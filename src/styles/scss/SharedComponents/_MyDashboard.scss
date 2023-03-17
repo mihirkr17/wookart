@@ -1,0 +1,132 @@
+.jjk_2m2 {
+      width: 30px;
+      height: 30px;
+}
+
+.mydb {
+   position: relative;
+
+   .search_result {
+      width: 100%;
+   }
+}
+
+.mydb_head {
+   display: flex;
+   align-items: center;
+   justify-content: space-around;
+   padding: 0.8rem 0.5rem;
+   background-color: var(--color-accent);
+   margin-bottom: 1rem;
+  
+}
+
+.search_box {
+   .search_bars {
+      padding: 0.3rem 0.6rem;
+      border: 1px solid var(--color-trans-three);
+   }
+   .search_btn {
+      border: 1px solid var(--color-trans-three);
+      padding: 0.3rem 0.6rem;
+   }
+}
+
+.d_p_head {
+   padding: 0.6rem 0.2rem;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+
+   .d_p_icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50px;
+      background-color: #04947733;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text);
+      position: relative;
+      .o_counter {
+         position: absolute;
+         top: 0;
+         right: 0;
+         background-color: var(--color-orange);
+         width: 20px;
+         height: 20px;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         border-radius: 50px;
+         color: var(--color-text);
+      }
+   }
+}
+
+.d_p {
+   .d_p_mid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0.5rem 0;
+      .d_p_mid_img {
+         width: 90px;
+         height: 90px;
+         border-radius: 50px;
+         border: 1px solid var(--color-trans-three);
+         margin-bottom: 0.8rem;
+         overflow: hidden;
+      }
+      h6 {
+         padding: 0.5rem 0;
+      }
+   }
+}
+
+.d_p_footer {
+   border: 1px solid var(--color-trans-three);
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   flex-direction: row;
+   padding: 0.5rem 0.6rem;
+}
+
+.t_p {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 50%;
+
+   &:nth-child(1) {
+      border-right: 1px solid var(--color-trans-three);
+   }
+}
+
+.t_p_icon {
+   width: 35px;
+   height: 35px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background-color: #04947733;
+   border-radius: 4px;
+   margin-right: 0.8rem;
+}
+
+.t_p_right_text {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   span {
+      font-size: 0.7rem;
+      color: var(--color-secondary);
+      font-weight: bold;
+   }
+}
+.pid {
+   color: var(--color-secondary);
+}

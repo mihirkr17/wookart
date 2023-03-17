@@ -1,0 +1,154 @@
+.swatch_size_btn {
+  border: 1px solid var(--color-mute);
+  color: var(--color-mute);
+  background-color: transparent;
+  margin: 0 0.3rem;
+  font-size: 70%;
+  padding: 2px;
+  margin: 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    padding: 1px 0;
+  }
+
+  &.active {
+    color: var(--color-green);
+    font-weight: bold;
+    border: 1px solid var(--color-green);
+  }
+}
+
+.seeMore {
+  color: var(--color-blued);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.product_price_model {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0.4rem 0;
+  padding: 0.1rem 0;
+
+  big {
+    color: var(--color-green);
+    padding-right: 0.3rem;
+    font-weight: 500;
+    font-size: 2rem;
+  }
+
+  strike {
+    color: var(--color-mute);
+    margin: 0 0.6rem;
+
+    i {
+      font-size: 1rem;
+    }
+  }
+
+  span {
+    color: var(--color-green);
+    font-weight: 500;
+  }
+}
+
+.product_rating_model small {
+  color: var(--color-orange);
+  font-weight: 500;
+}
+
+.product-details {
+  margin-top: 3.2rem;
+}
+
+.details_wrapper {
+  padding: 1rem;
+  background-color: #fdfdfd;
+}
+
+.p_details {
+  margin-bottom: 1.2rem;
+  padding: 1rem;
+
+  h5 {
+    padding: 0.6rem 0 1rem 0;
+  }
+}
+
+.product-details__items {
+  ul {
+    column-count: 2;
+    column-gap: 30px;
+    > li {
+      padding: 0.2rem 0;
+      display: flex;
+      width: 100%;
+      flex-direction: row;
+      font-size: 0.8rem;
+
+      > span {
+        color: var(--color-mute);
+        margin-right: 0.6rem;
+        font-weight: 500;
+        width: 50%;
+        display: block;
+
+        &:nth-child(2) {
+          color: var(--color-text);
+        }
+      }
+    }
+  }
+}
+
+.tabHeader {
+  padding: 2rem 0;
+  width: 100%;
+  margin: auto;
+}
+.tabBtns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    padding: 0.6rem 0.5rem;
+    margin: 0.4rem;
+    background-color: var(--color-trans-one);
+    cursor: pointer;
+    mask-type: alpha;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    min-width: 200px;
+    text-align: center;
+
+    &.active {
+      background-color: var(--color-trans-three);
+    }
+  }
+}
+
+
+@media (max-width: 567px) {
+  .tabBtns {
+    span{
+      min-width: 150px;
+      font-size: 0.9rem;
+    }
+  }
+
+  .product-details__items {
+    ul {
+      column-count: 1;
+      column-gap: 10px;
+    }
+  }
+}

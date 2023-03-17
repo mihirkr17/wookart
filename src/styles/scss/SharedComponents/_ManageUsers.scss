@@ -1,0 +1,16 @@
+.manage_user_header {
+   button {
+      border: none;
+      margin: 0.4rem;
+      padding: 0.4rem 0.8rem;
+      background-color: var(--color-secondary);
+      color: white;
+      font-weight: 500;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+   }
+
+   .tabs.active {
+      background-color: var(--color-accent);
+   }
+}

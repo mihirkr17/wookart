@@ -1,0 +1,12 @@
+.manage_order_header {
+   padding: 1rem;
+   display: flex;
+   align-items: center;
+   justify-content: space-evenly;
+
+   a {
+      display: inline-block;
+      border: none;
+      background-color: transparent;
+   }
+}

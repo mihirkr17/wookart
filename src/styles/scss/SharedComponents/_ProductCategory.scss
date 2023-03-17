@@ -1,0 +1,40 @@
+.ggt_ffo {
+  a {
+    font-size: 0.9rem;
+    text-transform: capitalize;
+  }
+  small {
+   font-size: 0.9rem;
+  }
+  ul {
+    li {
+      a {
+        font-size: 0.9rem;
+        text-transform: capitalize;
+      }
+    }
+  }
+}
+
+.category_right_side {
+   height: 100%;
+   overflow-y: auto;
+   scrollbar-width: 2px;
+}
+
+.category_left_side {
+   height: 100%;
+   overflow-y: auto;
+}
+
+@media (max-width: 567px) {
+   .category_right_side {
+      height: 100%;
+      overflow-y: auto;
+   }
+
+   .category_left_side {
+      height: auto;
+      overflow-y: auto;
+   }
+}

@@ -1,0 +1,59 @@
+// .my_profile {
+//   border: 1px solid var(--color-dark);
+// }
+
+.tty_ssd {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   flex-wrap: wrap;
+   padding: 0.5rem 0 0.8rem 0;
+}
+
+.update_form {
+  height: 0;
+  width: 100%;
+  overflow: hidden;
+  transition: all 0.4s ease-in-out;
+  text-align: center;
+}
+
+.update_form > button {
+  padding: 0.2rem 0.4rem;
+  border: 1px solid hotpink;
+  border-radius: 3px;
+  background-color: hotpink;
+  margin-top: 0.6rem;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: all 0.4s linear;
+}
+
+.update_form > button:hover {
+  background-color: #bb0460;
+}
+
+.update_form.active {
+  height: 90px;
+  padding: 0.5rem 0;
+}
+
+.profile_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  flex-wrap: wrap;
+
+  .ph_i {
+    span {
+      font-weight: 500;
+      padding: 0.2rem;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      margin-right: 1rem;
+    }
+  }
+}

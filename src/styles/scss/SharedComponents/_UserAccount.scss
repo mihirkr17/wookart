@@ -1,0 +1,37 @@
+
+ .order_card {
+   padding: 0.6rem;
+   border: 1px solid #f6f6f6;
+   box-shadow: 0 0 5px 0 #0000004d;
+   border-radius: 3px;
+}
+
+.order_card:hover {
+   box-shadow: 0 0 10px 0 #0000005d;
+}
+
+.order_card small{
+   font-size: 12px;
+}
+
+ .cart_card_body p {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   font-size: 0.9rem;
+ }
+
+ .my-profile {
+   column-count: 2;
+
+   li {
+      padding-bottom: 1.3rem;
+      h6 {
+         font-size: 0.8rem;
+         color: var(--color-mute);
+      }
+      span {
+         font-size: 0.9rem;
+      }
+   }
+ }

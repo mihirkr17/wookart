@@ -1,0 +1,38 @@
+ul,
+li,
+a {
+  list-style: none;
+  text-decoration: none;
+}
+ol,
+ul {
+  padding-left: 0.8rem;
+}
+
+a {
+  color: var(--color-link);
+}
+
+.badge {
+  border: none;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: gray !important;
+  }
+}
+
+tr {
+  font-size: var(--font-size-smaller);
+}
+svg {
+  color: var(--color-text-primary);
+}
+
+.table {
+  color: var(--color-text);
+}
+
+.ck.ck-editor__main > .ck-editor__editable {
+  background-color: var(--color-light) !important;
+}
