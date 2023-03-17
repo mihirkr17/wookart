@@ -1,4 +1,5 @@
 import BtnSpinner from "@/Components/Shared/BtnSpinner/BtnSpinner";
+import { emailValidator } from "@/Functions/common";
 import { useBaseContext } from "@/lib/BaseProvider";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

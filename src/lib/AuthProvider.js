@@ -15,13 +15,13 @@ export default function AuthProvider(props) {
    const [ref, setRef] = useState(false);
 
    useEffect(() => {
-      const userData2 = new URLSearchParams(document.cookie.replaceAll("; ", "&")).get('u_data') || "";
+      // const userData2 = new URLSearchParams(document.cookie.replaceAll("; ", "&")).get('u_data') || "";
 
 
 
-      const { u_data } = CookieParser(document.cookie);
+      // const { u_data } = CookieParser(document.cookie);
 
-      console.log(u_data);
+      // console.log(u_data);
 
       // getting u_data token from localStorage
       const userData = localStorage.getItem("u_data");
