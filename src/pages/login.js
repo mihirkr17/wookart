@@ -1,12 +1,13 @@
 // pages/Login.js
 
+import VerifyAuthToken from "@/Components/AuthComponents/verifyAuthToken";
 import { useAuthContext } from "@/lib/AuthProvider";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import VerifyAuthToken from "./verifyAuthToken";
+
 
 
 export default function Login() {
@@ -29,12 +30,7 @@ export default function Login() {
          e.preventDefault();
          let emailOrPhone = e.target.emailOrPhone.value;
          let password = e.target.password.value;
-         // let verify_token;
-
-         // if (vrTok) {
-         //    verify_token = e.target.verify_token.value;
-         // }
-
+ 
          if (emailOrPhone.length <= 0) {
             return setMessage('Phone or email address required !!!', 'danger');
          }
@@ -56,10 +52,7 @@ export default function Login() {
 
             setLoading(false);
 
-            const { name, uuid, verifyToken, u_data, message } = await response.json();
-
-            // let verifyTok = document.cookie.split('; ').find(e => e.startsWith('verifyToken='))?.split('=')[1];
-
+            const { name, verifyToken, u_data, message } = await response.json();
 
             if (!response.ok) {
                return setMessage(message, 'danger');

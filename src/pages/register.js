@@ -1,3 +1,4 @@
+import VerifyAuthToken from "@/Components/AuthComponents/verifyAuthToken";
 import BtnSpinner from "@/Components/Shared/BtnSpinner/BtnSpinner";
 import { emailValidator } from "@/Functions/common";
 import { useBaseContext } from "@/lib/BaseProvider";
@@ -5,7 +6,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useState } from "react";
-import VerifyAuthToken from "./verifyAuthToken";
+
 
 
 

@@ -1,6 +1,9 @@
-import BtnSpinner from "@/Components/Shared/BtnSpinner/BtnSpinner";
+
+// Components/AuthComponents/VerifyAuthToken.js
+
 import { useRouter } from "next/router";
 import { useState } from "react";
+import BtnSpinner from "../Shared/BtnSpinner/BtnSpinner";
 
 
 export default function VerifyAuthToken({ vToken, setMessage }) {
@@ -37,11 +40,11 @@ export default function VerifyAuthToken({ vToken, setMessage }) {
                setAuthVerifyToken(data?.verifyToken);
                return;
             } else {
-               router.push(`/login?authenticate=${data?.data?.email}`);
+               router.replace(`/login`);
             }
          }
       } catch (error) {
-
+         setMessage(error?.message, 'danger');
       }
    }
 
