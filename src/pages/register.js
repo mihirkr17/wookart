@@ -112,7 +112,7 @@ export default function Register() {
                      it takes less than a minute
                   </p>
                   {
-                     verifyToken ? <VerifyAuthToken vToken={verifyToken} setMessage={setMessage} /> :
+                     verifyToken ? <VerifyAuthToken vToken={verifyToken} setVerifyToken={setVerifyToken} setMessage={setMessage} /> :
                         <form onSubmit={handleRegister}>
 
                            <div className="mb-3">

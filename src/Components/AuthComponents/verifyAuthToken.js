@@ -6,7 +6,7 @@ import { useState } from "react";
 import BtnSpinner from "../Shared/BtnSpinner/BtnSpinner";
 
 
-export default function VerifyAuthToken({ vToken, setMessage }) {
+export default function VerifyAuthToken({ vToken, setMessage, setVerifyToken }) {
 
    const [loading, setLoading] = useState(false);
    const [authVerifyToken, setAuthVerifyToken] = useState(vToken || "");
@@ -40,6 +40,7 @@ export default function VerifyAuthToken({ vToken, setMessage }) {
                setAuthVerifyToken(data?.verifyToken);
                return;
             } else {
+               setVerifyToken(false);
                router.replace(`/login`);
             }
          }
@@ -63,7 +64,7 @@ export default function VerifyAuthToken({ vToken, setMessage }) {
                padding: "0.5rem",
             }}>{authVerifyToken}</div>
             <br />
-            <input className='form-control' type="text" id='verify_token' name='verify_token' autoComplete='off' placeholder="Enter upper provided token here!!!" />
+            <input className='form-control' type="text" id='verify_token' name='verify_token' autoComplete='off' placeholder="Enter upper text.." />
          </div>
 
          <button id="submit_btn" variant="primary" className='bt9_auth' type="submit">

@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 
 export default function Login() {
    const [showPwd, setShowPwd] = useState(false);
-   const [vrTok, setVrTok] = useState("");
+   const [vrTok, setVrTok] = useState(false);
    const [loading, setLoading] = useState(false);
    const { setMessage, role, authRefetch } = useAuthContext();
    const router = useRouter();
@@ -97,7 +97,7 @@ export default function Login() {
                      it takes less than a minute
                   </p>
                   {
-                     vrTok ? <VerifyAuthToken vToken={vrTok} setMessage={setMessage}></VerifyAuthToken> :
+                     vrTok ? <VerifyAuthToken vToken={vrTok} setVerifyToken={setVrTok} setMessage={setMessage}></VerifyAuthToken> :
                         <form onSubmit={handleLogin} className='text-start'>
                            <div className="mb-3 input_group">
                               <label htmlFor='emailOrPhone'>Email address or phone</label>
@@ -118,23 +118,7 @@ export default function Login() {
                                  </span>
                               </div>
                            </div>
-                           {
-                              vrTok && <div className='mb-3'>
-                                 <div style={{
-                                    width: "fit-content",
-                                    height: "40px",
-                                    border: "2px solid gray",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    letterSpacing: "2px",
-                                    fontVariantNumeric: "diagonal-fractions",
-                                    padding: "0.5rem",
-                                 }}>{vrTok}</div>
-                                 <br />
-                                 <input className='form-control' type="text" name='verify_token' id='verify_token' placeholder="Enter token" />
-                              </div>
-                           }
+
                            <div className='mb-3 input_group'>
                               <button className='bt9_auth' type="submit">
                                  {loading ? "Signing..." : "Login"}
