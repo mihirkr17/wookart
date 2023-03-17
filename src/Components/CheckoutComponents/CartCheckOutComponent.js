@@ -135,7 +135,7 @@ export default function CartCheckoutComponent() {
 
                         setConfirmLoading(false);
 
-                        return router.push("/user/my-account/orders-management");
+                        return router.push("/user/orders-management");
                      }
                   }
                }
