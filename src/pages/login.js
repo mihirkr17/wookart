@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 
 export default function Login() {
    const [showPwd, setShowPwd] = useState(false);
-   const [verifyToken, setVerifyToken] = useState(undefined);
+   const [verifyToken, setVerifyToken] = useState("");
    const [loading, setLoading] = useState(false);
    const { setMessage, role, authRefetch } = useAuthContext();
    const router = useRouter();
@@ -55,25 +55,32 @@ export default function Login() {
 
             setLoading(false);
 
-            const { name, uuid, u_data, message } = await response.json();
+            const { name, uuid, verifyToken, u_data, message } = await response.json();
 
-            let verifyTok = document.cookie.split('; ').find(e => e.startsWith('verifyToken='))?.split('=')[1];
+            // let verifyTok = document.cookie.split('; ').find(e => e.startsWith('verifyToken='))?.split('=')[1];
 
-            setVerifyToken(verifyTok);
 
             if (!response.ok) {
                return setMessage(message, 'danger');
+            } else {
+
+               
+               if (verifyToken && typeof verifyToken !== "undefined") {
+                  setVerifyToken(verifyTok);
+               }
+
+
+               if (name === 'isLogin' && u_data) {
+                  localStorage.setItem("u_data", u_data);
+                  authRefetch();
+                  router.back();
+               }
             }
 
-            if (name === 'isLogin' && u_data) {
-               localStorage.setItem("u_data", u_data);
-               authRefetch();
-               router.back();
-            }
          }
 
       } catch (error) {
-         console.log(error);
+         setMessage(error?.message, "danger");
       } finally {
          setLoading(false);
       }
@@ -98,6 +105,9 @@ export default function Login() {
                      &nbsp;<Link href={'/register'}>Create Your Account</Link>&nbsp;
                      it takes less than a minute
                   </p>
+                  {
+
+                  }
 
                   <form onSubmit={handleLogin} className='text-start'>
                      <div className="mb-3 input_group">
@@ -138,7 +148,7 @@ export default function Login() {
                      }
                      <div className='mb-3 input_group'>
                         <button className='bt9_auth' type="submit">
-                          {loading ? "Signing..." : "Login"}
+                           {loading ? "Signing..." : "Login"}
                         </button>
                      </div>
                   </form>

@@ -12,16 +12,15 @@ import { useState } from 'react';
 
 export default function Home({ data }) {
   const router = useRouter();
-  let [limit, setLimit] = useState(1);
+  let [limit, setLimit] = useState(12);
   const [ctg, setCtg] = useState("");
 
   const showMoreHandler = () => {
-    limit += 1;
+    limit += 6;
     setLimit(limit);
     router.push("./?limit=" + limit);
   }
 
-  // console.log(newCategory);
   return (
     <>
       <Head>
@@ -116,7 +115,7 @@ export default function Home({ data }) {
 export async function getServerSideProps(context) {
   const { limit } = context.query;
 
-  let newLimit = limit || 1;
+  let newLimit = limit || 12;
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/store/${newLimit}`);
   const data = await response.json();

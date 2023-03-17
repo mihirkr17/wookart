@@ -63,7 +63,7 @@ const NavigationBar = () => {
                                        (data && data.length > 0) ? data.map((product, index) => {
                                           return (
                                              <div className="d-flex flex-row align-items-center justify-content-start mb-3" key={index}>
-                                                {/* <img src={product?.image && product?.image} style={{ width: "25px", height: "25px", marginRight: "0.8rem", marginBottom: "0.4rem" }} alt="" /> */}
+                                                <img src={product?.image && product?.image} style={{ width: "25px", height: "25px", marginRight: "0.8rem", marginBottom: "0.4rem" }} alt="" />
                                                 <Link href={`/product/${product?.slug}?pId=${product._id}&vId=${product?._VID}`} style={{ fontSize: "0.7rem" }}>{product?.title}</Link>
                                              </div>
                                           )
@@ -96,9 +96,6 @@ const NavigationBar = () => {
                            <Link className="drp_item" href="/sell-online">Become a Seller</Link>
                            <Link className="drp_item" href="/user/my-account">My Account</Link>
                            <Link className='drp_item' href='/user/orders-management'>My Order</Link>
-                           <Link className='drp_item' href='/my-profile/my-wishlist'>
-                              My Wishlist ({(0) || 0})
-                           </Link>
                            <button className='drp_item' onClick={handleLogout}>Logout</button>
                         </div>
                      </div>
