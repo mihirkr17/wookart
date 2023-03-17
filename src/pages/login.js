@@ -64,9 +64,9 @@ export default function Login() {
                return setMessage(message, 'danger');
             } else {
 
-               
+
                if (verifyToken && typeof verifyToken !== "undefined") {
-                  setVerifyToken(verifyTok);
+                  setVerifyToken(verifyToken);
                }
 
 
