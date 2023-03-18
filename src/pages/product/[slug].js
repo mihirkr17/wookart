@@ -78,6 +78,7 @@ export default function ViewProduct({ data }) {
 export async function getServerSideProps({ query, params, req }) {
    const { pId, vId } = query;
    const { slug } = params;
+   console.log(req.headers.cookie);
 
    const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/fetch-single-product/${slug}?pId=${pId}&vId=${vId}`, {
       method: "GET",
@@ -87,6 +88,7 @@ export async function getServerSideProps({ query, params, req }) {
          Cookie: req.headers.cookie
      }
    });
+   
    const data = await response.json();
 
    return {
