@@ -12,10 +12,9 @@ import { useRouter } from "next/router"
 export default function ViewProduct({ data }) {
    const router = useRouter();
    const product = data?.product && data?.product;
-   const { slug, pId, vId } = router.query;
+   const { vId } = router.query;
 
    const { authRefetch, userInfo, setMessage } = useAuthContext();
-
 
    return (
       <div className='view_product section_default'>
