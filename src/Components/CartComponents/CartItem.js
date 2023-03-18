@@ -1,12 +1,14 @@
+import { useAuthContext } from '@/lib/AuthProvider';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import React from 'react';
 import { useState } from 'react';
 
-const CartItem = ({ product: cartProduct, setMessage, cartRefetch, checkOut, cartType, state, setState, cartQtyUpdater, items }) => {
+const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state, setState, items }) => {
    const [qtyLoading, setQtyLoading] = useState(false);
    const [loading, setLoading] = useState(false);
+   const { userInfo, cartQtyUpdater, setMessage } = useAuthContext();
 
    //  Remove product from cartProduct && cartProduct handler
    const removeItemFromCartHandler = async (cp) => {
@@ -155,7 +157,7 @@ const CartItem = ({ product: cartProduct, setMessage, cartRefetch, checkOut, car
                <div className='c_meta_info'>
 
                   <b className="c_title">
-                     <Link href={`/product/${cartProduct?.slug}?pId=${cartProduct?.productID}&vId=${cartProduct?.variationID}`}>
+                     <Link href={`/product/${cartProduct?.slug}?pId=${cartProduct?.productID}&vId=${cartProduct?.variationID}&uTracker=${userInfo?._uuid || ""}`}>
                         {cartProduct && cartProduct?.title}
                      </Link>
                   </b>

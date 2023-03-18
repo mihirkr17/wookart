@@ -11,7 +11,7 @@ export default function MyCart() {
    const [cartData, setCartData] = useState({});
    const [cartError, setCartError] = useState("");
    const [cartRef, setCartRef] = useState(false);
-   const { userInfo, setMessage, cartQtyUpdater } = useAuthContext();
+   const { userInfo, setMessage } = useAuthContext();
 
    const cartRefetch = () => setCartRef(e => !e);
 
@@ -67,8 +67,6 @@ export default function MyCart() {
                                     product={product}
                                     cartType={"toCart"}
                                     checkOut={false}
-                                    setMessage={setMessage}
-                                    cartQtyUpdater={cartQtyUpdater}
                                     items={cartData?.numberOfProducts}
                                  />
                               )

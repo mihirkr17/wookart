@@ -76,13 +76,16 @@ export default function ViewProduct({ data }) {
 }
 
 export async function getServerSideProps({ query, params, req }) {
-   const { pId, vId } = query;
+   const { pId, vId, uTracker } = query;
    const { slug } = params;
 
    const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/fetch-single-product/${slug}?pId=${pId}&vId=${vId}`, {
       method: "GET",
       withCredentials: true,
-      credentials: "include"
+      credentials: "include",
+      headers: {
+         authorization: uTracker || ""
+      }
    });
 
    const data = await response.json();

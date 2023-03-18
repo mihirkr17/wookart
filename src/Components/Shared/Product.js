@@ -1,13 +1,15 @@
 
+import { useAuthContext } from '@/lib/AuthProvider';
 import Link from 'next/link';
 import React from 'react';
 
 const Product = ({ product }) => {
+   const { userInfo } = useAuthContext();
 
    return (
       <div className='product_card my-2'>
 
-         <Link href={`/product/${product?.slug}?pId=${product?._id}&vId=${product?._vrid}`}>
+         <Link href={`/product/${product?.slug}?pId=${product?._id}&vId=${product?._vrid}&uTracker=${userInfo?._uuid || ""}`}>
 
             <div className="product_card_img">
                <img src={product?.image && product?.image} alt='' />
@@ -40,7 +42,7 @@ const Product = ({ product }) => {
                      }
                   </div>
 
-               
+
                </div>
             </article>
          </Link>
