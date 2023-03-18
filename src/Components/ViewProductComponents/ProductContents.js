@@ -13,9 +13,6 @@ export default function ProductContents({ product, variationID, authRefetch, set
 
    const defShipAddrs = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true);
 
-   let inCart = Array.isArray(userInfo?.buyer?.shoppingCartItems) &&
-      userInfo?.buyer?.shoppingCartItems.find(e => (e?.variationID === variationID && e?.productID === product?._id)) || undefined;
-
    // add to cart handler
    const addToCartHandler = async (pId, _lid, vId, params) => {
       try {
@@ -160,7 +157,7 @@ export default function ProductContents({ product, variationID, authRefetch, set
                <div className="py-3 mt-4 product_handler">
 
                   {
-                     (!inCart || typeof inCart === 'undefined') ?
+                     (!product?.inCart || typeof product?.inCart === 'undefined') ?
                         <button
                            className='addToCartBtn'
                            disabled={product?.variations?.stock === "out" ? true : false}
