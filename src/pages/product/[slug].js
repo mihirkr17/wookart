@@ -79,16 +79,10 @@ export async function getServerSideProps({ query, params, req }) {
    const { pId, vId } = query;
    const { slug } = params;
 
-   let token = req.cookies["token"];
-
-   const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/fetch-single-product/${slug}?pId=${pId}&vId=${vId}&token=${token}`, {
+   const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/fetch-single-product/${slug}?pId=${pId}&vId=${vId}`, {
       method: "GET",
       withCredentials: true,
-      credentials: "include",
-      headers: {
-         Cookie: req.headers.cookie,
-         authorization: token
-      }
+      credentials: "include"
    });
 
    const data = await response.json();
