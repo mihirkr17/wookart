@@ -96,10 +96,10 @@ export default function MyCart() {
                                  <Link className='bt9_checkout' href={{
                                     pathname: `/checkout`,
                                     query: {
-                                       spa: `${userInfo?._UUID + "cart.proceed_to_checkout"}`,
+                                       spa: `${userInfo?._uuid + "cart.proceed_to_checkout"}`,
                                        data: JSON.stringify(cartData && cartData)
                                     }
-                                 }} as={`/checkout?spa=${userInfo?._UUID + "cart.proceed_to_checkout"}`}>
+                                 }} as={`/checkout?spa=${userInfo?._uuid + "cart.proceed_to_checkout"}`}>
                                     Proceed To Checkout
                                  </Link>
                            }

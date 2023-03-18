@@ -138,7 +138,7 @@ export default function __dynamicCategory({ p }) {
                         {
                            Array.isArray(data) && data.map((product) => {
                               return (
-                                 <Product key={product?._VID} product={product}></Product>
+                                 <Product key={product?._vrid} product={product}></Product>
                               )
                            })
                         }

@@ -10,12 +10,14 @@ import { useRouter } from 'next/router';
 export default function ProductContents({ product, variationID, authRefetch, setMessage, userInfo }) {
    const [addCartLoading, setAddCartLoading] = useState(false);
    const router = useRouter();
-   // const location = useLocation();
-   // const navigate = useNavigate();
+
    const defShipAddrs = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true);
 
+   let inCart = Array.isArray(userInfo?.buyer?.shoppingCartItems) &&
+      userInfo?.buyer?.shoppingCartItems.find(e => (e?.variationID === variationID && e?.productID === product?._id)) || undefined;
+
    // add to cart handler
-   const addToCartHandler = async (pId, _LID, vId, params) => {
+   const addToCartHandler = async (pId, _lid, vId, params) => {
       try {
          if (!userInfo?.email) {
             router.push('/login');
@@ -32,7 +34,7 @@ export default function ProductContents({ product, variationID, authRefetch, set
                headers: {
                   "Content-Type": "application/json"
                },
-               body: JSON.stringify({ productID: pId, listingID: _LID, variationID: vId, action: params })
+               body: JSON.stringify({ productID: pId, listingID: _lid, variationID: vId, action: params })
             });
 
             const result = await response.json();
@@ -110,8 +112,8 @@ export default function ProductContents({ product, variationID, authRefetch, set
                                        <div key={i} className='d-flex align-items-center justify-content-center flex-column'>
                                           {
                                              e?.variant?.color &&
-                                             <Link className={`swatch_size_btn ${e._VID === variationID ? 'active' : ''}`}
-                                                href={`/product/${product?.slug}?pId=${product?._id}&vId=${e._VID}`}>
+                                             <Link className={`swatch_size_btn ${e._vrid === variationID ? 'active' : ''}`}
+                                                href={`/product/${product?.slug}?pId=${product?._id}&vId=${e._vrid}`}>
                                                 <div style={{
                                                    backgroundColor: hex,
                                                    display: 'block',
@@ -158,11 +160,11 @@ export default function ProductContents({ product, variationID, authRefetch, set
                <div className="py-3 mt-4 product_handler">
 
                   {
-                     (!product?.inCart || typeof product?.inCart === 'undefined') ?
+                     (!inCart || typeof inCart === 'undefined') ?
                         <button
                            className='addToCartBtn'
                            disabled={product?.variations?.stock === "out" ? true : false}
-                           onClick={() => addToCartHandler(product?._id, product?._LID, product?.variations?._VID, "toCart")}
+                           onClick={() => addToCartHandler(product?._id, product?._lid, product?.variations?._vrid, "toCart")}
                         >
                            {
                               addCartLoading ? <BtnSpinner text={"Adding..."} /> : <>
@@ -179,9 +181,9 @@ export default function ProductContents({ product, variationID, authRefetch, set
                      pathname: `/single-checkout`,
                      query: {
                         data: JSON.stringify({
-                           listingID: product?._LID,
+                           listingID: product?._lid,
                            productID: product?._id,
-                           variationID: product?.variations?._VID,
+                           variationID: product?.variations?._vrid,
                            quantity: 1,
                            customerEmail: userInfo?.email
                         }),
