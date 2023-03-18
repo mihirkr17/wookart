@@ -149,8 +149,6 @@ export default function ProductContents({ product, variationID, authRefetch, set
                      }
                   </ul>
                }
-
-
             </article>
 
             {
