@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useBaseContext } from "./BaseProvider";
 import jwt_decode from "jwt-decode";
-import { authLogout, CookieParser } from "@/Functions/common";
+import { authLogout } from "@/Functions/common";
 
 export const AuthContext = createContext();
 
@@ -15,13 +15,6 @@ export default function AuthProvider(props) {
    const [ref, setRef] = useState(false);
 
    useEffect(() => {
-      // const userData2 = new URLSearchParams(document.cookie.replaceAll("; ", "&")).get('u_data') || "";
-
-
-
-      // const { u_data } = CookieParser(document.cookie);
-
-      // console.log(u_data);
 
       // getting u_data token from localStorage
       const userData = localStorage.getItem("u_data");
