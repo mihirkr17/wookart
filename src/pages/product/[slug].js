@@ -78,17 +78,17 @@ export default function ViewProduct({ data }) {
 export async function getServerSideProps({ query, params, req }) {
    const { pId, vId } = query;
    const { slug } = params;
-   console.log(req.headers.cookie);
 
    const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/fetch-single-product/${slug}?pId=${pId}&vId=${vId}`, {
       method: "GET",
       withCredentials: true,
       credentials: "include",
       headers: {
-         Cookie: req.headers.cookie
-     }
+         Cookie: req.headers.cookie,
+         authorization: req.cookies["token"]
+      }
    });
-   
+
    const data = await response.json();
 
    return {
