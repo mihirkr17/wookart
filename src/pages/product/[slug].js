@@ -84,7 +84,7 @@ export async function getServerSideProps({ query, params, req }) {
       withCredentials: true,
       credentials: "include",
       headers: {
-         authorization: uTracker || ""
+         authorization: uTracker || req.cookies["_uuid"] || ""
       }
    });
 
