@@ -14,7 +14,7 @@ export default function Login() {
    const [showPwd, setShowPwd] = useState(false);
    const [vrTok, setVrTok] = useState(false);
    const [loading, setLoading] = useState(false);
-   const { setMessage, role, authRefetch } = useAuthContext();
+   const { setMessage, role, initialLoader } = useAuthContext();
    const router = useRouter();
 
    useEffect(() => {
@@ -71,8 +71,7 @@ export default function Login() {
 
                   document.cookie = `client_data=${u_data}; max-age= ${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
 
-                  // localStorage.setItem("u_data", u_data);
-                  authRefetch();
+                  initialLoader();
                   router.back();
                }
             }

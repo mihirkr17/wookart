@@ -18,7 +18,7 @@ const CartAddress = ({ authRefetch, addr, setMessage }) => {
          if (data.message) {
             setLoading(false);
             setMessage(data?.message, "success");
-            authRefetch();
+            await authRefetch();
          } else {
             setLoading(false);
             setMessage(data?.message, "danger");

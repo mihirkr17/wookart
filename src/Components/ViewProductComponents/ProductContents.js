@@ -37,7 +37,7 @@ export default function ProductContents({ product, variationID, authRefetch, set
             const result = await response.json();
 
             if (response.ok && result?.success === true) {
-               authRefetch();
+               await authRefetch();
                setMessage(result?.message, "success");
 
                setAddCartLoading(false);

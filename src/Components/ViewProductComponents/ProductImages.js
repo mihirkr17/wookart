@@ -35,7 +35,7 @@ const ProductImages = ({ product, userInfo, authRefetch, setMessage }) => {
       }
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/wishlist/add-to-wishlist/${userInfo?.email}`, {
-         method: "PUT",
+         method: "POST",
          withCredentials: true,
          credentials: "include",
          headers: {
@@ -47,7 +47,7 @@ const ProductImages = ({ product, userInfo, authRefetch, setMessage }) => {
       const resData = await response.json();
 
       if (response.ok) {
-         authRefetch();
+         await authRefetch();
          setMessage(<p className='py-2 text-success'><small><strong>{resData?.message}</strong></small></p>);
       }
    }
@@ -62,7 +62,7 @@ const ProductImages = ({ product, userInfo, authRefetch, setMessage }) => {
       const resData = await response.json();
 
       if (response.ok) {
-         authRefetch();
+         await authRefetch();
          setMessage(<p className='py-2 text-success'><small><strong>{resData?.message}</strong></small></p>);
       }
    }

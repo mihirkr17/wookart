@@ -70,7 +70,7 @@ const MyAddressBook = () => {
          if (data.success) {
             closeAddressForm();
             setMessage(data?.message, "success");
-            authRefetch();
+            await authRefetch();
          } else {
             setMessage(data?.message, "danger");
          }
@@ -86,7 +86,7 @@ const MyAddressBook = () => {
 
       if (data.success) {
          setLoading(false);
-         authRefetch();
+         await authRefetch();
          setMessage(data?.message, "success");
       } else {
          setLoading(false);
@@ -101,7 +101,7 @@ const MyAddressBook = () => {
 
          if (data.success) {
             setMessage(data?.message, "success");
-            authRefetch();
+            await authRefetch();
             return;
          } else {
             setMessage(data?.message, "danger");

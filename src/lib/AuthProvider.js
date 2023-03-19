@@ -16,11 +16,7 @@ export default function AuthProvider(props) {
 
    useEffect(() => {
 
-      // getting u_data token from localStorage
-      // const userData = localStorage.getItem("u_data");
       const { client_data } = CookieParser(document.cookie);
-
-      console.log(client_data);
 
       setAuthLoading(true);
 
@@ -28,7 +24,6 @@ export default function AuthProvider(props) {
 
          // decode u_data token by jwt_decode function
          const decoded = jwt_decode(client_data);
-
 
          if (decoded) {
             setAuthLoading(false);
@@ -40,6 +35,8 @@ export default function AuthProvider(props) {
       }
    }, [ref]);
 
+   const initialLoader = () => setRef(e => !e);
+
    const authRefetch = async () => {
       try {
          setAuthLoading(true);
@@ -50,17 +47,21 @@ export default function AuthProvider(props) {
             method: "GET"
          });
 
-         const data = await response.json();
-
-         console.log(data);
+         const { maxAgeOfCookie, u_data } = await response.json();
 
          if (response.ok) {
 
-            setRef(e => !e);
-
             setAuthLoading(false);
 
-            // localStorage.setItem("u_data", data?.u_data);
+            if (u_data && typeof u_data !== "undefined") {
+               let now = new Date();
+
+               const expireTime = new Date(now.getTime() + 16 * 60 * 60 * 1000);
+
+               document.cookie = `client_data=${u_data}; max-age= ${maxAgeOfCookie || ((expireTime.getTime() - now.getTime()) / 1000)}; path=/`;
+            }
+
+            setRef(e => !e);
 
          } else {
             setAuthLoading(false);
@@ -92,7 +93,7 @@ export default function AuthProvider(props) {
 
 
    return (
-      <AuthContext.Provider value={{ userInfo, role: userInfo?.role && userInfo?.role, setMessage, msg, authRefetch, authLoading, authErr, cartQtyUpdater }}>
+      <AuthContext.Provider value={{ initialLoader, userInfo, role: userInfo?.role && userInfo?.role, setMessage, msg, authRefetch, authLoading, authErr, cartQtyUpdater }}>
          {msg}
          {props?.children}
       </AuthContext.Provider>

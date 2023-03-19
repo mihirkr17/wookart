@@ -17,7 +17,7 @@ const Profile = () => {
          if (data?.success) {
             setMessage(data?.message, 'success');
 
-            authRefetch();
+            await authRefetch();
 
             return;
          }
@@ -50,7 +50,7 @@ const Profile = () => {
 
          if (data?.success) {
             setMessage(data?.message, "success");
-            authRefetch();
+            await authRefetch();
             return;
          } else {
             setMessage(data?.message, "danger");
@@ -127,7 +127,7 @@ const Profile = () => {
                         <br />
                         {
                            userInfo?.authProvider === "system" && <button className={openPwdForm ? "bt9_cancel" : "bt9_edit"} onClick={() => setOpenPwdForm(e => !e)}>
-                             {openPwdForm ? "Cancel" : "Change Password"} 
+                              {openPwdForm ? "Cancel" : "Change Password"}
                            </button>
                         }</>
                }
@@ -137,14 +137,14 @@ const Profile = () => {
                      <div className="row">
                         <div className="col-lg-6">
                            <div className="p-1">
-                              <label htmlFor="oldPassword">Old Password <span style={{color: "red"}}>*</span> </label> <br />
+                              <label htmlFor="oldPassword">Old Password <span style={{ color: "red" }}>*</span> </label> <br />
                               <input className='form-control form-control-sm' type="password" name="oldPassword" id="oldPassword" />
                            </div>
                         </div>
 
                         <div className="col-lg-6">
                            <div className="p-1">
-                              <label htmlFor="newPassword">Set New Password <span style={{color: "red"}}>*</span></label>
+                              <label htmlFor="newPassword">Set New Password <span style={{ color: "red" }}>*</span></label>
                               <br />
                               <input className='form-control form-control-sm' type="password" name="newPassword" id="newPassword" />
                            </div>
