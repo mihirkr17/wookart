@@ -66,8 +66,9 @@ export default function Login() {
                if (name === 'isLogin' && u_data) {
 
                   let now = new Date();
-                  let maxAge = now.getTime() - (now.getTimezoneOffset() * 60000);
-                  maxAge = maxAge + 57600000;
+
+                  const expireTime = new Date(now.getTime() + 16 * 60 * 60 * 1000);
+                  let maxAge = expireTime.getTime();
 
                   document.cookie = `client_data=${u_data}; max-age= ${maxAge}; path=/`;
 
@@ -83,6 +84,8 @@ export default function Login() {
          setLoading(false);
       }
    }
+
+
    return (
       <div className='section_default' style={{ height: "90vh" }}>
          <div className='container'>
