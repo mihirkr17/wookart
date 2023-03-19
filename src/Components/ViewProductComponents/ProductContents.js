@@ -167,7 +167,7 @@ export default function ProductContents({ product, variationID, authRefetch, set
                               </>
                            }
                         </button> :
-                        <button className='ms-4 addToCartBtn' onClick={() => navigate('/my-cart')}>
+                        <button className='ms-4 addToCartBtn' onClick={() => router.push('/my-cart')}>
                            Go To Cart
                         </button>
                   }

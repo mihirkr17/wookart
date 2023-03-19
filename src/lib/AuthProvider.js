@@ -51,6 +51,8 @@ export default function AuthProvider(props) {
 
          if (response.ok) {
 
+            console.log(maxAgeOfCookie);
+
             setAuthLoading(false);
 
             if (u_data && typeof u_data !== "undefined") {

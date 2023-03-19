@@ -1,11 +1,8 @@
 
-import { useAuthContext } from '@/lib/AuthProvider';
 import Link from 'next/link';
 import React from 'react';
 
 const Product = ({ product }) => {
-   const { userInfo } = useAuthContext();
-   // &uTracker=${userInfo?._uuid || ""}
 
    return (
       <div className='product_card my-2'>
