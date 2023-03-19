@@ -5,7 +5,6 @@ export const authLogout = async () => {
       credentials: "include",
    });
    if (response.ok) {
-      localStorage.removeItem("u_data");
       deleteCookie("client_data");
       window.location.reload();
    }
