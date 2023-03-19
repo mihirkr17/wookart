@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useBaseContext } from "./BaseProvider";
 import jwt_decode from "jwt-decode";
-import { authLogout } from "@/Functions/common";
+import { authLogout, CookieParser } from "@/Functions/common";
 
 export const AuthContext = createContext();
 
@@ -17,14 +17,18 @@ export default function AuthProvider(props) {
    useEffect(() => {
 
       // getting u_data token from localStorage
-      const userData = localStorage.getItem("u_data");
+      // const userData = localStorage.getItem("u_data");
+      const { client_data } = CookieParser(document.cookie);
+
+      console.log(client_data);
 
       setAuthLoading(true);
 
-      if (userData && typeof userData === "string") {
+      if (client_data && typeof client_data === "string") {
 
          // decode u_data token by jwt_decode function
-         const decoded = jwt_decode(userData);
+         const decoded = jwt_decode(client_data);
+
 
          if (decoded) {
             setAuthLoading(false);
@@ -54,7 +58,7 @@ export default function AuthProvider(props) {
 
             setAuthLoading(false);
 
-            localStorage.setItem("u_data", data?.u_data);
+            // localStorage.setItem("u_data", data?.u_data);
 
          } else {
             setAuthLoading(false);

@@ -6,6 +6,7 @@ export const authLogout = async () => {
    });
    if (response.ok) {
       localStorage.removeItem("u_data");
+      deleteCookie("client_data");
       window.location.reload();
    }
 };
@@ -110,4 +111,11 @@ export function CookieParser(cookie) {
    }
 
    return cookies;
+}
+
+
+export function deleteCookie(cookieName) {
+
+   if (!cookieName) return;
+   return document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
