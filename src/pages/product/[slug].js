@@ -75,38 +75,40 @@ export default function ViewProduct({ data }) {
    )
 }
 
-export async function callApi(slug, pId, vId) {
-   const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/fetch-single-product/${slug}?pId=${pId}&vId=${vId}`, {
-      method: "GET",
-      withCredentials: true,
-      credentials: "include"
-      // headers: {
-      //    authorization: uTracker || req.cookies["_uuid"] || ""
-      // }
-   });
+// export async function callApi(slug, pId, vId) {
+//    const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/fetch-single-product/${slug}?pId=${pId}&vId=${vId}`, {
+//       method: "GET",
+//       withCredentials: true,
+//       credentials: "include"
+//       // headers: {
+//       //    authorization: uTracker || req.cookies["_uuid"] || ""
+//       // }
+//    });
 
-   const data = await response.json();
+//    const data = await response.json();
 
-   return data;
+//    return data;
 
-}
+// }
 
 export async function getServerSideProps({ query, params, req }) {
    const { pId, vId, uTracker } = query;
    const { slug } = params;
+   const { cookies } = req.headers;
 
-   const data = await callApi(slug, pId, vId);
+   // const data = await callApi(slug, pId, vId);
 
-   // const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/fetch-single-product/${slug}?pId=${pId}&vId=${vId}`, {
-   //    method: "GET",
-   //    withCredentials: true,
-   //    credentials: "include",
-   //    headers: {
-   //       authorization: uTracker || req.cookies["_uuid"] || ""
-   //    }
-   // });
+   const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/fetch-single-product/${slug}?pId=${pId}&vId=${vId}`, {
+      method: "GET",
+      withCredentials: true,
+      credentials: "include",
+      headers: {
+         Cookie: cookies || "",
+         authorization: uTracker || req.cookies["_uuid"] || ""
+      }
+   });
 
-   // const data = await response.json();
+   const data = await response.json();
 
    return {
       props: data
