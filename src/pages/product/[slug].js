@@ -94,7 +94,7 @@ export default function ViewProduct({ data }) {
 export async function getServerSideProps({ query, params, req }) {
    const { pId, vId, uTracker } = query;
    const { slug } = params;
-   const { cookies } = req.headers;
+   const { cookie } = req.headers;
 
    // const data = await callApi(slug, pId, vId);
 
@@ -103,7 +103,7 @@ export async function getServerSideProps({ query, params, req }) {
       withCredentials: true,
       credentials: "include",
       headers: {
-         Cookie: cookies || "",
+         Cookie: cookie || "",
          authorization: uTracker || req.cookies["_uuid"] || ""
       }
    });
