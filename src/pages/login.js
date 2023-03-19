@@ -65,7 +65,10 @@ export default function Login() {
 
                if (name === 'isLogin' && u_data) {
 
-                  let maxAge = new Date().getTime() + 57600000; // 16 hrs
+                  let now = new Date();
+                  let maxAge = now.getTime() - (now.getTimezoneOffset() * 60000);
+                  maxAge = maxAge + 57600000;
+
                   document.cookie = `client_data=${u_data}; max-age= ${maxAge}; path=/`;
 
                   // localStorage.setItem("u_data", u_data);

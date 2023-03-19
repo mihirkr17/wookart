@@ -52,6 +52,8 @@ export default function AuthProvider(props) {
 
          const data = await response.json();
 
+         console.log(data);
+
          if (response.ok) {
 
             setRef(e => !e);
