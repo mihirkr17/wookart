@@ -47,11 +47,9 @@ export default function AuthProvider(props) {
             method: "GET"
          });
 
-         const { maxAgeOfCookie, u_data } = await response.json();
+         const { u_data } = await response.json();
 
          if (response.ok) {
-
-            console.log(maxAgeOfCookie);
 
             setAuthLoading(false);
 
@@ -60,7 +58,7 @@ export default function AuthProvider(props) {
 
                const expireTime = new Date(now.getTime() + 16 * 60 * 60 * 1000);
 
-               document.cookie = `client_data=${u_data}; max-age= ${maxAgeOfCookie || ((expireTime.getTime() - now.getTime()) / 1000)}; path=/`;
+               document.cookie = `client_data=${u_data}; max-age= ${((expireTime.getTime() - now.getTime()) / 1000)}; path=/`;
             }
 
             setRef(e => !e);
