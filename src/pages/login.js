@@ -30,7 +30,7 @@ export default function Login() {
          e.preventDefault();
          let emailOrPhone = e.target.emailOrPhone.value;
          let password = e.target.password.value;
- 
+
          if (emailOrPhone.length <= 0) {
             return setMessage('Phone or email address required !!!', 'danger');
          }
@@ -52,7 +52,7 @@ export default function Login() {
 
             setLoading(false);
 
-            const { name, verifyToken, u_data, message } = await response.json();
+            const { name, verifyToken, u_data, token, message } = await response.json();
 
             if (!response.ok) {
                return setMessage(message, 'danger');
@@ -64,6 +64,7 @@ export default function Login() {
                }
 
                if (name === 'isLogin' && u_data) {
+                  document.cookie = `client_token=${token}`;
                   localStorage.setItem("u_data", u_data);
                   authRefetch();
                   router.back();
