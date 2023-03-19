@@ -68,9 +68,8 @@ export default function Login() {
                   let now = new Date();
 
                   const expireTime = new Date(now.getTime() + 16 * 60 * 60 * 1000);
-                  let maxAge = expireTime.getTime();
 
-                  document.cookie = `client_data=${u_data}; max-age= ${maxAge}; path=/`;
+                  document.cookie = `client_data=${u_data}; max-age= ${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
 
                   // localStorage.setItem("u_data", u_data);
                   authRefetch();
