@@ -157,7 +157,7 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
                <div className='c_meta_info'>
 
                   <b className="c_title">
-                     <Link href={`/product/${cartProduct?.slug}?pId=${cartProduct?.productID}&vId=${cartProduct?.variationID}&uTracker=${userInfo?._uuid || ""}`}>
+                     <Link href={`/product/${cartProduct?.slug}?pId=${cartProduct?.productID}&vId=${cartProduct?.variationID}`}>
                         {cartProduct && cartProduct?.title}
                      </Link>
                   </b>
