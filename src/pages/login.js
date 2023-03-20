@@ -52,7 +52,7 @@ export default function Login() {
 
             setLoading(false);
 
-            const { name, verifyToken, u_data, message } = await response.json();
+            const { name, verifyToken, u_data, uuid, message } = await response.json();
 
             if (!response.ok) {
                return setMessage(message, 'danger');
@@ -69,7 +69,9 @@ export default function Login() {
 
                   const expireTime = new Date(now.getTime() + 16 * 60 * 60 * 1000);
 
-                  document.cookie = `client_data=${u_data}; max-age= ${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
+                  document.cookie = `_uuid=${uuid}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
+
+                  localStorage.setItem("client_data", u_data);
 
                   initialLoader();
                   router.back();

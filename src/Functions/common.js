@@ -5,7 +5,8 @@ export const authLogout = async () => {
       credentials: "include",
    });
    if (response.ok) {
-      deleteCookie("client_data");
+      deleteCookie("_uuid");
+      localStorage.removeItem("client_data");
       window.location.reload();
    }
 };
@@ -84,6 +85,8 @@ export async function apiHandler(url = "", method = "GET", body = {}, authorizat
 
    if (response.status === 401) {
       await authLogout();
+      deleteCookie("_uuid");
+      localStorage.removeItem("client_data");
       return;
    }
 
@@ -94,10 +97,12 @@ export async function apiHandler(url = "", method = "GET", body = {}, authorizat
    }
 }
 
-export function CookieParser(cookie) {
+export function CookieParser() {
+
+   let cookie = document.cookie;
 
    if (!cookie || typeof cookie === "undefined") {
-      return { error: "Required cookie !" }
+      return;
    }
 
    let cookies = {};

@@ -16,7 +16,8 @@ export default function AuthProvider(props) {
 
    useEffect(() => {
 
-      const { client_data } = CookieParser(document.cookie);
+      // const { client_data } = CookieParser();
+      let client_data = localStorage.getItem("client_data");
 
       setAuthLoading(true);
 
@@ -54,11 +55,7 @@ export default function AuthProvider(props) {
             setAuthLoading(false);
 
             if (u_data && typeof u_data !== "undefined") {
-               let now = new Date();
-
-               const expireTime = new Date(now.getTime() + 16 * 60 * 60 * 1000);
-
-               document.cookie = `client_data=${u_data}; max-age= ${((expireTime.getTime() - now.getTime()) / 1000)}; path=/`;
+               localStorage.setItem("client_data", u_data);
             }
 
             setRef(e => !e);
