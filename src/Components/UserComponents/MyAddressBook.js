@@ -16,7 +16,7 @@ const MyAddressBook = () => {
    const [newDivision, setNewDivision] = useState({});
    const [newCity, setNewCity] = useState({});
    const [address, setAddress] = useState({});
-   const addr = userInfo && userInfo?.buyer?.shippingAddress;
+   const addr = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress;
    const [loading, setLoading] = useState(false);
 
    useEffect(() => {
@@ -80,6 +80,7 @@ const MyAddressBook = () => {
 
    const selectAddressHandler = async (addrsID, selectAddress) => {
 
+      console.log(addrsID);
       setLoading(true);
 
       const data = await apiHandler(`/user/shipping-address-select`, "POST", { addrsID, default_shipping_address: selectAddress });
@@ -228,8 +229,9 @@ const MyAddressBook = () => {
                      <div className="row">
                         {
                            Array.isArray(addr) && addr.map(addrs => {
+                        
                               const { addrsID, name, division, city, phone_number, postal_code, landmark, default_shipping_address } = addrs;
-
+              
                               return (
                                  <div className="col-lg-6" key={addrsID}>
                                     <div className={`row shipping_address_card ${default_shipping_address ? "selected" : ""}`}>

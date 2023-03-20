@@ -68,10 +68,12 @@ export async function apiHandler(url = "", method = "GET", body = {}, authorizat
       credentials: "include",
       headers: {
          "Content-Type": "application/json",
-         authorization
+         authorization: authorization
       },
       body: JSON.stringify(body)
    });
+
+   const result = await response.json();
 
    if (response.status === 401) {
       await authLogout();
@@ -79,8 +81,6 @@ export async function apiHandler(url = "", method = "GET", body = {}, authorizat
       localStorage.removeItem("client_data");
       return;
    }
-
-   const result = await response.json();
 
    if (result) {
       return result;

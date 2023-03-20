@@ -1,3 +1,4 @@
+import { apiHandler } from '@/Functions/common';
 import { useAuthContext } from '@/lib/AuthProvider';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,25 +17,14 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
          setLoading(true);
 
          const { productID, title } = cp;
+         const result = await apiHandler(`/cart/delete-cart-item/${cartType && cartType}`, "DELETE", {}, productID);
 
-         const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/cart/delete-cart-item/${cartType && cartType}`, {
-            method: "DELETE",
-            withCredentials: true,
-            credentials: 'include',
-            headers: {
-               authorization: productID
-            }
-         });
-
-         setLoading(false);
-         const resData = await response.json();
-
-         if (response.ok) {
-            setMessage(`${title} ${resData?.message}`, 'success');
+         if (result?.success) {
+            setMessage(`${title} ${result?.message}`, 'success');
             cartRefetch();
             cartQtyUpdater(items - 1);
          } else {
-            setMessage(`${title} ${resData?.error}`, 'danger');
+            setMessage(`${title} ${result?.message}`, 'danger');
          }
       } catch (error) {
          setMessage(error?.message, "danger");
