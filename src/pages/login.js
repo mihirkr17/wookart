@@ -74,6 +74,7 @@ export default function Login() {
                   localStorage.setItem("client_data", u_data);
 
                   initialLoader();
+
                   router.back();
                }
             }

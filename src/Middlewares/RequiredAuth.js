@@ -5,14 +5,14 @@ import { useRouter } from "next/router";
 export default function RequiredAuth({ children }) {
    const { role, authLoading } = useAuthContext();
    const router = useRouter();
-   
+
    if (typeof window === "undefined") return;
 
    if (authLoading) return;
 
-   if (role && role === "BUYER") {
+   if (typeof role !== "undefined" && role === "BUYER") {
       return children;
-   } else {
-      router.push("/login");
    }
+
+   router.push("/login");
 }
