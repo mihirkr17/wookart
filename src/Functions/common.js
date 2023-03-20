@@ -11,16 +11,11 @@ export const authLogout = async () => {
    }
 };
 
-
-
 export const slugMaker = (string) => {
    return string.toLowerCase()
       .replace(/ /g, '-')
       .replace(/[^\w-]+/g, '').trim();
 }
-
-
-
 
 export const emailValidator = (email) => {
    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -36,7 +31,6 @@ export const camelToTitleCase = (str) => {
 
    return newStr.charAt(0).toUpperCase() + newStr.slice(1);
 }
-
 
 export const textToTitleCase = (str) => {
 
@@ -55,8 +49,6 @@ export const textToTitleCase = (str) => {
    return finalStr.trim();
 }
 
-
-
 export const calcTime = (iso, offset) => {
 
    let date = new Date(iso);
@@ -67,8 +59,6 @@ export const calcTime = (iso, offset) => {
 
    return nd?.toLocaleTimeString();
 }
-
-
 
 export async function apiHandler(url = "", method = "GET", body = {}, authorization = "") {
 
