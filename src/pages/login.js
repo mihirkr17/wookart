@@ -9,13 +9,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 
-
 export default function Login() {
    const [showPwd, setShowPwd] = useState(false);
    const [vrTok, setVrTok] = useState(false);
    const [loading, setLoading] = useState(false);
    const { setMessage, role, initialLoader } = useAuthContext();
    const router = useRouter();
+   const { email } = router.query;
 
    useEffect(() => {
       if (role) {
@@ -112,7 +112,7 @@ export default function Login() {
                         <form onSubmit={handleLogin} className='text-start'>
                            <div className="mb-3 input_group">
                               <label htmlFor='emailOrPhone'>Email address or phone</label>
-                              <input className='form-control' type="text" name='emailOrPhone' id='emailOrPhone' defaultValue={""} autoComplete='off' placeholder="Enter your email or phone" />
+                              <input className='form-control' type="text" name='emailOrPhone' id='emailOrPhone' defaultValue={email || ""} autoComplete='off' placeholder="Enter your email or phone" />
                            </div>
 
                            <div className="mb-3 input_group">
@@ -137,6 +137,10 @@ export default function Login() {
                            </div>
                         </form>
                   }
+
+                  <br />
+                  <Link href={`/forgot-pwd`}>Forgot password ?</Link>
+
                </div>
 
             </div>

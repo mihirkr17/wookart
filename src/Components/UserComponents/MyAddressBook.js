@@ -79,8 +79,6 @@ const MyAddressBook = () => {
 
 
    const selectAddressHandler = async (addrsID, selectAddress) => {
-
-      console.log(addrsID);
       setLoading(true);
 
       const data = await apiHandler(`/user/shipping-address-select`, "POST", { addrsID, default_shipping_address: selectAddress });

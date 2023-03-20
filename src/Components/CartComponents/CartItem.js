@@ -9,7 +9,7 @@ import { useState } from 'react';
 const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state, setState, items }) => {
    const [qtyLoading, setQtyLoading] = useState(false);
    const [loading, setLoading] = useState(false);
-   const { userInfo, cartQtyUpdater, setMessage } = useAuthContext();
+   const { cartQtyUpdater, setMessage } = useAuthContext();
 
    //  Remove product from cartProduct && cartProduct handler
    const removeItemFromCartHandler = async (cp) => {
@@ -47,45 +47,28 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
             return;
          }
 
-         const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/cart/update-cart-product-quantity`, {
-            method: "PUT",
-            withCredentials: true,
-            credentials: 'include',
-            headers: {
-               "Content-Type": "application/json",
-               authorization: productID
+         const result = await apiHandler(`/cart/update-cart-product-quantity`, "PUT", {
+            actionRequestContext: {
+               pageUri: '/my-cart',
+               type: cartType,
+               pageNumber: 1
             },
-            body: JSON.stringify({
-               actionRequestContext: {
-                  pageUri: '/my-cart',
-                  type: cartType,
-                  pageNumber: 1
-               },
-               upsertRequest: {
-                  cartContext: {
-                     productID, variationID, quantity: quantity, cartID
-                  }
+            upsertRequest: {
+               cartContext: {
+                  productID, variationID, quantity: quantity, cartID
                }
-            })
-         });
+            }
+         }, productID);
 
-         const result = await response.json();
+         setQtyLoading(false);
 
          if (result?.success === true && result?.statusCode >= 200) {
-            setQtyLoading(false);
             cartRefetch();
             setMessage(result?.message, 'success');
             return;
          } else {
-
+            setMessage(result?.message, 'danger');
          }
-         setQtyLoading(false);
-
-         if (response.status === 401) {
-            window.location.reload();
-         }
-
-         if (!result?.success) return setMessage(result?.message, 'danger');
 
       } catch (error) {
          return setMessage(error?.message, 'danger');

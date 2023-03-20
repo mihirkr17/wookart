@@ -16,9 +16,7 @@ const Profile = () => {
 
          if (data?.success) {
             setMessage(data?.message, 'success');
-
             await authRefetch();
-
             return;
          }
 
@@ -71,7 +69,10 @@ const Profile = () => {
 
                      {
                         openProfileUpdateForm ?
-                           <input onChange={e => setInputs({ ...inputs, [e.target.name]: e.target.value })} type="text" name='fullName' id='fullName' defaultValue={userInfo?.fullName || ""} /> :
+                           <input className="form-control form-control-sm"
+                              onChange={e => setInputs({ ...inputs, [e.target.name]: e.target.value })}
+                              type="text" name='fullName'
+                              id='fullName' defaultValue={userInfo?.fullName || ""} /> :
                            <span>{userInfo?.fullName}</span>
                      }
                   </li>
@@ -79,7 +80,7 @@ const Profile = () => {
                      <h6>Gender</h6>
                      {
                         openProfileUpdateForm ?
-                           <select name="gender" id="gender" onChange={e => setInputs({ ...inputs, [e.target.name]: e.target.value })}>
+                           <select className="form-select form-select-sm" name="gender" id="gender" onChange={e => setInputs({ ...inputs, [e.target.name]: e.target.value })}>
                               {
                                  userInfo?.gender && <option value={userInfo?.gender}>{userInfo?.gender}</option>
                               }
@@ -95,7 +96,7 @@ const Profile = () => {
                      <h6>Date Of Birth</h6>
                      {
                         openProfileUpdateForm ?
-                           <input onChange={e => setInputs({ ...inputs, [e.target.name]: e.target.value })} type="date" name="dob" id="dob" defaultValue={userInfo?.dob || ""} />
+                           <input onChange={e => setInputs({ ...inputs, [e.target.name]: e.target.value })} className="form-control form-control-sm" type="date" name="dob" id="dob" defaultValue={userInfo?.dob || ""} />
                            : <span>{userInfo?.dob}</span>
                      }
 
@@ -138,7 +139,13 @@ const Profile = () => {
                         <div className="col-lg-6">
                            <div className="p-1">
                               <label htmlFor="oldPassword">Old Password <span style={{ color: "red" }}>*</span> </label> <br />
-                              <input className='form-control form-control-sm' type="password" name="oldPassword" id="oldPassword" />
+                              <input
+                                 className='form-control form-control-sm'
+                                 type="password"
+                                 name="oldPassword"
+                                 id="oldPassword"
+                                 placeholder='Enter your old password...'
+                              />
                            </div>
                         </div>
 
@@ -146,7 +153,13 @@ const Profile = () => {
                            <div className="p-1">
                               <label htmlFor="newPassword">Set New Password <span style={{ color: "red" }}>*</span></label>
                               <br />
-                              <input className='form-control form-control-sm' type="password" name="newPassword" id="newPassword" />
+                              <input
+                                 className='form-control form-control-sm'
+                                 type="password"
+                                 name="newPassword"
+                                 id="newPassword"
+                                 placeholder='Enter new password...'
+                              />
                            </div>
                         </div>
                      </div>
