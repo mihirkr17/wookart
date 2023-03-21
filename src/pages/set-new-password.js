@@ -12,15 +12,13 @@ export default function SetNewPassword() {
 
    const router = useRouter();
 
-   const { user, session } = router.query;
+   const { user, session, life_time } = router.query;
 
    useEffect(() => {
-      if (!user || !session) {
+      if (!user || !session || !life_time) {
          router.push("/");
       }
-   }, [user, session, router]);
-
-
+   }, [user, session, router, life_time]);
 
 
    async function handleNewPassword(e) {
@@ -33,7 +31,7 @@ export default function SetNewPassword() {
             return setMessage("Required password !", "danger");
          }
 
-         const { success, message } = await apiHandler("/auth/user/set-new-password", "POST", { email: user, password });
+         const { success, message } = await apiHandler("/auth/user/set-new-password", "POST", { email: user, password, securityCode: session });
 
          if (success) {
             setMessage(message, "success");
@@ -50,19 +48,19 @@ export default function SetNewPassword() {
    return (
       <div className="section_default">
          <div className="container">
-            <h3 className="text-center">Set new password</h3>
+            <h3 className="text-center">Set a new password</h3>
 
             <div className="row">
-               <div className="col-6 mx-auto">
-                  <form action="" onSubmit={handleNewPassword}>
-                     <div className="p-3">
-                        <label htmlFor="password">Password</label> <br />
+               <div className="col-lg-4 mx-auto">
+                  <form action="" onSubmit={handleNewPassword} className='text-center p-4'>
+
+                     <div className="pb-3">
                         <input type="password"
                            className="form-control form-control-sm"
                            name="password" id="password" placeholder="Enter new password..." />
                      </div>
 
-                     <button className="bt9_edit" type="submit">Submit</button>
+                     <button className="bt9_edit w-100" type="submit">Submit</button>
                   </form>
                </div>
             </div>
