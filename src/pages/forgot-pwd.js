@@ -114,10 +114,9 @@ export default function ForgotPwdPage() {
                                              <button className="bt9_edit ms-2" onClick={(e) => handleForgotPwd(e, fPwd?.emailOrPhone)}>Resend</button>
                                           </div>
                                           : <div>
-                                             <span>Your Security Code is</span>
-                                             <span style={{ color: "green", fontWeight: "bold" }}>
-                                                &nbsp;{fPwd?.secCode} &nbsp; Time Remaining {timer} s
-                                             </span>
+                                             <span>Your Security Code is <b style={{ color: "green" }}>&nbsp;{fPwd?.secCode}&nbsp;</b> </span>
+                                             <br />
+                                             <i>Time Remaining <b>{timer}</b> seconds</i>
                                           </div>
                                     }
                                     </label>
