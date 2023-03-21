@@ -753,6 +753,56 @@ label {
   padding: 2px 10px;
 }
 
+.target_bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  margin-bottom: 2rem;
+}
+.target_bar > span {
+  display: block;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: var(--color-mute);
+  text-align: center;
+  line-height: 25px;
+  color: var(--color-light);
+  position: relative;
+  margin: 0 20px 0 20px;
+}
+.target_bar > span::before {
+  content: "";
+  width: 40px;
+  height: 4px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: block;
+  background-color: var(--color-mute);
+  -webkit-transform: translate(-100%, -90%);
+          transform: translate(-100%, -90%);
+}
+.target_bar > span:first-child::before {
+  display: none;
+}
+.target_bar > span.active::before {
+  background-color: var(--color-accent);
+}
+.target_bar > span.active {
+  background-color: var(--color-accent);
+}
+
 .main_spinner {
   width: 100%;
   height: 80vh;

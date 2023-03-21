@@ -9,8 +9,13 @@ export default function ForgotPwdPage() {
 
    const { setMessage, role } = useAuthContext();
 
-   const [fPwd, setFPwd] = useState({});
+   const [secureCodeForm, setSecureCodeForm] = useState({});
+
    let [timer, setTimer] = useState(0);
+
+   const [target, setTarget] = useState([1]);
+
+   const [newPwdForm, setNewPwdForm] = useState({});
 
    const router = useRouter();
 
@@ -27,12 +32,12 @@ export default function ForgotPwdPage() {
       }, 1000);
 
       if (timer === 0) {
-         setFPwd({ secCode: null, emailOrPhone: fPwd?.emailOrPhone });
+         setSecureCodeForm({ secCode: null, emailOrPhone: secureCodeForm?.emailOrPhone });
          clearInterval(dd);
       }
 
       return () => clearInterval(dd);
-   }, [timer, fPwd?.emailOrPhone]);
+   }, [timer, secureCodeForm?.emailOrPhone]);
 
    async function handleForgotPwd(e, emlPhn) {
       try {
@@ -47,7 +52,8 @@ export default function ForgotPwdPage() {
          const { success, message, securityCode, email_phone, lifeTime } = await apiHandler("/auth/check-user-authentication", "POST", { emailOrPhone });
 
          if (success) {
-            setFPwd({ secCode: securityCode, emailOrPhone: email_phone });
+            setSecureCodeForm({ secCode: securityCode, emailOrPhone: email_phone });
+            setTarget([...target, 2]);
             setTimer(lifeTime / 1000);
             setMessage(message, "success");
             return;
@@ -61,11 +67,12 @@ export default function ForgotPwdPage() {
       }
    }
 
+
    async function securityCodeHandler(e) {
       try {
          e.preventDefault();
 
-         let emailOrPhone = e.target.emailOrPhone.value;
+         let emailOrPhone = secureCodeForm?.emailOrPhone || "";
          let securityCode = e.target.securityCode.value;
 
          if (!securityCode) {
@@ -75,11 +82,12 @@ export default function ForgotPwdPage() {
          const { success, message, data } = await apiHandler("/auth/check-user-forgot-pwd-security-key", "POST", { securityCode, emailOrPhone });
 
          if (success && data) {
-            setFPwd({});
+            setSecureCodeForm({});
             setMessage(message, "success");
-            router.push(`/set-new-password?user=${data?.email}&session=${data?.securityCode}&life_time=${data?.sessionLifeTime}`);
-            return;
+            setTarget([...target, 3]);
+            setNewPwdForm({ user: data?.email, session: data?.securityCode, life_time: data?.sessionLifeTime });
 
+            return;
          } else {
             return setMessage(message, "danger");
          }
@@ -88,68 +96,118 @@ export default function ForgotPwdPage() {
          return setMessage(error?.message, "danger");
       }
    }
+
+
+   async function handleNewPassword(e) {
+      try {
+         e.preventDefault();
+
+         let password = e.target.password.value;
+
+         if (!password) {
+            return setMessage("Required password !", "danger");
+         }
+
+         const { success, message } = await apiHandler("/auth/user/set-new-password", "POST", { email: newPwdForm?.user, password, securityCode: newPwdForm?.session });
+
+         if (success) {
+            setMessage(message, "success");
+
+            router.push("/login?email=" + newPwdForm?.user);
+         } else {
+            return setMessage(message, "danger");
+         }
+      } catch (error) {
+         return setMessage(error?.message, "danger");
+      }
+   }
+
    return (
       <div className="section_default">
          <div className="container">
-            <h3 className="text-center">Forgot Your Password ?</h3>
+            <h5 className="text-center">Forgot Your Password ?</h5>
 
             <div className="py-3 w-75 mx-auto" style={{
-               boxShadow: "0 0 8px 0 #c5c5c599",
                height: "100%",
                marginTop: "5rem"
             }}>
+               <div className="py-2 target_bar">
+                  <span className={target.includes(1) ? "active" : ""}>1</span>
+                  <span className={target.includes(2) ? "active" : ""}>2</span>
+                  <span className={target.includes(3) ? "active" : ""}>3</span>
+               </div>
+
                {
-                  (fPwd?.emailOrPhone) ?
-                     <div className="row">
+                  (newPwdForm?.user && target.includes(3)) ? <div className="row">
+                     <div className="col-lg-4 mx-auto" style={{
+                              boxShadow: "0 0 8px 0 #c5c5c599"
+                           }}>
+                        <form action="" onSubmit={handleNewPassword} className='text-center p-4'>
 
-                        <div className="col-lg-4 mx-auto">
-                           <form onSubmit={securityCodeHandler} className="p-4">
+                           <div className="pb-3">
+                              <input type="password"
+                                 className="form-control form-control-sm"
+                                 name="password" id="password" placeholder="Enter new password..." />
+                           </div>
 
-                              <div className="row">
-                                 <div className="col-lg-12">
-                                    <label htmlFor="securityCode"> {
-                                       timer === 0 ?
-                                          <div style={{ color: "red" }}>
-                                             <span>Session Expired !</span>
-                                             <button className="bt9_edit ms-2" onClick={(e) => handleForgotPwd(e, fPwd?.emailOrPhone)}>Resend</button>
-                                          </div>
-                                          : <div>
-                                             <span>Your Security Code is <b style={{ color: "green" }}>&nbsp;{fPwd?.secCode}&nbsp;</b> </span>
-                                             <br />
-                                             <i>Time Remaining <b>{timer}</b> seconds</i>
-                                          </div>
-                                    }
-                                    </label>
-
-                                    <br />
-                                    <input type="text" disabled={timer === 0 ? true : false} name="securityCode" id="securityCode" className="form-control form-control-sm" />
-                                    <input type="hidden" name="emailOrPhone" id="emailOrPhone" value={fPwd?.emailOrPhone} />
-                                 </div>
-
-                                 <div className="col-lg-12 py-1">
-                                    <button className="bt9_edit" type="submit" disabled={timer === 0 ? true : false}>Submit</button>
-                                 </div>
-                              </div>
-                           </form>
-
-                        </div>
-                     </div> :
-                     <div className="row">
-                        <div className="col-lg-4 mx-auto">
-                           <form onSubmit={handleForgotPwd} className='bordered p-4'>
-                              <div className="row">
-                                 <div className="col-lg-12 p-3">
-                                    <label htmlFor="emailOrPhone">Email Address / Phone number</label> <br />
-                                    <input type="text" name="emailOrPhone" id="emailOrPhone" className="form-control form-control-sm" />
-                                 </div>
-
-                                 <div className="col-lg-12">
-                                    <button className="bt9_edit" type="submit">Check Account</button>
-                                 </div>
-                              </div>
-                           </form>
-                        </div>
+                           <button className="bt9_edit w-100" type="submit">Set new password</button>
+                        </form>
                      </div>
+                  </div> :
+                     (secureCodeForm?.emailOrPhone && target.includes(2)) ?
+                        <div className="row">
+
+                           <div className="col-lg-4 mx-auto" style={{
+                              boxShadow: "0 0 8px 0 #c5c5c599"
+                           }}>
+                              <form onSubmit={securityCodeHandler} className="p-4">
+
+                                 <div className="row">
+                                    <div className="col-lg-12">
+                                       <label htmlFor="securityCode"> {
+                                          timer === 0 ?
+                                             <div style={{ color: "red" }}>
+                                                <span>Session Expired !</span>
+                                                <button className="bt9_primary ms-2" onClick={(e) => handleForgotPwd(e, secureCodeForm?.emailOrPhone)}>Resend</button>
+                                             </div>
+                                             : <div>
+                                                <span>Your Security Code is <b style={{ color: "green" }}>&nbsp;{secureCodeForm?.secCode}&nbsp;</b> </span>
+                                                <br />
+                                                <i>Time Remaining <b>{timer}</b> seconds</i>
+                                             </div>
+                                       }
+                                       </label>
+
+                                       <br />
+                                       <input type="text" disabled={timer === 0 ? true : false} name="securityCode" id="securityCode" className="form-control form-control-sm" />
+                                    </div>
+
+                                    <div className="col-lg-12 py-1">
+                                       <button className="bt9_edit w-100" type="submit" disabled={timer === 0 ? true : false}>Verify Security Code</button>
+                                    </div>
+                                 </div>
+                              </form>
+
+                           </div>
+                        </div> :
+                        <div className="row">
+                           <div className="col-lg-4 mx-auto" style={{
+                              boxShadow: "0 0 8px 0 #c5c5c599"
+                           }}>
+                              <form onSubmit={handleForgotPwd} className='bordered p-4'>
+                                 <div className="row">
+                                    <div className="col-lg-12 p-3">
+                                       <label htmlFor="emailOrPhone">Email Address / Phone number</label> <br />
+                                       <input type="text" name="emailOrPhone" id="emailOrPhone" className="form-control form-control-sm" />
+                                    </div>
+
+                                    <div className="col-lg-12">
+                                       <button className="bt9_edit w-100" type="submit">Check Account</button>
+                                    </div>
+                                 </div>
+                              </form>
+                           </div>
+                        </div>
                }
             </div>
          </div>

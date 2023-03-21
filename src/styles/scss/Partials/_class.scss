@@ -594,3 +594,51 @@ label {
     }
   }
 }
+
+.target_bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  margin-bottom: 2rem;
+
+  > span {
+    display: block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: var(--color-mute);
+    text-align: center;
+    line-height: 25px;
+    color: var(--color-light);
+    position: relative;
+    margin: 0 20px 0 20px;
+
+    &::before {
+      content: "";
+      width: 40px;
+      height: 4px;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      display: block;
+      background-color: var(--color-mute);
+      transform: translate(-100%, -90%);
+
+      
+    }
+
+    &:first-child::before {
+      // content: unset;
+      display: none;
+    }
+
+    &.active::before {
+      background-color: var(--color-accent);
+    }
+
+    &.active {
+      background-color: var(--color-accent);
+    }
+  }
+}
