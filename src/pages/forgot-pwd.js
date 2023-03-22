@@ -2,6 +2,8 @@
 
 import { apiHandler } from "@/Functions/common";
 import { useAuthContext } from "@/lib/AuthProvider";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -9,7 +11,9 @@ export default function ForgotPwdPage() {
 
    const { setMessage, role } = useAuthContext();
 
-   const [secureCodeForm, setSecureCodeForm] = useState({});
+   const [fPWDEmail, setFPWDEmail] = useState(false);
+
+   const [showPwd, setShowPwd] = useState(false);
 
    let [timer, setTimer] = useState(0);
 
@@ -32,27 +36,26 @@ export default function ForgotPwdPage() {
       }, 1000);
 
       if (timer === 0) {
-         setSecureCodeForm({ secCode: null, emailOrPhone: secureCodeForm?.emailOrPhone });
          clearInterval(dd);
       }
 
       return () => clearInterval(dd);
-   }, [timer, secureCodeForm?.emailOrPhone]);
+   }, [timer]);
 
-   async function handleForgotPwd(e, emlPhn) {
+   async function handleForgotPwd(e, cEmail) {
       try {
          e.preventDefault();
 
-         let emailOrPhone = emlPhn || e.target.emailOrPhone.value;
+         let clientEmail = cEmail || e.target.email.value;
 
-         if (!emailOrPhone) {
+         if (!clientEmail) {
             return setMessage("Required email address or phone number !", "danger");
          }
 
-         const { success, message, securityCode, email_phone, lifeTime } = await apiHandler("/auth/check-user-authentication", "POST", { emailOrPhone });
+         const { success, message, email, lifeTime } = await apiHandler("/auth/check-user-authentication", "POST", { email: clientEmail });
 
-         if (success) {
-            setSecureCodeForm({ secCode: securityCode, emailOrPhone: email_phone });
+         if (success && lifeTime && email) {
+            setFPWDEmail(email);
             setTarget([...target, 2]);
             setTimer(lifeTime / 1000);
             setMessage(message, "success");
@@ -72,17 +75,17 @@ export default function ForgotPwdPage() {
       try {
          e.preventDefault();
 
-         let emailOrPhone = secureCodeForm?.emailOrPhone || "";
+         let email = fPWDEmail || "";
          let securityCode = e.target.securityCode.value;
 
          if (!securityCode) {
             return setMessage("Required security code !", "danger");
          }
 
-         const { success, message, data } = await apiHandler("/auth/check-user-forgot-pwd-security-key", "POST", { securityCode, emailOrPhone });
+         const { success, message, data } = await apiHandler("/auth/check-user-forgot-pwd-security-key", "POST", { securityCode, email });
 
          if (success && data) {
-            setSecureCodeForm({});
+            setFPWDEmail(false);
             setMessage(message, "success");
             setTarget([...target, 3]);
             setNewPwdForm({ user: data?.email, session: data?.securityCode, life_time: data?.sessionLifeTime });
@@ -140,21 +143,36 @@ export default function ForgotPwdPage() {
                {
                   (newPwdForm?.user && target.includes(3)) ? <div className="row">
                      <div className="col-lg-4 mx-auto" style={{
-                              boxShadow: "0 0 8px 0 #c5c5c599"
-                           }}>
+                        boxShadow: "0 0 8px 0 #c5c5c599"
+                     }}>
                         <form action="" onSubmit={handleNewPassword} className='text-center p-4'>
 
-                           <div className="pb-3">
-                              <input type="password"
-                                 className="form-control form-control-sm"
-                                 name="password" id="password" placeholder="Enter new password..." />
+                           <div className="input_group">
+                              <label htmlFor="password">Password</label>
+                              <div style={{ position: 'relative' }}>
+                                 <input className='form-control form-control-sm' 
+                                 type={showPwd ? "text" : "password"} 
+                                 name='password' 
+                                 id='password' 
+                                 autoComplete='off' 
+                                 placeholder="Enter new password..." />
+                                 <span style={{
+                                    transform: "translateY(-50%)",
+                                    position: "absolute",
+                                    right: "2%",
+                                    top: "50%"
+                                 }} className='bt9' onClick={() => setShowPwd(e => !e)}>
+                                    {showPwd ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} />}
+                                 </span>
+                              </div>
+
                            </div>
 
                            <button className="bt9_edit w-100" type="submit">Set new password</button>
                         </form>
                      </div>
                   </div> :
-                     (secureCodeForm?.emailOrPhone && target.includes(2)) ?
+                     (fPWDEmail && target.includes(2)) ?
                         <div className="row">
 
                            <div className="col-lg-4 mx-auto" style={{
@@ -162,30 +180,33 @@ export default function ForgotPwdPage() {
                            }}>
                               <form onSubmit={securityCodeHandler} className="p-4">
 
-                                 <div className="row">
-                                    <div className="col-lg-12">
-                                       <label htmlFor="securityCode"> {
-                                          timer === 0 ?
-                                             <div style={{ color: "red" }}>
-                                                <span>Session Expired !</span>
-                                                <button className="bt9_primary ms-2" onClick={(e) => handleForgotPwd(e, secureCodeForm?.emailOrPhone)}>Resend</button>
-                                             </div>
-                                             : <div>
-                                                <span>Your Security Code is <b style={{ color: "green" }}>&nbsp;{secureCodeForm?.secCode}&nbsp;</b> </span>
-                                                <br />
-                                                <i>Time Remaining <b>{timer}</b> seconds</i>
-                                             </div>
-                                       }
-                                       </label>
+                                 <div className="input_group">
+                                    <label htmlFor="securityCode"> {
+                                       timer === 0 ?
+                                          <div style={{ color: "red" }}>
+                                             <span>Session Expired !</span>
+                                             <button className="bt9_primary ms-2" onClick={(e) => handleForgotPwd(e, fPWDEmail)}>Resend</button>
+                                          </div>
+                                          : <div>
+                                             <span>Your Security Code is <b style={{ color: "green" }}>&nbsp;{fPWDEmail}&nbsp;</b> </span>
+                                             <br />
+                                             <i>Time Remaining <b>{timer}</b> seconds</i>
+                                          </div>
+                                    }
+                                    </label>
 
-                                       <br />
-                                       <input type="text" disabled={timer === 0 ? true : false} name="securityCode" id="securityCode" className="form-control form-control-sm" />
-                                    </div>
-
-                                    <div className="col-lg-12 py-1">
-                                       <button className="bt9_edit w-100" type="submit" disabled={timer === 0 ? true : false}>Verify Security Code</button>
-                                    </div>
+                                    <input
+                                       type="text"
+                                       disabled={timer === 0 ? true : false}
+                                       name="securityCode"
+                                       id="securityCode"
+                                       className="form-control form-control-sm"
+                                       autoComplete="off"
+                                       defaultValue=""
+                                    />
                                  </div>
+
+                                 <button className="bt9_edit w-100" type="submit" disabled={timer === 0 ? true : false}>Verify Security Code</button>
                               </form>
 
                            </div>
@@ -195,16 +216,18 @@ export default function ForgotPwdPage() {
                               boxShadow: "0 0 8px 0 #c5c5c599"
                            }}>
                               <form onSubmit={handleForgotPwd} className='bordered p-4'>
-                                 <div className="row">
-                                    <div className="col-lg-12 p-3">
-                                       <label htmlFor="emailOrPhone">Email Address / Phone number</label> <br />
-                                       <input type="text" name="emailOrPhone" id="emailOrPhone" className="form-control form-control-sm" />
-                                    </div>
-
-                                    <div className="col-lg-12">
-                                       <button className="bt9_edit w-100" type="submit">Check Account</button>
-                                    </div>
+                                 <div className="input_group">
+                                    <label htmlFor="email">Email Address</label>
+                                    <input
+                                       type="text"
+                                       name="email"
+                                       id="email"
+                                       className="form-control form-control-sm"
+                                       placeholder="enter email address..."
+                                    />
                                  </div>
+
+                                 <button className="bt9_edit w-100" type="submit">Check Account</button>
                               </form>
                            </div>
                         </div>

@@ -77,6 +77,8 @@
   --m-2: 1.2rem;
   --m-3: 1.9rem;
   --m-4: 2.1rem;
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
 }
 
 *,
@@ -402,9 +404,16 @@ svg {
   font-size: 1rem;
 }
 
+.input_group {
+  text-align: start;
+  margin: 1rem 0;
+}
+
 .form-control {
   background-color: var(--color-light);
   color: var(--color-text);
+  border-radius: 2px;
+  font-size: 0.9rem;
 }
 .form-control .form-control-sm {
   padding: 0.4rem 0.5rem;
@@ -418,6 +427,8 @@ svg {
   background-color: var(--color-light);
   color: var(--color-dark-alt);
   text-transform: capitalize;
+  border-radius: 2px;
+  font-size: 0.9rem;
 }
 .form-select .form-select-sm {
   padding: 0.2rem 0.5rem;

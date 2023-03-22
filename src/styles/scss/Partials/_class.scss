@@ -237,9 +237,16 @@
 }
 
 // form design
+.input_group {
+  text-align: start;
+  margin: 1rem 0;
+}
+
 .form-control {
   background-color: var(--color-light);
   color: var(--color-text);
+  border-radius: 2px;
+  font-size: 0.9rem;
   .form-control-sm {
     padding: 0.4rem 0.5rem;
   }
@@ -254,6 +261,8 @@
   background-color: var(--color-light);
   color: var(--color-dark-alt);
   text-transform: capitalize;
+  border-radius: 2px;
+  font-size: 0.9rem;
   .form-select-sm {
     padding: 0.2rem 0.5rem;
   }
@@ -624,8 +633,6 @@ label {
       display: block;
       background-color: var(--color-mute);
       transform: translate(-100%, -90%);
-
-      
     }
 
     &:first-child::before {
