@@ -18,9 +18,9 @@ export default function Login() {
 
    useEffect(() => {
       if (role) {
-         router.back();
+         router.push("/");
       }
-   }, [role, router]);
+   }, [role, router, email]);
 
    async function handleLogin(e) {
       try {
