@@ -78,6 +78,7 @@ export default function Register() {
             }
             setVerificationMsg(data?.message);
             setMessage(data?.message, "success");
+            e.target.reset();
             return;
          }
 
@@ -109,7 +110,7 @@ export default function Register() {
 
 
                   {
-                     verificationMsg && <b style={{ color: "lightgreen" }}>
+                     verificationMsg && <b style={{ color: "green" }}>
                         {verificationMsg}
                      </b>
                   }
