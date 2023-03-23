@@ -6,11 +6,12 @@ import Link from 'next/link';
 import { useAuthContext } from '@/lib/AuthProvider';
 import { useRouter } from 'next/router';
 import { authLogout } from '@/Functions/common';
+import useMenu from '@/Hooks/useMenu';
 
 const NavigationBar = () => {
-   const [openAccount, setOpenAccount] = useState(false);
    const { userInfo, role } = useAuthContext();
    const { pathname } = useRouter();
+   const { menuRef, openMenu, setOpenMenu } = useMenu();
 
    const [data, setData] = useState([]);
 
@@ -88,15 +89,18 @@ const NavigationBar = () => {
 
                   {
                      ((role === 'BUYER')) &&
-                     <div className="account_box nv_items">
-                        <span onClick={() => setOpenAccount(e => !e)}>
+                     <div className="account_box nv_items" ref={menuRef}>
+                        <span onClick={() => setOpenMenu(e => !e)}>
                            <FontAwesomeIcon icon={faUserAlt}></FontAwesomeIcon>
+
                         </span>
-                        <div className={`account_field ${openAccount ? "active" : ""}`}>
+                        <div className={`account_field ${openMenu ? "active" : ""}`}>
+                           <small><b>{userInfo?.fullName}</b></small>
                            <Link className="drp_item" href="/sell-online">Become a Seller</Link>
                            <Link className="drp_item" href="/user/my-account">My Account</Link>
                            <Link className='drp_item' href='/user/orders-management'>My Order</Link>
-                           <button className='drp_item' onClick={handleLogout}>Logout</button>
+                           <br />
+                           <button style={{color: "red"}} className='drp_item' onClick={handleLogout}>Logout Now</button>
                         </div>
                      </div>
                   }

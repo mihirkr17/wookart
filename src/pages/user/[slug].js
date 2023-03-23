@@ -22,22 +22,26 @@ export default function MyAccount() {
             <div className="container">
                <div className="row">
                   <div className="col-lg-2">
-                     <div className="p-3">
+                     <div className="p-3" style={{
+                        boxShadow: "0 0 10px 2px #91919187",
+                        borderRadius: "10px",
+                        margin: "0 0 1rem 0"
+                     }}>
                         <div className="py-2">
-                           <span>Hello, {userInfo?.fullName}</span>
+                           <small>Hello, <b>{userInfo?.fullName}</b></small>
                         </div>
                         <ul>
                            <li>
-                              <Link style={{ color: slug === "my-account" && "red" }} href='/user/my-account'>My Profile</Link>
+                              <Link style={{ color: slug === "my-account" ? "black" : "#666666" }} href='/user/my-account'>Profile</Link>
                            </li>
                            <li>
-                              <Link style={{ color: slug === "address-book" && "red" }} href='address-book'>My Address Book</Link>
+                              <Link style={{ color: slug === "address-book" ? "black" : "#666666" }} href='address-book'>Address Book</Link>
                            </li>
                            <li>
-                              <Link style={{ color: slug === "payment-management" && "red" }} href='payment-management'>My Payment Option</Link>
+                              <Link style={{ color: slug === "payment-management" ? "black" : "#666666" }} href='payment-management'>Payment Option</Link>
                            </li>
                            <li>
-                              <Link style={{ color: slug === "orders-management" && "red" }} href="orders-management">My Orders</Link>
+                              <Link style={{ color: slug === "orders-management" ? "black" : "#666666" }} href="orders-management">Orders</Link>
                            </li>
                         </ul>
                      </div>
