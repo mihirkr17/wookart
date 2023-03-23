@@ -11,6 +11,7 @@ export default function Register() {
    const [loading, setLoading] = useState(false);
    const [accept, setAccept] = useState(false);
    const [showPwd, setShowPwd] = useState(false);
+   const [verificationMsg, setVerificationMsg] = useState("");
 
    async function handleRegister(e) {
       try {
@@ -75,6 +76,7 @@ export default function Register() {
                setMessage(data?.message, 'danger');
                return;
             }
+            setVerificationMsg(data?.message);
             setMessage(data?.message, "success");
             return;
          }
@@ -104,6 +106,13 @@ export default function Register() {
                      &nbsp;<Link href={'/login'}>Go To Login</Link>&nbsp;
                      it takes less than a minute
                   </p>
+
+
+                  {
+                     verificationMsg && <b style={{ color: "lightgreen" }}>
+                        {verificationMsg}
+                     </b>
+                  }
 
                   <form onSubmit={handleRegister}>
 
