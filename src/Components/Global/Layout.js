@@ -1,16 +1,17 @@
-import AuthProvider from "@/lib/AuthProvider";
-import BaseProvider from "@/lib/BaseProvider";
+import { useAuthContext } from "@/lib/AuthProvider";
 import NavigationBar from "./NavigationBar";
 
-export default function Layout(props) {
+
+export default function Layout({ children }) {
+
+   const { role } = useAuthContext();
 
    return (
-      <BaseProvider>
-         <AuthProvider>
-            <NavigationBar></NavigationBar>
-            <main>{props.children}</main>
-         </AuthProvider>
-
-      </BaseProvider>
+      <>
+         {
+            (role === "BUYER" || !role) && <NavigationBar></NavigationBar>
+         }
+         <main>{children}</main>
+      </>
    )
 }

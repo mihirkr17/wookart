@@ -4,12 +4,13 @@ import ProductContents from "@/Components/ViewProductComponents/ProductContents"
 import ProductImages from "@/Components/ViewProductComponents/ProductImages";
 import ProductReviews from "@/Components/ViewProductComponents/ProductReviews";
 import RelatedProducts from "@/Components/ViewProductComponents/RelatedProducts";
+import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import Head from "next/head";
 import { useRouter } from "next/router"
 
 
-export default function ViewProduct({ data }) {
+export function ViewProduct({ data }) {
    const router = useRouter();
    const product = data?.product && data?.product;
    const { vId } = router.query;
@@ -95,3 +96,6 @@ export async function getServerSideProps({ query, params, req }) {
       props: data
    }
 }
+
+
+export default withOutDashboard(ViewProduct, []);

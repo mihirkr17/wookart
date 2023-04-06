@@ -1,5 +1,6 @@
 import Product from '@/Components/Shared/Product';
 import { newCategory } from '@/CustomData/categories';
+import { withOutDashboard } from '@/Functions/withOutDashboard';
 import { textToTitleCase } from '@/Functions/common';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,7 +11,7 @@ import { useState } from 'react';
 
 
 
-export default function Home({ data }) {
+export function Home({ data }) {
   const router = useRouter();
   let [limit, setLimit] = useState(12);
   const [ctg, setCtg] = useState("");
@@ -122,3 +123,6 @@ export async function getServerSideProps(context) {
 
   return { props: { data } };
 }
+
+
+export default withOutDashboard(Home, [""]);

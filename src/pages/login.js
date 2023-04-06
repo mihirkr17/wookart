@@ -103,6 +103,10 @@ export default function Login() {
                      &nbsp;<Link href={'/register'}>Create Your Account</Link>&nbsp;
                      it takes less than a minute
                   </p>
+                  <br />
+                  <p>
+                     Become Seller &nbsp; <Link href={"/sell-online"}>Seller Registration</Link>
+                  </p>
 
                   <form onSubmit={handleLogin} className='text-start'>
                      <div className="mb-3 input_group">

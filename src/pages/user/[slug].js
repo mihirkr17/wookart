@@ -2,13 +2,14 @@ import MyAddressBook from "@/Components/UserComponents/MyAddressBook";
 import MyOrder from "@/Components/UserComponents/MyOrder";
 import MyPayment from "@/Components/UserComponents/MyPayment";
 import Profile from "@/Components/UserComponents/Profile";
+import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import RequiredAuth from "@/Middlewares/RequiredAuth";
 import Link from "next/link";
 import { useRouter } from "next/router"
 
 
-export default function MyAccount() {
+export function MyAccount() {
 
    const router = useRouter();
    const { userInfo } = useAuthContext();
@@ -69,3 +70,7 @@ export default function MyAccount() {
       </RequiredAuth>
    )
 }
+
+
+
+export default withOutDashboard(MyAccount, []);

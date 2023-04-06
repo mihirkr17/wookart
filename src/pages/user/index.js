@@ -1,9 +1,13 @@
+
+// src/pages/user/index.js
+
 import Profile from "@/Components/UserComponents/Profile";
+import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import RequiredAuth from "@/Middlewares/RequiredAuth";
 import Link from "next/link";
 
-export default function User() {
+export function User() {
 
    const { userInfo } = useAuthContext();
    return (
@@ -47,3 +51,6 @@ export default function User() {
       </RequiredAuth>
    )
 }
+
+
+export default withOutDashboard(User, []);

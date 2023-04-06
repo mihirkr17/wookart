@@ -1,11 +1,12 @@
 import CartCalculation from "@/Components/CartComponents/CartCalculation";
 import CartItem from "@/Components/CartComponents/CartItem";
+import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import RequiredAuth from "@/Middlewares/RequiredAuth";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function MyCart() {
+export default withOutDashboard(function MyCart() {
 
    const [cartLoading, setCartLoading] = useState(false);
    const [cartData, setCartData] = useState({});
@@ -109,4 +110,4 @@ export default function MyCart() {
          </div>
       </RequiredAuth>
    )
-}
+}, [])

@@ -4,13 +4,14 @@ import Breadcrumbs from "@/Components/Shared/Breadcrumbs";
 import Product from "@/Components/Shared/Product";
 import { newCategory } from "@/CustomData/categories";
 import { textToTitleCase } from "@/Functions/common";
+import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export default function __dynamicCategory({ p }) {
+export function __dynamicCategory({ p }) {
    const [data, setData] = useState([]);
    const [size, setSize] = useState("");
    const [brnd, setBrnd] = useState("");
@@ -164,3 +165,7 @@ export async function getServerSideProps({ params }) {
       props: { p: data }
    }
 }
+
+
+
+export default withOutDashboard(__dynamicCategory, []);

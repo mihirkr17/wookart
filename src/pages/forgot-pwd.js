@@ -1,13 +1,14 @@
 // pages/forgot-pwd.js
 
 import { apiHandler } from "@/Functions/common";
+import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export default function ForgotPwdPage() {
+export default withOutDashboard(function ForgotPwdPage() {
 
    const { setMessage, role } = useAuthContext();
 
@@ -150,12 +151,12 @@ export default function ForgotPwdPage() {
                            <div className="input_group">
                               <label htmlFor="password">Password</label>
                               <div style={{ position: 'relative' }}>
-                                 <input className='form-control form-control-sm' 
-                                 type={showPwd ? "text" : "password"} 
-                                 name='password' 
-                                 id='password' 
-                                 autoComplete='off' 
-                                 placeholder="Enter new password..." />
+                                 <input className='form-control form-control-sm'
+                                    type={showPwd ? "text" : "password"}
+                                    name='password'
+                                    id='password'
+                                    autoComplete='off'
+                                    placeholder="Enter new password..." />
                                  <span style={{
                                     transform: "translateY(-50%)",
                                     position: "absolute",
@@ -236,4 +237,4 @@ export default function ForgotPwdPage() {
          </div>
       </div>
    )
-}
+}, [])
