@@ -137,16 +137,6 @@ const OrderTable = ({ orderList, setOpenModal, setLabelModal, orderRefetch, setM
                                              <button className='status_btn_alt' onClick={() => getPaymentInfo(odr && odr?.paymentIntentID, odr)}>Refund Now</button>
                                           </li>
                                        }
-                                       {
-                                          (orderStatus === "pending") && <>
-                                             <li>
-                                                <button className='status_btn_alt' onClick={() => setOpenBox(odr)}>Dispatch Now</button>
-                                             </li>
-                                             <li>
-                                                <button className='status_btn_alt' onClick={() => setLabelModal(true && odr)}>Download Label</button>
-                                             </li>
-                                          </>
-                                       }
                                        <li>
                                           <button className="status_btn_alt" onClick={() => setOpenModal(true && odr)}>Details</button>
                                        </li>
@@ -168,6 +158,9 @@ const OrderTable = ({ orderList, setOpenModal, setLabelModal, orderRefetch, setM
                                           orderStatus === "pending" && <>
                                              <li>
                                                 <button className='status_btn_alt' onClick={() => setOpenBox(odr)}>Dispatch Now</button>
+                                             </li>
+                                             <li>
+                                                <button className='status_btn_alt' onClick={() => setLabelModal(true && odr)}>Download Label</button>
                                              </li>
                                              <li>
                                                 <button className='status_btn_alt' onClick={() => setOpenCancelReasonForm((orderID !== openCancelReasonForm) ? orderID : false)}>

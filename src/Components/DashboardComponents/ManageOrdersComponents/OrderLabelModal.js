@@ -9,7 +9,6 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
    const canvasRef = useRef();
    const { orderID, trackingID, paymentMode, orderAT, quantity, shippingAddress, shipping, shippingCharge, baseAmount } = data && data;
 
-
    useEffect(() => {
       let str = "OrderID: " + orderID + ", Total Amount: " + baseAmount + ", Quantity: " + quantity;
 
@@ -89,7 +88,7 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
                <div>
                   <p>
                      <pre className='p-3'>
-                        Total Amount : {baseAmount} Tk (BDT) (+ shipping charge {shippingCharge} Tk) <br />
+                        Total Amount : {baseAmount} usd (+ shipping charge {shippingCharge} usd) <br />
                      </pre>
                   </p>
                </div>
