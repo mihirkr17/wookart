@@ -77,10 +77,10 @@ export default function SideBar({ dbSlug, shrink, setShrink, role }) {
                         </button>
 
                         <div style={childLink === 'users' ? { display: 'block' } : { display: 'none' }}>
-                           <Link className={dbSlug === "manage-users" ? "active_link" : ""} href='/dashboard/manage-users'>
-                              <span>&nbsp;&nbsp;Customers</span>
+                           <Link className={dbSlug === "manage-buyers" ? "active_link" : ""} href='/dashboard/manage-buyers'>
+                              <span>&nbsp;&nbsp;Buyers</span>
                            </Link>
-                           <Link className={dbSlug === "manage-seller" ? "active_link" : ""} href='/dashboard/manage-seller'>
+                           <Link className={dbSlug === "manage-sellers" ? "active_link" : ""} href='/dashboard/manage-sellers'>
                               <span>&nbsp;&nbsp;Sellers</span>
                            </Link>
                         </div>
@@ -96,6 +96,13 @@ export default function SideBar({ dbSlug, shrink, setShrink, role }) {
                         <Link className={dbSlug === "check-all-incoming-listing" ? "active_link" : ""} href='/dashboard/check-all-incoming-listing'>
                            <FontAwesomeIcon icon={faBlind} />
                            <span>&nbsp;&nbsp;Listing</span>
+                        </Link>
+                     </li>
+
+                     <li className="link_group">
+                        <Link className={dbSlug === "seller-request" ? "active_link" : ""} href='/dashboard/seller-request'>
+                           <FontAwesomeIcon icon={faBlind} />
+                           <span>&nbsp;&nbsp;Seller Request</span>
                         </Link>
                      </li>
                   </>

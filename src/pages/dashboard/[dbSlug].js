@@ -1,7 +1,10 @@
 import AddProduct from "@/Components/DashboardComponents/AddProduct/AddProduct";
 import CheckAllIncomingProductListing from "@/Components/DashboardComponents/CheckAllIncomingListing/CheckAllIncomingProductListing";
+import CheckSeller from "@/Components/DashboardComponents/CheckSeller/CheckSeller";
 import ManageOrders from "@/Components/DashboardComponents/ManageOrdersComponents/manage-orders";
 import ManageProduct from "@/Components/DashboardComponents/ManageProduct/ManageProduct";
+import Buyers from "@/Components/DashboardComponents/ManageUsers/Buyers";
+import Sellers from "@/Components/DashboardComponents/ManageUsers/Sellers";
 import MyProfile from "@/Components/DashboardComponents/MyProfile/MyProfile";
 import RightNavbar from "@/Components/DashboardComponents/RightNavbar/RightNavbar";
 import SideBar from "@/Components/DashboardComponents/SideBar/SideBar";
@@ -55,14 +58,25 @@ export function DBSlug() {
                   }
 
                   {
-                     dbSlug === "add-product" && <AddProduct></AddProduct>
+                     (role === "SELLER" && dbSlug === "add-product") && <AddProduct></AddProduct>
                   }
                   {
                      dbSlug === "my-profile" && <MyProfile></MyProfile>
                   }
 
                   {
-                     dbSlug === "check-all-incoming-listing" && <CheckAllIncomingProductListing />
+                     (role === "ADMIN" && dbSlug === "check-all-incoming-listing") && <CheckAllIncomingProductListing />
+                  }
+
+                  {
+                     (role === "ADMIN" && dbSlug === "seller-request") && <CheckSeller></CheckSeller>
+                  }
+
+                  {
+                     (role === "ADMIN" && dbSlug === "manage-buyers") && <Buyers></Buyers>
+                  }
+                  {
+                     (role === "ADMIN" && dbSlug === "manage-sellers") && <Sellers></Sellers>
                   }
                </div>
             </div>

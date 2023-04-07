@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SellerProfile = ({ userInfo, role }) => {
+const SellerProfile = ({ userInfo }) => {
 
    return (
       <div className="col-12">
@@ -10,7 +10,7 @@ const SellerProfile = ({ userInfo, role }) => {
                   <h6>Seller Information</h6>
 
                   {
-                     (role === 'SELLER') && <div className='ph_i'>
+                     (userInfo?.role === 'SELLER') && <div className='ph_i'>
                         <span>Balance : {userInfo?.total_earn || 0}&nbsp;$</span>
                         <button className='bt9_withdraw'>Withdraw</button>
                      </div>

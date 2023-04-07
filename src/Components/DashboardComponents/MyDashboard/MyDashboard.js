@@ -156,7 +156,7 @@ const MyDashboard = () => {
                                                    <td><img className='jjk_2m2' src={seller?.images && seller?.images[0]} alt="" /></td>
                                                    <td>
                                                       <small>{seller?.fullName}</small> <br />
-                                                      <small className='pid'>#{seller?._UUID}</small>
+                                                      <small className='pid'>#{seller?._uuid}</small>
                                                    </td>
                                                    <td><small>{seller?.email && seller?.email}</small></td>
                                                    <td><small>{seller?.totalProducts} pcs</small></td>

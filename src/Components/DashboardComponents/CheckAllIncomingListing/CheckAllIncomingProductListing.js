@@ -7,8 +7,8 @@ const CheckAllIncomingProductListing = () => {
    const { data, refetch, triggers } = useAdminContext();
    const [items, setItems] = useState(1);
    const {setMessage} = useBaseContext();
-   const qProducts = data && (data?.data?.queueProducts || []);
-   const countQueueProduct = data && data?.data?.countQueueProducts;
+   const qProducts = data && (data?.queueProducts || []);
+   const countQueueProduct = data && data?.countQueueProducts;
 
    useEffect(() => {
       const cc = countQueueProduct && Math.ceil(countQueueProduct / 3)

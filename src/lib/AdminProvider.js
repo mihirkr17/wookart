@@ -12,7 +12,7 @@ const AdminProvider = ({ children }) => {
 
    const [pages, setPages] = useState(1);
 
-   const { data, refetch, loading } = useFetch(role === "ADMIN" && `${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/admin/${userInfo?._UUID}/provider?pages=${pages}&items=${3}`);
+   const { data, refetch, loading } = useFetch(role === "ADMIN" && `${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/admin/${userInfo?._uuid}/provider?pages=${pages}&items=${3}`);
 
    const triggers = async (params) => {
       setPages(params);
