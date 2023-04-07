@@ -660,6 +660,12 @@ label {
   border-radius: 10px;
 }
 
+@media (max-width: 567px) {
+  .modal_body {
+    width: 100%;
+    left: 50%;
+  }
+}
 .modal_body .modal_close {
   -ms-flex-item-align: end;
       align-self: flex-end;

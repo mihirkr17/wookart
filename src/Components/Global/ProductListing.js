@@ -397,27 +397,27 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
                         <div className="col-lg-3 col-sm-6 mb-2">
                            <label htmlFor="packageWeight">Weight (kg)</label>
                            <input className='form-control form-control-sm' type="text" id='packageWeight' name="packageWeight"
-                              defaultValue={(data?.package?.weight) || ""} />
+                              defaultValue={(data?.packaged?.weight) || ""} />
                         </div>
                         <div className="col-lg-3 col-sm-6 mb-2">
                            <label htmlFor="packageLength">Length (cm)</label>
                            <input className='form-control form-control-sm' type="text" id='packageLength' name='packageLength'
-                              defaultValue={(data?.package?.dimension?.length) || ""} />
+                              defaultValue={(data?.packaged?.dimension?.length) || ""} />
                         </div>
                         <div className="col-lg-3 col-sm-6 mb-2">
                            <label htmlFor="packageWidth">Width (cm)</label>
                            <input className='form-control form-control-sm' type="text" id='packageWidth' name='packageWidth'
-                              defaultValue={(data?.package?.dimension?.width) || ""} />
+                              defaultValue={(data?.packaged?.dimension?.width) || ""} />
                         </div>
                         <div className="col-lg-3 col-sm-6 mb-2">
                            <label htmlFor="packageHeight">Height (cm)</label>
                            <input className='form-control form-control-sm' type="text" id='packageHeight' name='packageHeight'
-                              defaultValue={((data?.package?.dimension?.height) || "") || ""} />
+                              defaultValue={((data?.packaged?.dimension?.height) || "") || ""} />
                         </div>
                         <div className='col-lg-12 mb-3'>
                            <label htmlFor='inTheBox'>{required} What is in the box</label>
                            <input className='form-control form-control-sm' name="inTheBox" id='inTheBox' type="text"
-                              defaultValue={(data?.package?.inTheBox || "")} placeholder="e.g: 1 x hard disk" />
+                              defaultValue={(data?.packaged?.inTheBox || "")} placeholder="e.g: 1 x hard disk" />
                         </div>
 
                      </div>

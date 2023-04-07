@@ -116,14 +116,14 @@ const OrderDetailsModal = ({ data, closeModal }) => {
 
                   <tr>
                      <th>In The Box</th>
-                     <td>{shipping?.package?.inTheBox}</td>
+                     <td>{packaged?.inTheBox}</td>
                   </tr>
                   <tr>
                      <th>Package Dimension</th>
                      <td>
                         <ul>
-                           <li><small>WEIGHT : {shipping?.package?.weight} kg</small></li>
-                           {getAttrs(shipping?.package?.dimension, " cm")}
+                           <li><small>WEIGHT : {packaged?.weight} kg</small></li>
+                           {getAttrs(packaged?.dimension, " cm")}
                         </ul>
                      </td>
                   </tr>

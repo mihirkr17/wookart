@@ -7,10 +7,12 @@ import ModalWrapper from '@/Components/Global/ModalWrapper';
 const OrderLabelModal = ({ data, closeModal, userInfo }) => {
    const ref = useRef();
    const canvasRef = useRef();
-   const { orderID, trackingID, paymentMode, orderAT, quantity, shippingAddress, shipping, shippingCharge, baseAmount } = data && data;
+   const { orderID, trackingID, paymentMode, orderAT, quantity, shippingAddress, packaged, shippingCharge, baseAmount } = data && data;
 
+
+   console.log(data);
    useEffect(() => {
-      let str = "OrderID: " + orderID + ", Total Amount: " + baseAmount + ", Quantity: " + quantity;
+      let str = "OrderID: " + orderID + ", Total Amount: " + baseAmount + " USD" + ", Quantity: " + quantity;
 
       QRCode.toCanvas(
          canvasRef.current,
@@ -26,35 +28,48 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
                {({ toPdf }) => <button className='status_btn' onClick={toPdf}>Generate Pdf</button>}
             </Pdf>
          </div>
-         <div className="wrapper mx-auto card_default card_description" style={{ width: "70%", height: "100%", margin: "1rem 0", padding: "1rem" }} ref={ref}>
+         <div className="wrapper mx-auto card_default card_description" style={{ width: "384px", height: "624px", margin: "1rem 0", padding: "1rem" }} ref={ref}>
+            
+            <p style={{textAlign: "center", padding: "0.3rem 0"}}>
+               WooKart Sales Order
+            </p>
+            
             <div className="d-flex align-items-center justify-content-around flex-wrap">
                <small><strong>Order ID : {orderID}</strong></small>
-               <small><strong>Tracking Number : {trackingID}</strong></small>
-               <small><strong>Payment Mode : {paymentMode}</strong></small>
+               <small><strong>Tracking ID : {trackingID}</strong></small>
             </div>
 
             <small className="py-1 text-center">
                Order Creation Date : {orderAT?.date} at {orderAT?.time}
             </small>
+
             <hr />
 
-            <div className="d-flex">
+            <div className="barcode p-1" style={{ width: "100%", display: "flex" }}>
+               <canvas style={{ width: "100px" }} ref={canvasRef}></canvas>
 
-               <div className="barcode p-3" style={{ width: "30%" }}>
-                  <canvas style={{ width: "100px" }} ref={canvasRef}></canvas>
-                  <span style={{ fontSize: "0.8rem" }}> Quantity : {quantity} <br />Weight : {shipping?.package?.weight} Kg</span>
-               </div>
+               <pre style={{ fontSize: "0.7rem", margin: "auto" }}>
+                  Total Amount    : <b>{baseAmount} USD</b> <br />
+                  Quantity        : {quantity} <br />
+                  Shipping Charge : {shippingCharge} USD <br />
+                  Weight          : {packaged?.weight} Kg <br />
+                  Payment Mode    : {paymentMode}
+               </pre>
+            </div>
 
-               <div className='shipping_details d-flex align-items-start justify-content-start flex-column' style={{
+            <hr />
+
+            <div className="p-1">
+               <div className='shipping_details d-flex align-items-start justify-content-between flex-column' style={{
                   border: "1px solid black",
-                  width: "70%"
+                  width: "100%"
                }}>
 
                   <div className='p-2' style={{
                      width: "100%"
                   }}>
                      <h6 style={{ fontSize: "0.9rem" }}>Recipient : {shippingAddress?.name}</h6>
-                     <p>
+                     <p style={{ fontSize: "0.8rem" }}>
                         <small>
                            {shippingAddress?.area},&nbsp;{shippingAddress?.city},&nbsp;
                            {shippingAddress?.division},&nbsp;{shippingAddress?.postal_code} <br />
@@ -69,7 +84,7 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
                      width: "100%"
                   }}>
                      <h6 style={{ fontSize: "0.9rem" }}>Shipper Name : {userInfo?.seller?.storeInfos?.storeName}</h6>
-                     <p>
+                     <p style={{ fontSize: "0.8rem" }}>
                         <small>
                            {userInfo?.seller?.address?.area},&nbsp;{userInfo?.seller?.address?.city}, <br />
                            {userInfo?.seller?.address?.country},&nbsp;{userInfo?.seller?.address?.postal_code} <br />
@@ -77,20 +92,6 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
                         </small>
                      </p>
                   </div>
-               </div>
-            </div>
-
-
-
-            <hr />
-            <div className="product_details py-3 d-flex">
-
-               <div>
-                  <p>
-                     <pre className='p-3'>
-                        Total Amount : {baseAmount} usd (+ shipping charge {shippingCharge} usd) <br />
-                     </pre>
-                  </p>
                </div>
             </div>
          </div>
