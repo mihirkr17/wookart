@@ -26,7 +26,7 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
                {({ toPdf }) => <button className='status_btn' onClick={toPdf}>Generate Pdf</button>}
             </Pdf>
          </div>
-         <div className="wrapper mx-auto card_default card_description" style={{ width: "384px", height: "624px", margin: "1rem 0", padding: "1rem" }} ref={ref}>
+         <div className="wrapper mx-auto card_default card_description" style={{ width: "432px", height: "624px", margin: "1rem 0", padding: "1rem" }} ref={ref}>
             
             <p style={{textAlign: "center", padding: "0.3rem 0"}}>
                WooKart Sales Order
@@ -43,7 +43,7 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
 
             <hr />
 
-            <div className="barcode p-1" style={{ width: "100%", display: "flex" }}>
+            <div className="barcode" style={{ width: "100%", display: "flex" }}>
                <canvas style={{ width: "100px" }} ref={canvasRef}></canvas>
 
                <pre style={{ fontSize: "0.7rem", margin: "auto" }}>
