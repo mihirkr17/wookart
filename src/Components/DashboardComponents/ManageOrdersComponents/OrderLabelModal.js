@@ -9,8 +9,6 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
    const canvasRef = useRef();
    const { orderID, trackingID, paymentMode, orderAT, quantity, shippingAddress, packaged, shippingCharge, baseAmount } = data && data;
 
-
-   console.log(data);
    useEffect(() => {
       let str = "OrderID: " + orderID + ", Total Amount: " + baseAmount + " USD" + ", Quantity: " + quantity;
 

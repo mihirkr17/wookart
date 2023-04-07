@@ -22,6 +22,10 @@ export const useFetch = (url, authorization = "") => {
                      }
                   });
 
+                  if (response.status === 401) {
+                     localStorage.removeItem("client_data");
+                  }
+
                   const resData = await response.json();
 
                   if (response.ok) {

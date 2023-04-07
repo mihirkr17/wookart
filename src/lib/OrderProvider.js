@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext, createContext } from 'react';
 import { useAuthContext } from './AuthProvider';
 
-
 export const OrderContext = createContext();
 
 const OrderProvider = ({ children }) => {
@@ -35,6 +34,10 @@ const OrderProvider = ({ children }) => {
                });
 
                const result = await response.json();
+
+               if (response.status === 401) {
+                  localStorage.removeItem("client_data");
+               }
 
                if (!response.ok) {
                   setOrderLoading(false);
