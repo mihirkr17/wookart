@@ -1,5 +1,6 @@
 import CartCalculation from "@/Components/CartComponents/CartCalculation";
 import CartItem from "@/Components/CartComponents/CartItem";
+import Spinner from "@/Components/Shared/Spinner/Spinner";
 import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import RequiredAuth from "@/Middlewares/RequiredAuth";
@@ -60,7 +61,7 @@ export default withOutDashboard(function MyCart() {
                         <h6>Total In Cart ({(cartData?.numberOfProducts && cartData?.numberOfProducts) || 0})</h6>
                         <hr />
                         {
-                           Array.isArray(cartData?.products) && cartData?.numberOfProducts > 0 ? cartData?.products.map(product => {
+                           cartLoading ? <Spinner></Spinner> : Array.isArray(cartData?.products) && cartData?.numberOfProducts > 0 ? cartData?.products.map(product => {
                               return (
                                  <CartItem
                                     key={product?.variationID}

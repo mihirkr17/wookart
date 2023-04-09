@@ -89,21 +89,17 @@ export async function apiHandler(url = "", method = "GET", body = {}, authorizat
 
 export function CookieParser() {
 
-   let cookie = document.cookie;
+   let cookie = document && document.cookie;
 
    if (!cookie || typeof cookie === "undefined") {
       return;
    }
 
-   let cookies = {};
-
-   cookie = cookie?.split(";").filter(e => e) || [];
-
-   for (let i = 0; i < cookie.length; i++) {
-      let [key, value] = cookie[i]?.replace(/[=+]/gi, ":")?.split(":");
-      cookies[key.trim()] = value.trim();
-   }
-
+   const cookies = {};
+   cookie.split(';').forEach(cookie => {
+      const [name, value] = cookie.split('=').map(c => c.trim());
+      cookies[name] = value;
+   });
    return cookies;
 }
 
@@ -112,4 +108,13 @@ export function deleteCookie(cookieName) {
 
    if (!cookieName) return;
    return document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+export function addCookies(name, value, age) {
+   let now = new Date();
+
+   const expireTime = new Date(now.getTime() + parseFloat(age) * 60 * 60 * 1000);
+
+   document.cookie = `${name}=${value}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
+   return true;
 }

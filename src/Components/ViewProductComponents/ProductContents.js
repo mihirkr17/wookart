@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { faCartShopping, faHandshake, faLocationPin, faTruck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BtnSpinner from '../Shared/BtnSpinner/BtnSpinner';
-import { camelToTitleCase } from '@/Functions/common';
+import { CookieParser, addCookies, camelToTitleCase } from '@/Functions/common';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 
-export default function ProductContents({ product, variationID, authRefetch, setMessage, userInfo }) {
+export default function ProductContents({ product, variationID, setMessage, userInfo, cartQtyUpdater }) {
    const [addCartLoading, setAddCartLoading] = useState(false);
    const router = useRouter();
 
@@ -15,39 +15,38 @@ export default function ProductContents({ product, variationID, authRefetch, set
 
    // add to cart handler
    const addToCartHandler = async (pId, _lid, vId, params) => {
-      try {
-         if (!userInfo?.email) {
-            router.push('/login');
-            return;
+
+      if (!userInfo?.email) {
+         router.push('/login');
+         return;
+      }
+
+      setAddCartLoading(true);
+
+      if (product?.variations?.stock === "in") {
+
+         let cartData = [];
+
+         let { cart_data } = CookieParser();
+
+         let cd = cart_data && JSON.parse(cart_data);
+
+         if (!cd || typeof cd === "undefined" || typeof cd !== "object") {
+            cartData = [];
+         } else {
+            cartData = cd;
          }
 
-         if (product?.variations?.stock === "in") {
-            setAddCartLoading(true);
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/cart/add-to-cart`, {
-               method: "POST",
-               withCredentials: true,
-               credentials: 'include',
-               headers: {
-                  "Content-Type": "application/json"
-               },
-               body: JSON.stringify({ productID: pId, listingID: _lid, variationID: vId, action: params })
-            });
-
-            const result = await response.json();
-
-            if (response.ok && result?.success === true) {
-               await authRefetch();
-               setMessage(result?.message, "success");
-
-               setAddCartLoading(false);
-               router.push('/my-cart');
-            } else {
-               setAddCartLoading(false);
-            }
+         if (cartData.find(e => (e?.variationID === vId && e?.listingID === _lid))) {
+            setAddCartLoading(false);
+            return setMessage("Product has already in your cart");
          }
-      } catch (error) {
-         setMessage(error?.message, 'danger');
+
+         let newData = [...cartData, { quantity: 1, productID: pId, listingID: _lid, variationID: vId, action: params }];
+
+         addCookies("cart_data", JSON.stringify(newData), 16) && setMessage("Product added to your cart.", "success");
+         cartQtyUpdater(Array.isArray(newData) && newData.length || 0);
+         router.push('/my-cart');
       }
    }
 

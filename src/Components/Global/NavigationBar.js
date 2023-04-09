@@ -5,11 +5,11 @@ import { Navbar } from 'react-bootstrap';
 import Link from 'next/link';
 import { useAuthContext } from '@/lib/AuthProvider';
 import { useRouter } from 'next/router';
-import { authLogout } from '@/Functions/common';
+import { CookieParser, authLogout } from '@/Functions/common';
 import useMenu from '@/Hooks/useMenu';
 
 const NavigationBar = () => {
-   const { userInfo, role } = useAuthContext();
+   const { userInfo, role, cartQuantity } = useAuthContext();
    const { pathname } = useRouter();
    const { menuRef, openMenu, setOpenMenu } = useMenu();
 
@@ -83,7 +83,7 @@ const NavigationBar = () => {
                   <div className="nv_items">
                      <Link className="nav_link cart_link" href='/my-cart'>
                         <FontAwesomeIcon icon={faCartShopping}></FontAwesomeIcon>
-                        {<div className="bg-info cart_badge">{userInfo?.buyer?.shoppingCartItems || 0}</div>}
+                        {<div className="bg-info cart_badge">{cartQuantity || 0}</div>}
                      </Link>
                   </div>
 
@@ -100,7 +100,7 @@ const NavigationBar = () => {
                            <Link className="drp_item" href="/user/my-account">My Account</Link>
                            <Link className='drp_item' href='/user/orders-management'>My Order</Link>
                            <br />
-                           <button style={{color: "red"}} className='drp_item' onClick={handleLogout}>Logout Now</button>
+                           <button style={{ color: "red" }} className='drp_item' onClick={handleLogout}>Logout Now</button>
                         </div>
                      </div>
                   }
