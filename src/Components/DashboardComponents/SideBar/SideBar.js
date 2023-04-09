@@ -56,7 +56,7 @@ export default function SideBar({ dbSlug, shrink, setShrink, role }) {
                            <span>&nbsp;&nbsp;Catalog</span>
                         </button>
 
-                        <div style={childLink === 'catalog' ? { display: 'block' } : { display: 'none' }}>
+                        <div style={(childLink === 'catalog' || dbSlug === "manage-product" || dbSlug === "add-product") ? { display: 'block' } : { display: 'none' }}>
                            <Link className={dbSlug === "manage-product" ? "active_link" : ""} href='/dashboard/manage-product'>
                               <span>&nbsp;&nbsp;Products</span>
                            </Link>
@@ -76,7 +76,7 @@ export default function SideBar({ dbSlug, shrink, setShrink, role }) {
                            <span>&nbsp;&nbsp;Users</span>
                         </button>
 
-                        <div style={childLink === 'users' ? { display: 'block' } : { display: 'none' }}>
+                        <div style={(childLink === 'users' || dbSlug === "manage-buyers" || dbSlug === "manage-sellers") ? { display: 'block' } : { display: 'none' }}>
                            <Link className={dbSlug === "manage-buyers" ? "active_link" : ""} href='/dashboard/manage-buyers'>
                               <span>&nbsp;&nbsp;Buyers</span>
                            </Link>

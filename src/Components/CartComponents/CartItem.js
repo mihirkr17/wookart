@@ -16,8 +16,8 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
       try {
          setLoading(true);
 
-         const { productID, title } = cp;
-         const result = await apiHandler(`/cart/delete-cart-item/${cartType && cartType}`, "DELETE", {}, productID);
+         const { productID, title, variationID } = cp;
+         const result = await apiHandler(`/cart/delete-cart-item/${cartType && cartType}?vr=${variationID}`, "DELETE", {}, productID);
 
          if (result?.success) {
             setMessage(`${title} ${result?.message}`, 'success');
