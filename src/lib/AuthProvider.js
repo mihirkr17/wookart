@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useBaseContext } from "./BaseProvider";
 import jwt_decode from "jwt-decode";
-import { CookieParser, authLogout } from "@/Functions/common";
+import { CookieParser, authLogout, deleteAuth } from "@/Functions/common";
 
 export const AuthContext = createContext();
 
@@ -67,6 +67,7 @@ export default function AuthProvider(props) {
             setAuthLoading(false);
 
             if (response.status === 401) {
+               deleteAuth();
                await authLogout();
                return;
             }

@@ -5,8 +5,7 @@ export const authLogout = async () => {
       credentials: "include",
    });
    if (response.ok) {
-      deleteCookie("_uuid");
-      localStorage.removeItem("client_data");
+      deleteAuth();
       window.location.reload();
    }
 };
@@ -105,7 +104,6 @@ export function CookieParser() {
 
 
 export function deleteCookie(cookieName) {
-
    if (!cookieName) return;
    return document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
@@ -116,5 +114,12 @@ export function addCookies(name, value, age) {
    const expireTime = new Date(now.getTime() + parseFloat(age) * 60 * 60 * 1000);
 
    document.cookie = `${name}=${value}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
+   return true;
+}
+
+export function deleteAuth() {
+   deleteCookie("_uuid");
+   deleteCookie("cart_dat");
+   localStorage.removeItem("client_data");
    return true;
 }

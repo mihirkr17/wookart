@@ -1,7 +1,7 @@
 import CartCalculation from "@/Components/CartComponents/CartCalculation";
 import CartItem from "@/Components/CartComponents/CartItem";
 import Spinner from "@/Components/Shared/Spinner/Spinner";
-import { CookieParser } from "@/Functions/common";
+import { CookieParser, deleteAuth } from "@/Functions/common";
 import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import RequiredAuth from "@/Middlewares/RequiredAuth";
@@ -38,6 +38,10 @@ export default withOutDashboard(function MyCart() {
                });
 
                const result = await response.json();
+
+               if (response.status === 401) {
+                  deleteAuth();
+               }
 
                if (!response.ok) {
                   setCartLoading(false);

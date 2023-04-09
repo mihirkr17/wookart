@@ -1,3 +1,4 @@
+import { deleteAuth } from "@/Functions/common";
 import { useEffect, useState } from "react";
 
 export const useFetch = (url, authorization = "") => {
@@ -23,7 +24,7 @@ export const useFetch = (url, authorization = "") => {
                   });
 
                   if (response.status === 401) {
-                     localStorage.removeItem("client_data");
+                     deleteAuth();
                   }
 
                   const resData = await response.json();
