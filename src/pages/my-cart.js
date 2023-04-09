@@ -1,6 +1,7 @@
 import CartCalculation from "@/Components/CartComponents/CartCalculation";
 import CartItem from "@/Components/CartComponents/CartItem";
 import Spinner from "@/Components/Shared/Spinner/Spinner";
+import { CookieParser } from "@/Functions/common";
 import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import RequiredAuth from "@/Middlewares/RequiredAuth";
@@ -18,15 +19,22 @@ export default withOutDashboard(function MyCart() {
    const cartRefetch = () => setCartRef(e => !e);
 
    useEffect(() => {
+
+      const { cart_data } = CookieParser();
+
       const startFetch = setTimeout(() => {
          (async () => {
             try {
                setCartLoading(true);
 
                const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/cart/cart-context`, {
-                  method: "GET",
+                  method: "POST",
                   withCredentials: true,
-                  credentials: "include"
+                  credentials: "include",
+                  headers: {
+                     "Content-type": "application/json"
+                  },
+                  body: cart_data
                });
 
                const result = await response.json();
