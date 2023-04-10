@@ -29,7 +29,7 @@ export default function CartProvider({ children }) {
                setCartLoading(true);
 
                const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/cart/cart-context`, {
-                  method: "POST",
+                  method: "GET",
                   withCredentials: true,
                   credentials: "include"
                });

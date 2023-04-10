@@ -122,3 +122,30 @@ export function deleteAuth() {
    localStorage.removeItem("client_data");
    return true;
 }
+
+
+export function calculateShippingCost(volWeight, areaType) {
+   let n = 0; // price initial 0.5 kg = 0.5 dollar
+   let charge;
+   let arr = [];
+
+   if (volWeight <= 3) {
+      charge = areaType === "local" ? 0.5 : areaType === "zonal" ? 0.8 : 0.8;
+   }
+   else if (volWeight > 3 && volWeight <= 8) {
+      charge = areaType === "local" ? 0.4 : areaType === "zonal" ? 0.7 : 0.7;
+   }
+   else if (volWeight > 8) {
+      charge = areaType === "local" ? 0.3 : areaType === "zonal" ? 0.5 : 0.5;
+   }
+
+   do {
+      n += 0.5;
+      arr.push(n);
+   } while (n < volWeight);
+
+   let count = arr.length;
+
+   let sum = (count * charge).toFixed(0);
+   return parseInt(sum);
+}

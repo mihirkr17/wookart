@@ -46,7 +46,7 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
             return;
          }
 
-         const result = await apiHandler(`/cart/update-cart-product-quantity`, "PUT", {
+         const { message, success, statusCode } = await apiHandler(`/cart/update-cart-product-quantity`, "PUT", {
             actionRequestContext: {
                pageUri: '/my-cart',
                type: cartType,
@@ -61,13 +61,13 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
 
          setQtyLoading(false);
 
-         if (result?.success === true && result?.statusCode >= 200) {
+         if (success === true && statusCode >= 200) {
             cartRefetch();
-            setMessage(result?.message, 'success');
+            setMessage(message, 'success');
             return;
-         } else {
-            setMessage(result?.message, 'danger');
          }
+
+         setMessage(message, 'danger');
 
       } catch (error) {
          return setMessage(error?.message, 'danger');

@@ -45,6 +45,13 @@ export default function AuthProvider(props) {
             method: "GET"
          });
 
+         if (response.status === 401) {
+            setAuthLoading(false);
+            deleteAuth();
+            await authLogout();
+            return;
+         }
+
          const { u_data } = await response.json();
 
          if (response.ok) {
@@ -59,12 +66,6 @@ export default function AuthProvider(props) {
 
          } else {
             setAuthLoading(false);
-
-            if (response.status === 401) {
-               deleteAuth();
-               await authLogout();
-               return;
-            }
          }
 
       } catch (error) {
@@ -76,7 +77,16 @@ export default function AuthProvider(props) {
 
 
    return (
-      <AuthContext.Provider value={{ initialLoader, userInfo, role: userInfo?.role && userInfo?.role, setMessage, msg, authRefetch, authLoading, authErr }}>
+      <AuthContext.Provider value={{
+         initialLoader,
+         userInfo,
+         role: userInfo?.role && userInfo?.role,
+         setMessage,
+         msg,
+         authRefetch,
+         authLoading,
+         authErr
+      }}>
          {msg}
          {props?.children}
       </AuthContext.Provider>

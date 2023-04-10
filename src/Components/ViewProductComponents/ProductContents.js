@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { faCartShopping, faHandshake, faLocationPin, faTruck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BtnSpinner from '../Shared/BtnSpinner/BtnSpinner';
-import { apiHandler, camelToTitleCase } from '@/Functions/common';
+import { apiHandler, calculateShippingCost, camelToTitleCase } from '@/Functions/common';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCartContext } from '@/lib/CartProvider';
@@ -12,9 +12,11 @@ export default function ProductContents({ product, variationID, setMessage, user
    const [addCartLoading, setAddCartLoading] = useState(false);
    const router = useRouter();
 
-   const { cartRefetch } = useCartContext();
+   const { cartRefetch, cartData } = useCartContext();
 
    const defShipAddrs = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true);
+
+   let inCart = Array.isArray(cartData?.products) && cartData?.products.find(e => e?.variationID === variationID);
 
    // add to cart handler
    const addToCartHandler = async (pId, _lid, vId, params) => {
@@ -156,7 +158,7 @@ export default function ProductContents({ product, variationID, setMessage, user
                <div className="py-3 mt-4 product_handler">
 
                   {
-                     (!product?.inCart || typeof product?.inCart === 'undefined') ?
+                     (!inCart || typeof inCart === 'undefined') ?
                         <button
                            className='addToCartBtn'
                            disabled={product?.variations?.stock === "out" ? true : false}
@@ -242,7 +244,7 @@ export default function ProductContents({ product, variationID, setMessage, user
 
                <div>
                   {
-                     (product?.shippingCharge === 0 && product?.isFreeShipping) ? "Free" : "$ " + product?.shippingCharge
+                     (product?.isFreeShipping) ? "Free" : "$ " + calculateShippingCost(product?.volumetricWeight, defShipAddrs?.area_type)
                   }
                </div>
             </div>

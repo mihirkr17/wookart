@@ -1,21 +1,17 @@
 import CartCalculation from "@/Components/CartComponents/CartCalculation";
 import CartItem from "@/Components/CartComponents/CartItem";
 import Spinner from "@/Components/Shared/Spinner/Spinner";
-import { CookieParser, deleteAuth } from "@/Functions/common";
 import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import { useCartContext } from "@/lib/CartProvider";
 import RequiredAuth from "@/Middlewares/RequiredAuth";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export default withOutDashboard(function MyCart() {
 
-   const { userInfo, setMessage } = useAuthContext();
+   const { userInfo } = useAuthContext();
 
    const { cartData, cartLoading, cartRefetch } = useCartContext();
-
-   console.log(cartData);
 
    return (
       <RequiredAuth>
@@ -24,11 +20,11 @@ export default withOutDashboard(function MyCart() {
 
                <div className="row">
                   <div className="col-lg-8 mb-3">
-                     <div className="cart_card">
+                     <div className="cart_card" style={cartLoading ? { opacity: "0.3" } : { opacity: "1" }}>
                         <h6>Total In Cart ({(cartData?.numberOfProducts && cartData?.numberOfProducts) || 0})</h6>
                         <hr />
                         {
-                           cartLoading ? <Spinner></Spinner> : Array.isArray(cartData?.products) && cartData?.numberOfProducts > 0 ? cartData?.products.map(product => {
+                           Array.isArray(cartData?.products) && cartData?.numberOfProducts > 0 ? cartData?.products.map(product => {
                               return (
                                  <CartItem
                                     key={product?.variationID}
@@ -36,7 +32,6 @@ export default withOutDashboard(function MyCart() {
                                     product={product}
                                     cartType={"toCart"}
                                     checkOut={false}
-                                    items={cartData?.numberOfProducts}
                                  />
                               )
                            }) :
