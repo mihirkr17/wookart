@@ -7,9 +7,12 @@ import { useAuthContext } from '@/lib/AuthProvider';
 import { useRouter } from 'next/router';
 import { CookieParser, authLogout } from '@/Functions/common';
 import useMenu from '@/Hooks/useMenu';
+import { useCartContext } from '@/lib/CartProvider';
 
 const NavigationBar = () => {
-   const { userInfo, role, cartQuantity } = useAuthContext();
+   const { userInfo, role } = useAuthContext();
+
+   const { cartQuantity } = useCartContext();
    const { pathname } = useRouter();
    const { menuRef, openMenu, setOpenMenu } = useMenu();
 

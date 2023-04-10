@@ -4,63 +4,18 @@ import Spinner from "@/Components/Shared/Spinner/Spinner";
 import { CookieParser, deleteAuth } from "@/Functions/common";
 import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
+import { useCartContext } from "@/lib/CartProvider";
 import RequiredAuth from "@/Middlewares/RequiredAuth";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default withOutDashboard(function MyCart() {
 
-   const [cartLoading, setCartLoading] = useState(false);
-   const [cartData, setCartData] = useState({});
-   const [cartError, setCartError] = useState("");
-   const [cartRef, setCartRef] = useState(false);
    const { userInfo, setMessage } = useAuthContext();
 
-   const cartRefetch = () => setCartRef(e => !e);
+   const { cartData, cartLoading, cartRefetch } = useCartContext();
 
-   useEffect(() => {
-
-      const { cart_data } = CookieParser();
-
-      const startFetch = setTimeout(() => {
-         (async () => {
-            try {
-               setCartLoading(true);
-
-               const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/cart/cart-context`, {
-                  method: "POST",
-                  withCredentials: true,
-                  credentials: "include",
-                  headers: {
-                     "Content-type": "application/json"
-                  },
-                  body: cart_data
-               });
-
-               const result = await response.json();
-
-               if (response.status === 401) {
-                  deleteAuth();
-               }
-
-               if (!response.ok) {
-                  setCartLoading(false);
-               }
-
-               if (result?.statusCode === 200 && result?.success === true) {
-                  setCartLoading(false);
-                  setCartData(result?.data?.module);
-               }
-            } catch (error) {
-               setCartError(error?.message);
-            } finally {
-               setCartLoading(false);
-            }
-         })();
-      }, 0);
-
-      return () => clearTimeout(startFetch);
-   }, [cartRef]);
+   console.log(cartData);
 
    return (
       <RequiredAuth>

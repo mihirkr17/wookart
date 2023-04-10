@@ -1,4 +1,4 @@
-import { CookieParser, addCookies } from '@/Functions/common';
+import { apiHandler } from '@/Functions/common';
 import { useAuthContext } from '@/lib/AuthProvider';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,31 +6,25 @@ import Link from 'next/link';
 import React from 'react';
 import { useState } from 'react';
 
-const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state, setState, items }) => {
+const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state, setState }) => {
    const [qtyLoading, setQtyLoading] = useState(false);
    const [loading, setLoading] = useState(false);
-   const { cartQtyUpdater, setMessage } = useAuthContext();
+   const { setMessage } = useAuthContext();
 
    //  Remove product from cartProduct && cartProduct handler
    const removeItemFromCartHandler = async (cp) => {
       try {
          setLoading(true);
 
-         const { title, variationID } = cp;
+         const { productID, title, variationID } = cp;
+         const result = await apiHandler(`/cart/delete-cart-item/${cartType && cartType}?vr=${variationID}`, "DELETE", {}, productID);
 
-         const { cart_data } = CookieParser();
-
-         let cartData = cart_data && JSON.parse(cart_data);
-
-         cartData = (cartData && cartData.filter(e => (e?.variationID !== variationID))) || [];
-
-         addCookies('cart_data', JSON.stringify(cartData), 16);
-
-         setMessage(`${title} removed from your cart.`, "success");
-
-         cartQtyUpdater(Array.isArray(cartData) && cartData.length || 0);
-
-         cartRefetch();
+         if (result?.success) {
+            setMessage(`${title} ${result?.message}`, 'success');
+            cartRefetch();
+         } else {
+            setMessage(`${title} ${result?.message}`, 'danger');
+         }
       } catch (error) {
          setMessage(error?.message, "danger");
       } finally {
@@ -52,22 +46,28 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
             return;
          }
 
-         const { cart_data } = CookieParser();
-
-         let cartData = cart_data && JSON.parse(cart_data);
-
-         let newItem = cartData && cartData.find(e => e?.variationID === variationID);
-
-         newItem.quantity = quantity;
-
-         cartData = (cartData && cartData.filter(e => (e?.variationID !== variationID))) || [];
-
-         let newCartData = [...cartData, newItem];
-
-         addCookies("cart_data", JSON.stringify(newCartData), 16) && setMessage("Quantity updated to " + quantity, "success");
-         cartRefetch();
+         const result = await apiHandler(`/cart/update-cart-product-quantity`, "PUT", {
+            actionRequestContext: {
+               pageUri: '/my-cart',
+               type: cartType,
+               pageNumber: 1
+            },
+            upsertRequest: {
+               cartContext: {
+                  productID, variationID, quantity: quantity, cartID
+               }
+            }
+         }, productID);
 
          setQtyLoading(false);
+
+         if (result?.success === true && result?.statusCode >= 200) {
+            cartRefetch();
+            setMessage(result?.message, 'success');
+            return;
+         } else {
+            setMessage(result?.message, 'danger');
+         }
 
       } catch (error) {
          return setMessage(error?.message, 'danger');

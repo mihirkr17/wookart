@@ -15,7 +15,7 @@ export function ViewProduct({ data }) {
    const product = data?.product && data?.product;
    const { vId } = router.query;
 
-   const { authRefetch, userInfo, setMessage, cartQtyUpdater } = useAuthContext();
+   const { authRefetch, userInfo, setMessage } = useAuthContext();
 
    return (
       <div className='view_product section_default'>
@@ -50,7 +50,6 @@ export function ViewProduct({ data }) {
                      authRefetch={authRefetch}
                      setMessage={setMessage}
                      userInfo={userInfo}
-                     cartQtyUpdater={cartQtyUpdater}
                   />
                </div>
             </div>

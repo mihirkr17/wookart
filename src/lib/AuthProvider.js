@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useBaseContext } from "./BaseProvider";
 import jwt_decode from "jwt-decode";
-import { CookieParser, authLogout, deleteAuth } from "@/Functions/common";
+import { authLogout, deleteAuth } from "@/Functions/common";
 
 export const AuthContext = createContext();
 
@@ -13,15 +13,9 @@ export default function AuthProvider(props) {
    const [authLoading, setAuthLoading] = useState(true);
    const [authErr, setAuthErr] = useState();
    const [ref, setRef] = useState(false);
-   const [cartQuantity, setCartQuantity] = useState(0);
 
    useEffect(() => {
       setAuthLoading(true);
-
-      const { cart_data } = CookieParser();
-      let cartData = (cart_data && JSON.parse(cart_data));
-
-      setCartQuantity((Array.isArray(cartData) && cartData.length) || 0);
 
       let client_data = localStorage.getItem("client_data");
 
@@ -80,14 +74,9 @@ export default function AuthProvider(props) {
       }
    };
 
-   // cart quantity updater for navigation bar
-   function cartQtyUpdater(params) {
-      setCartQuantity(params);
-   }
-
 
    return (
-      <AuthContext.Provider value={{ initialLoader, userInfo, role: userInfo?.role && userInfo?.role, setMessage, msg, cartQuantity, authRefetch, authLoading, authErr, cartQtyUpdater }}>
+      <AuthContext.Provider value={{ initialLoader, userInfo, role: userInfo?.role && userInfo?.role, setMessage, msg, authRefetch, authLoading, authErr }}>
          {msg}
          {props?.children}
       </AuthContext.Provider>

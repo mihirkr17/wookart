@@ -7,14 +7,17 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import AuthProvider from '@/lib/AuthProvider';
 import BaseProvider from '@/lib/BaseProvider';
+import CartProvider from '@/lib/CartProvider';
 config.autoAddCss = false;
 
 export default function App({ Component, pageProps }) {
   return <BaseProvider>
     <AuthProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <CartProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </CartProvider>
     </AuthProvider>
   </BaseProvider>
 }

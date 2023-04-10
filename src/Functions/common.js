@@ -119,7 +119,6 @@ export function addCookies(name, value, age) {
 
 export function deleteAuth() {
    deleteCookie("_uuid");
-   deleteCookie("cart_dat");
    localStorage.removeItem("client_data");
    return true;
 }
