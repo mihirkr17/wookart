@@ -11,6 +11,7 @@ import CartItem from "../CartComponents/CartItem";
 import CartCalculation from "../CartComponents/CartCalculation";
 import { useState } from "react";
 import { useAuthContext } from "@/lib/AuthProvider";
+import { apiHandler } from "@/Functions/common";
 
 
 export default function CartCheckoutComponent() {
@@ -31,8 +32,6 @@ export default function CartCheckoutComponent() {
    const buyBtnHandler = async (e) => {
       try {
          e.preventDefault();
-
-
 
          if (!selectedAddress) {
             return setMessage("Please select shipping address.", "danger");
@@ -61,24 +60,15 @@ export default function CartCheckoutComponent() {
 
             setOrderLoading(true);
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/order/set-order/`, {
-               method: "POST",
-               withCredentials: true,
-               credentials: "include",
-               headers: {
-                  "Content-Type": "application/json",
-                  authorization: `${userInfo?.email}`
-               },
-               body: JSON.stringify({ state: "byCart", paymentMethod })
-            });
+            const { clientSecret, orderPaymentID, orderItems, message, success } = await apiHandler(`/order/set-order/`, "POST", { state: "byCart", paymentMethod }, userInfo?.email);
 
-            const { clientSecret, orderPaymentID, orderItems } = await response.json();
-
-            if (response.status >= 200 && response.status <= 299) {
+            if (success) {
 
                setOrderLoading(false);
 
-               if (clientSecret && orderPaymentID && orderItems) {
+               if (success && clientSecret && orderPaymentID && orderItems) {
+
+                  setMessage(message, "success");
 
                   const { paymentIntent, error: intErr } = await stripe.confirmCardPayment(
                      clientSecret,
@@ -109,30 +99,19 @@ export default function CartCheckoutComponent() {
                   }
 
                   if (paymentIntent?.id && paymentIntent?.payment_method && paymentIntent?.status === "succeeded") {
-                     setMessage("Payment succeeded. Order confirming soon...", "success");
+                     setMessage("Payment succeeded.", "success");
                      setConfirmLoading(true);
                      setOrderLoading(false);
 
-                     const response2 = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/order/confirm-order`, {
-                        method: "POST",
-                        withCredentials: true,
-                        credentials: "include",
-                        headers: {
-                           "Content-Type": "application/json",
-                           authorization: clientSecret
-                        },
-                        body: JSON.stringify({
-                           orderPaymentID: orderPaymentID,
-                           paymentIntentID: paymentIntent?.id,
-                           paymentMethodID: paymentIntent?.payment_method,
-                           orderItems: orderItems
-                        })
-                     });
-
-                     const { success } = await response2.json();
+                     const { success } = await apiHandler(`/order/confirm-order`, "POST", {
+                        orderPaymentID: orderPaymentID,
+                        paymentIntentID: paymentIntent?.id,
+                        paymentMethodID: paymentIntent?.payment_method,
+                        orderItems: orderItems
+                     }, clientSecret);
 
                      if (success) {
-
+                        setMessage("Order confirmed.", "success");
                         setConfirmLoading(false);
 
                         return router.push("/user/orders-management");
@@ -141,6 +120,7 @@ export default function CartCheckoutComponent() {
                }
 
             } else {
+               setMessage(message, "danger");
                setOrderLoading(false);
             }
          }

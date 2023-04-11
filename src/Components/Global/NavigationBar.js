@@ -99,7 +99,6 @@ const NavigationBar = () => {
                         </span>
                         <div className={`account_field ${openMenu ? "active" : ""}`}>
                            <small><b>{userInfo?.fullName}</b></small>
-                           <Link className="drp_item" href="/sell-online">Become a Seller</Link>
                            <Link className="drp_item" href="/user/my-account">My Account</Link>
                            <Link className='drp_item' href='/user/orders-management'>My Order</Link>
                            <br />
