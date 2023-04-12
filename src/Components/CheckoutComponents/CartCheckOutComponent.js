@@ -95,6 +95,7 @@ export default function CartCheckoutComponent() {
                   );
 
                   if (intErr) {
+                     setOrderLoading(false);
                      return setMessage(intErr?.message, "danger");
                   }
 
@@ -212,7 +213,7 @@ export default function CartCheckoutComponent() {
                               !selectedAddress && <p>Please select shipping address.</p>
                            }
 
-                           <button className='bt9_checkout' disabled={(state?.products && userInfo?.buyer?.defaultShippingAddress) ? false : true} type='submit'>
+                           <button className='bt9_checkout' disabled={((state?.products && userInfo?.buyer?.defaultShippingAddress) || !orderLoading) ? false : true} type='submit'>
                               {
                                  orderLoading ? "Paying..." : confirmLoading ? "Confirming...." : "Pay Now"
                               }

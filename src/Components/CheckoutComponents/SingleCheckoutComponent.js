@@ -136,10 +136,12 @@ export default function SingleCheckoutComponent() {
                   );
 
                   if (error) {
+                     setOrderLoading(false);
                      return setMessage(error?.message, "danger");
                   }
 
                   if (!paymentIntent?.id) {
+                     setOrderLoading(false);
                      return;
                   }
 
@@ -171,7 +173,7 @@ export default function SingleCheckoutComponent() {
                   if (response.status >= 200 && response.status <= 299) {
                      setOrderLoading(false);
                      if (result?.success) {
-                        return router.push("/user/my-account/orders-management");
+                        return router.push("/user/orders-management");
                      }
                   } else {
                      setOrderLoading(false);
@@ -270,7 +272,7 @@ export default function SingleCheckoutComponent() {
                               !selectedAddress && <p>Please select shipping address.</p>
                            }
 
-                           <button className='bt9_checkout' disabled={(data?.product && selectedAddress) ? false : true} type='submit'>
+                           <button className='bt9_checkout' disabled={((data?.product && selectedAddress) || !orderLoading) ? false : true} type='submit'>
                               {
                                  orderLoading ? "Paying..." : "Pay Now "
                               }
