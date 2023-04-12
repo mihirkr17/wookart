@@ -272,11 +272,13 @@ export default function SingleCheckoutComponent() {
                               !selectedAddress && <p>Please select shipping address.</p>
                            }
 
-                           <button className='bt9_checkout' disabled={((data?.product && selectedAddress) || !orderLoading) ? false : true} type='submit'>
-                              {
-                                 orderLoading ? "Paying..." : "Pay Now "
-                              }
-                           </button>
+                           {
+                              (orderLoading) ?
+                                 <span style={{ padding: "5px 8px" }}>Confirming...</span> :
+                                 <button className='bt9_checkout' disabled={((data?.product && selectedAddress)) ? false : true} type='submit'>
+                                    Pay Now
+                                 </button>
+                           }
                         </form>
                      </div>
                   </div>

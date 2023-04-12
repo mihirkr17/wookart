@@ -64,8 +64,6 @@ export default function CartCheckoutComponent() {
 
             if (success) {
 
-               setOrderLoading(false);
-
                if (success && clientSecret && orderPaymentID && orderItems) {
 
                   setMessage(message, "success");
@@ -213,11 +211,12 @@ export default function CartCheckoutComponent() {
                               !selectedAddress && <p>Please select shipping address.</p>
                            }
 
-                           <button className='bt9_checkout' disabled={((state?.products && userInfo?.buyer?.defaultShippingAddress) || !orderLoading) ? false : true} type='submit'>
-                              {
-                                 orderLoading ? "Paying..." : confirmLoading ? "Confirming...." : "Pay Now"
-                              }
-                           </button>
+                           {
+                              (orderLoading || confirmLoading) ?
+                                 <span style={{ padding: "5px 8px" }}>{orderLoading ? "Paying..." : "Confirming..."}</span> : <button className='bt9_checkout' disabled={(state?.products && userInfo?.buyer?.defaultShippingAddress) ? false : true} type='submit'>
+                                    Pay Now
+                                 </button>
+                           }
                         </form>
                      </div>
 
