@@ -174,26 +174,28 @@ export default function ProductContents({ product, variationID, setMessage, user
                            Go To Cart
                         </button>
                   }
+                  {
+                     product?.variations?.stock === "in" &&
+                     <Link href={{
+                        pathname: `/single-checkout`,
+                        query: {
+                           data: JSON.stringify({
+                              listingID: product?._lid,
+                              productID: product?._id,
+                              variationID: product?.variations?._vrid,
+                              quantity: 1,
+                              customerEmail: userInfo?.email
+                           }),
+                           oTracker: `buy.${product?.title}`
+                        }
+                     }}
 
-                  <Link href={{
-                     pathname: `/single-checkout`,
-                     query: {
-                        data: JSON.stringify({
-                           listingID: product?._lid,
-                           productID: product?._id,
-                           variationID: product?.variations?._vrid,
-                           quantity: 1,
-                           customerEmail: userInfo?.email
-                        }),
-                        oTracker: `buy.${product?.title}`
-                     }
-                  }}
-
-                     as={`/single-checkout?oTracker=buy.${product?.title}`}
-                     className='ms-4 buyBtn'
-                  >
-                     Buy Now
-                  </Link>
+                        as={`/single-checkout?oTracker=buy.${product?.title}`}
+                        className='ms-4 buyBtn'
+                     >
+                        Buy Now
+                     </Link>
+                  }
                </div>
             }
          </div>
