@@ -38,13 +38,13 @@ export default function CartCheckoutComponent() {
          }
 
          if (!stripe || !elements) {
-            return;
+            return setMessage("Card initialization failed !", "danger");
          }
 
          const card = elements.getElement(CardElement);
 
          if (card === null) {
-            return;
+            return setMessage("Your card is null !", "danger");
          }
 
          // Use your card Element with other Stripe.js APIs
@@ -56,73 +56,142 @@ export default function CartCheckoutComponent() {
 
          let products = state?.products && state?.products;
 
-         if (Array.isArray(products) && products.length >= 0 && paymentMethod) {
+         if (!Array.isArray(products) || products.length <= 0) {
+            return setMessage("Please select product in your cart !", "danger");
+         }
 
-            setOrderLoading(true);
+         setOrderLoading(true);
 
-            const { clientSecret, orderPaymentID, orderItems, message, success } = await apiHandler(`/order/set-order/`, "POST", { state: "byCart", paymentMethod }, userInfo?.email);
+         const { clientSecret, orderPaymentID, totalAmount, productInfos, message, success } = await apiHandler(`/order/cart-purchase/`, "POST", { state: "byCart", paymentMethod }, userInfo?.email);
+
+         if (!success || !clientSecret || !orderPaymentID) {
+            setOrderLoading(false);
+            return setMessage(message, "danger");
+         }
+
+         setMessage(message, "success");
+
+         const { paymentIntent, error: intErr } = await stripe.confirmCardPayment(
+            clientSecret,
+            {
+               payment_method: {
+                  card: card,
+                  billing_details: {
+                     name: selectedAddress?.name,
+                     email: userInfo?.email,
+                     phone: selectedAddress?.phone_number,
+                     address: {
+                        city: selectedAddress?.city,
+                        state: selectedAddress?.division,
+                        line1: selectedAddress?.area,
+                        line2: selectedAddress?.landmark,
+                        country: "BD"
+                     }
+                  },
+                  metadata: {
+                     order_id: orderPaymentID
+                  },
+               },
+            },
+         );
+
+         if (intErr) {
+            setOrderLoading(false);
+            return setMessage(intErr?.message, "danger");
+         }
+
+         if (paymentIntent?.id && paymentIntent?.payment_method && paymentIntent?.status === "succeeded") {
+            setMessage("Payment succeeded.", "success");
+            setConfirmLoading(true);
+            setOrderLoading(false);
+
+            const { success } = await apiHandler(`/order/confirm-order`, "POST", {
+               orderPaymentID: orderPaymentID,
+               paymentIntentID: paymentIntent?.id,
+               paymentMethodID: paymentIntent?.payment_method,
+               productInfos,
+               totalAmount
+            }, clientSecret);
 
             if (success) {
+               setMessage("Order confirmed.", "success");
+               setConfirmLoading(false);
 
-               if (success && clientSecret && orderPaymentID && orderItems) {
-
-                  setMessage(message, "success");
-
-                  const { paymentIntent, error: intErr } = await stripe.confirmCardPayment(
-                     clientSecret,
-                     {
-                        payment_method: {
-                           card: card,
-                           billing_details: {
-                              name: selectedAddress?.name,
-                              email: userInfo?.email,
-                              phone: selectedAddress?.phone_number,
-                              address: {
-                                 city: selectedAddress?.city,
-                                 state: selectedAddress?.division,
-                                 line1: selectedAddress?.area,
-                                 line2: selectedAddress?.landmark,
-                                 country: "BD"
-                              }
-                           },
-                           metadata: {
-                              order_id: orderPaymentID
-                           },
-                        },
-                     },
-                  );
-
-                  if (intErr) {
-                     setOrderLoading(false);
-                     return setMessage(intErr?.message, "danger");
-                  }
-
-                  if (paymentIntent?.id && paymentIntent?.payment_method && paymentIntent?.status === "succeeded") {
-                     setMessage("Payment succeeded.", "success");
-                     setConfirmLoading(true);
-                     setOrderLoading(false);
-
-                     const { success } = await apiHandler(`/order/confirm-order`, "POST", {
-                        orderPaymentID: orderPaymentID,
-                        paymentIntentID: paymentIntent?.id,
-                        paymentMethodID: paymentIntent?.payment_method,
-                        orderItems: orderItems
-                     }, clientSecret);
-
-                     if (success) {
-                        setMessage("Order confirmed.", "success");
-                        setConfirmLoading(false);
-
-                        return router.push("/user/orders-management");
-                     }
-                  }
-               }
-
-            } else {
-               setMessage(message, "danger");
-               setOrderLoading(false);
+               return router.push("/user/orders-management");
             }
          }
+
+
+
+
+
+         // if (Array.isArray(products) && products.length >= 0 && paymentMethod) {
+
+         //    setOrderLoading(true);
+
+         //    const { clientSecret, orderPaymentID, orderItems, message, success } = await apiHandler(`/order/set-order/`, "POST", { state: "byCart", paymentMethod }, userInfo?.email);
+
+         //    if (success) {
+
+         //       if (success && clientSecret && orderPaymentID && orderItems) {
+
+         //          setMessage(message, "success");
+
+         //          const { paymentIntent, error: intErr } = await stripe.confirmCardPayment(
+         //             clientSecret,
+         //             {
+         //                payment_method: {
+         //                   card: card,
+         //                   billing_details: {
+         //                      name: selectedAddress?.name,
+         //                      email: userInfo?.email,
+         //                      phone: selectedAddress?.phone_number,
+         //                      address: {
+         //                         city: selectedAddress?.city,
+         //                         state: selectedAddress?.division,
+         //                         line1: selectedAddress?.area,
+         //                         line2: selectedAddress?.landmark,
+         //                         country: "BD"
+         //                      }
+         //                   },
+         //                   metadata: {
+         //                      order_id: orderPaymentID
+         //                   },
+         //                },
+         //             },
+         //          );
+
+         //          if (intErr) {
+         //             setOrderLoading(false);
+         //             return setMessage(intErr?.message, "danger");
+         //          }
+
+         //          if (paymentIntent?.id && paymentIntent?.payment_method && paymentIntent?.status === "succeeded") {
+         //             setMessage("Payment succeeded.", "success");
+         //             setConfirmLoading(true);
+         //             setOrderLoading(false);
+
+         //             const { success } = await apiHandler(`/order/confirm-order`, "POST", {
+         //                orderPaymentID: orderPaymentID,
+         //                paymentIntentID: paymentIntent?.id,
+         //                paymentMethodID: paymentIntent?.payment_method,
+         //                orderItems: orderItems
+         //             }, clientSecret);
+
+         //             if (success) {
+         //                setMessage("Order confirmed.", "success");
+         //                setConfirmLoading(false);
+
+         //                return router.push("/user/orders-management");
+         //             }
+         //          }
+         //       }
+
+         //    } else {
+         //       setMessage(message, "danger");
+         //       setOrderLoading(false);
+         //    }
+         // }
       } catch (error) {
          setMessage(error?.message, 'danger');
       }

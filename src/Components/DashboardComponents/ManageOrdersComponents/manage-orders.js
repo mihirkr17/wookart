@@ -15,7 +15,7 @@ import { useAuthContext } from '@/lib/AuthProvider';
 const ManageOrders = () => {
    const router = useRouter();
    const { userInfo, setMessage } = useAuthContext();
-   const { order, orderRefetch, orderLoading, viewController } = useOrder();
+   const { order, orders, orderRefetch, orderLoading, viewController } = useOrder();
    const [openModal, setOpenModal] = useState(false);
    const [openOrderPaymentInfo, setOpenOrderPaymentInfo] = useState(false);
    const [labelModal, setLabelModal] = useState(false);
@@ -24,7 +24,6 @@ const ManageOrders = () => {
    const [shipOrder, setShipOrder] = useState([]);
    const [showOrders, setShowOrders] = useState("pending");
    const viewMode = new URLSearchParams(window && window.location.search).get("view");
-
 
    // Filtering orders by status
 
@@ -106,6 +105,7 @@ const ManageOrders = () => {
                                              setMessage={setMessage}
                                              orderRefetch={orderRefetch}
                                              orderList={order}
+                                             orders={orders}
                                              setOpenModal={setOpenModal}
                                              setLabelModal={setLabelModal}
                                              setOpenOrderPaymentInfo={setOpenOrderPaymentInfo}

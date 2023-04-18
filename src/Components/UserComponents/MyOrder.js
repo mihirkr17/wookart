@@ -132,6 +132,60 @@ const MyOrder = () => {
             </div>
             <div className="col-lg-12 pt-3">
                <h6>{orderItems && orderItems.length > 0 ? "Total : " + orderItems.length + " Orders" : "You Have No Orders In Your History"}</h6>
+
+
+               <div className="row">
+                  <div className="col-12">
+                     {
+                        Array.isArray(orderItems) && orderItems.map((orderItem, index) => {
+                           const { totalAmount, _id, orderPaymentID, paymentMode, paymentStatus, items } = orderItem;
+                           return (
+                              <div className="p-2 mb-2 border" key={index}>
+                                 <div className="div w-100">
+                                    <pre className="text-muted">
+                                       Total Amount     : $ {totalAmount}<br />
+                                       Payment Mode     : {paymentMode} <br />
+                                       Payment Status   : {paymentStatus}
+
+                                    </pre>
+                                 </div>
+
+                                 <table className='table'>
+                                    <thead>
+                                       <tr>
+                                          <th>Items</th>
+                                          <th>Base Price</th>
+                                          <th>Sell Price</th>
+                                          <th>Qty</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       {
+                                          Array.isArray(items) && items.map((nItem, i) => {
+                                             const { title, baseAmount, quantity, sellingPrice } = nItem;
+                                             return (
+                                                <tr key={i}>
+                                                   <td>{title}</td>
+                                                   <td>{baseAmount}</td>
+                                                   <td>{sellingPrice}</td>
+                                                   <td>{quantity}</td>
+                                                </tr>
+                                             )
+                                          })
+                                       }
+                                    </tbody>
+                                 </table>
+                              </div>
+                           )
+                        })
+                     }
+
+                  </div>
+               </div>
+
+
+
+<br /> <br /> <br />
                <div className="row">
                   {
                      orderItems && orderItems.length > 0 ? orderItems.map(order => {

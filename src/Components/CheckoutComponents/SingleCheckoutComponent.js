@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import CartAddress from "../CartComponents/CartAddress";
+import { apiHandler } from "@/Functions/common";
 
 
 export default function SingleCheckoutComponent() {
@@ -93,99 +94,170 @@ export default function SingleCheckoutComponent() {
          setOrderLoading(true);
 
          if (data?.container_p?.finalAmounts && paymentMethod) {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/payment/create-payment-intent`, {
-               method: "POST",
-               withCredentials: true,
-               credentials: "include",
-               headers: {
-                  "Content-Type": "application/json"
+
+            const { success, message, clientSecret, orderPaymentID, orderDocID, totalAmount } = await apiHandler(`/order/single-purchase`, "POST", {
+               productID: product?.productID,
+               listingID: product?.listingID,
+               variationID: product?.variationID,
+               quantity: product?.quantity,
+               customerEmail: product?.customerEmail,
+               state: "byPurchase"
+            }, userInfo?.email);
+
+            if (!success) {
+               setMessage(message, "danger");
+               return;
+            };
+
+            const { paymentIntent, error } = await stripe.confirmCardPayment(
+               clientSecret,
+               {
+                  payment_method: {
+                     card: card,
+                     billing_details: {
+                        name: selectedAddress?.name,
+                        email: userInfo?.email,
+                        phone: selectedAddress?.phone_number,
+                        address: {
+                           city: selectedAddress?.city,
+                           state: selectedAddress?.division,
+                           line1: selectedAddress?.area,
+                           line2: selectedAddress?.landmark,
+                           country: "BD"
+                        }
+                     },
+                     metadata: {
+                        order_id: orderPaymentID
+                     },
+                  },
                },
-               body: JSON.stringify({ totalAmount: parseInt(data?.container_p?.finalAmounts) })
-            });
+            );
 
-            const result = await response.json();
+            if (error) {
+               setOrderLoading(false);
+               return setMessage(error?.message, "danger");
+            }
 
-            if (response.ok) {
-               clientSecret = result?.clientSecret;
-               orderPaymentID = result?.orderPaymentID;
+            if (!paymentIntent?.id) {
+               setOrderLoading(false);
+               return;
+            }
 
-               if (clientSecret && orderPaymentID) {
+            setOrderLoading(true);
 
-                  const { paymentIntent, error } = await stripe.confirmCardPayment(
-                     clientSecret,
-                     {
-                        payment_method: {
-                           card: card,
-                           billing_details: {
-                              name: selectedAddress?.name,
-                              email: userInfo?.email,
-                              phone: selectedAddress?.phone_number,
-                              address: {
-                                 city: selectedAddress?.city,
-                                 state: selectedAddress?.division,
-                                 line1: selectedAddress?.area,
-                                 line2: selectedAddress?.landmark,
-                                 country: "BD"
-                              }
-                           },
-                           metadata: {
-                              order_id: orderPaymentID
-                           },
-                        },
-                     },
-                  );
 
-                  if (error) {
-                     setOrderLoading(false);
-                     return setMessage(error?.message, "danger");
-                  }
+            if (!paymentIntent?.payment_method) {
+               return setMessage("Payment method failed !", "danger");
+            }
 
-                  if (!paymentIntent?.id) {
-                     setOrderLoading(false);
-                     return;
-                  }
+            if (paymentIntent?.id && paymentIntent?.payment_method && paymentIntent?.status === "succeeded") {
+               setMessage("Payment succeeded.", "success");
+               setConfirmLoading(true);
+               setOrderLoading(false);
 
-                  setOrderLoading(true);
+               const { success } = await apiHandler(`/order/confirm-order`, "POST", {
+                  orderPaymentID,
+                  paymentIntentID: paymentIntent?.id,
+                  paymentMethodID: paymentIntent?.payment_method,
+                  orderDocID,
+                  totalAmount
+               }, clientSecret);
 
-                  const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/order/single-purchase`, {
-                     method: "POST",
-                     withCredentials: true,
-                     credentials: "include",
-                     headers: {
-                        "Content-Type": "application/json",
-                        authorization: `${userInfo?.email}`
-                     },
-                     body: JSON.stringify({
-                        productID: product?.productID,
-                        listingID: product?.listingID,
-                        variationID: product?.variationID,
-                        quantity: product?.quantity,
-                        customerEmail: product?.customerEmail,
-                        state: "byPurchase",
-                        orderPaymentID,
-                        paymentMethodID: paymentIntent?.payment_method,
-                        paymentIntentID: paymentIntent?.id,
-                     })
-                  });
+               if (success) {
+                  setMessage("Order confirmed.", "success");
+                  setConfirmLoading(false);
 
-                  const result = await response.json();
-
-                  if (response.status >= 200 && response.status <= 299) {
-                     setOrderLoading(false);
-                     if (result?.success) {
-                        return router.push("/user/orders-management");
-                     }
-                  } else {
-                     setOrderLoading(false);
-                  }
-               } else {
-                  setOrderLoading(false);
-                  return setMessage("Payment intent creation failed !", "danger");
+                  return router.push("/user/orders-management");
                }
+            }
+
+            return;
+
+            data["paymentMethodID"] = paymentIntent?.payment_method;
+
+            const result = await apiHandler(`/order/confirm-single-purchase-order`, "POST", data);
+
+            if (result.success) {
+               setOrderLoading(false);
+               return router.push("/user/orders-management");
+
             } else {
                setOrderLoading(false);
-               return setMessage(result?.message, "danger");
             }
+
+
+
+            // const { success, message, clientSecret, orderPaymentID } = await apiHandler(`/payment/create-payment-intent`, "POST", {
+            //    totalAmount: parseInt(data?.container_p?.finalAmounts)
+            // });
+
+            // if (!success) {
+            //    setOrderLoading(false);
+            //    return setMessage(message, "danger");
+            // }
+
+            // if (clientSecret && orderPaymentID) {
+
+            //    const { paymentIntent, error } = await stripe.confirmCardPayment(
+            //       clientSecret,
+            //       {
+            //          payment_method: {
+            //             card: card,
+            //             billing_details: {
+            //                name: selectedAddress?.name,
+            //                email: userInfo?.email,
+            //                phone: selectedAddress?.phone_number,
+            //                address: {
+            //                   city: selectedAddress?.city,
+            //                   state: selectedAddress?.division,
+            //                   line1: selectedAddress?.area,
+            //                   line2: selectedAddress?.landmark,
+            //                   country: "BD"
+            //                }
+            //             },
+            //             metadata: {
+            //                order_id: orderPaymentID
+            //             },
+            //          },
+            //       },
+            //    );
+
+            //    if (error) {
+            //       setOrderLoading(false);
+            //       return setMessage(error?.message, "danger");
+            //    }
+
+            //    if (!paymentIntent?.id) {
+            //       setOrderLoading(false);
+            //       return;
+            //    }
+
+            //    setOrderLoading(true);
+
+            //    const result = await apiHandler(`/order/single-purchase`, "POST", {
+            //       productID: product?.productID,
+            //       listingID: product?.listingID,
+            //       variationID: product?.variationID,
+            //       quantity: product?.quantity,
+            //       customerEmail: product?.customerEmail,
+            //       state: "byPurchase",
+            //       orderPaymentID,
+            //       paymentMethodID: paymentIntent?.payment_method,
+            //       paymentIntentID: paymentIntent?.id,
+            //    }, userInfo?.email);
+
+            //    if (result.success) {
+            //       setOrderLoading(false);
+            //       return router.push("/user/orders-management");
+
+            //    } else {
+            //       setOrderLoading(false);
+            //    }
+            // } else {
+            //    setOrderLoading(false);
+            //    return setMessage("Payment intent creation failed !", "danger");
+            // }
+
          }
       } catch (error) {
          return setMessage(error?.message, "danger");

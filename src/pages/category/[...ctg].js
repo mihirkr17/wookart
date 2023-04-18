@@ -9,38 +9,94 @@ import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export function __dynamicCategory({ p }) {
-   const [data, setData] = useState([]);
-   const [size, setSize] = useState("");
-   const [brnd, setBrnd] = useState("");
+export function __dynamicCategory({ products, filterData }) {
    const router = useRouter();
    const { ctg } = router.query;
+   const [fBrand, setFBrand] = useState([]);
+   const [sorted, setSorted] = useState("");
+   const [priceRanger, setPriceRanger] = useState(0);
+   const basePath = ctg?.join("/");
+
 
    useEffect(() => {
-      let newP = [];
+      setFBrand(router?.query?.brand?.replace(/\s/g, "-").split("~") ?? []);
+      setSorted((router?.query?.sorted && router?.query?.sorted) || "");
+      setPriceRanger((router?.query?.price_range && router?.query?.price_range) || "")
+   }, [router?.query?.brand, router?.query?.sorted, router?.query?.price_range]);
 
-      if (size) {
-         newP = p && p.filter(m => m?.variant?.sizes === size);
-      } else if (brnd) {
-         newP = p && p.filter(m => m?.brand === brnd);
-      } else {
-         newP = p;
-      }
+   // useEffect(() => {
+   //    let newData = priceRanger && products?.filter(e => e?.pricing?.sellingPrice <= priceRanger);
+   //    setData(newData || products);
+   // }, [priceRanger, products]);
 
-      setData(newP);
-   }, [p, size, brnd]);
 
-   let lastCtg = ctg && ctg.slice(-1)[0];
+   let sort = sorted ? `&sorted=${sorted}` : "";
+   let priceR = priceRanger ? `&price_range=${priceRanger}` : "";
 
-   let fc = ctg && ctg[0];
+   // for handling products by brand value
+   function handleBrandFilter(params) {
+      const { value, checked } = params.target;
+      let newVal = value.replace(/\s/g, "-");
 
-   let category = newCategory && newCategory.find(c => c?.category === fc);
+      let b = checked
+         ? [...fBrand, newVal].filter((e, i, fa) => fa.indexOf(e) === i)
+         : fBrand.filter(e => e !== newVal);
 
-   let brand = p && p.map(d => d?.brand).filter(e => e);
+      setFBrand(b);
+      router.push(`${basePath}?brand=${(b ? b.join("~") : "") + sort + priceR}`);
+   }
 
-   let sizes = p && p.map(d => d?.variant?.sizes).filter(e => e) || false;
+   // sorting products by price lower or higher
+   function handleSortedPrice(e) {
+      const { value } = e.target;
+      setSorted(value);
+      router.push(`${basePath}?brand=${fBrand && fBrand.join("~")}&sorted=${value + priceR}`)
+   }
+
+   function handlePriceRanger(e) {
+      const { value } = e.target;
+      setPriceRanger(value);
+      router.push(`${basePath}?brand=${fBrand && fBrand.join("~") + sort}&price_range=${value}`)
+   }
+
+
+   // others options
+   // function getAttributes(variants = []) {
+   //     return variants.reduce((acc, curr) => {
+
+   //       Object.entries(curr).forEach(([key, value]) => {
+
+   //          if (acc.hasOwnProperty(key)) {
+
+   //             if (Array.isArray(acc[key])) {
+   //                acc[key].push(value);
+   //             } else {
+   //                acc[key] = [acc[key], value];
+   //             }
+   //          } else {
+   //             acc[key] = value;
+   //          }
+   //       });
+   //       return acc;
+   //    });
+   // }
+
+   // let v = filterData?.map(item => item?.variant);
+
+
+   let lastCtg = ctg?.slice(-1)[0];
+
+   let fc = ctg?.[0];
+
+   let category = newCategory?.find(c => c?.category === fc) ?? {};
+
+   let brand = filterData?.map(d => d?.brand).filter(e => e) ?? [];
+   const sizes = products?.map(d => d?.variant?.sizes).filter(e => e) ?? [];
+   const ram = products?.map(d => d?.variant?.ram).filter(e => e) ?? [];
+   const rom = products?.map(d => d?.variant?.rom).filter(e => e) ?? [];
+   const colors = products?.map(d => d?.variant?.color).filter(e => e) ?? [];
 
    return (
       <section className="section_default">
@@ -84,14 +140,16 @@ export function __dynamicCategory({ p }) {
                      <b>Brand</b> <br />
 
                      {
-                        brand && brand.map((b, i) => {
+                        brand?.map((b, i) => {
                            return (
-                              <>
-                                 <label htmlFor="brand" key={i}>
-                                    <input type="checkbox" name="brand" id="brand" value={b} onChange={(e) => setBrnd(e.target.value)} />
+                              <React.Fragment key={i}>
+                                 <label htmlFor={b}>
+                                    <input type="checkbox" name={b} id={b} value={b} onChange={(e) => handleBrandFilter(e)}
+                                       checked={fBrand && fBrand.includes(b.replace(/\s/g, "-"))}
+                                    />
                                     &nbsp;&nbsp;{b}
                                  </label> <br />
-                              </>
+                              </React.Fragment>
                            )
                         })
                      }
@@ -104,17 +162,27 @@ export function __dynamicCategory({ p }) {
                            {
                               sizes.map((s) => {
                                  return (
-                                    <>
-                                       <label htmlFor="size" key={s}>
-                                          <input type="checkbox" name="size" id="size" value={s} onChange={(e) => setSize(e.target.value)} />
+                                    <React.Fragment key={s}>
+                                       <label htmlFor="size">
+                                          <input type="checkbox" name="size" id="size" value={s}
+                                             onChange={(e) => setSize(e.target.value)}
+
+                                          />
                                           &nbsp;&nbsp;{s}
                                        </label> <br />
-                                    </>
+                                    </React.Fragment>
                                  )
                               })
                            }
                         </div> : ""
                   }
+
+
+                  <div className="p-1">
+                     <b>Price Range</b> <br />
+
+                     <input type="range" name="priceRange" id="priceRange" min={0} max={10000} title={priceRanger} value={priceRanger} onChange={(e) => handlePriceRanger(e)} />
+                  </div>
 
 
                </div>
@@ -130,14 +198,45 @@ export function __dynamicCategory({ p }) {
                         </h6>
                         <small className="textMute">
                            {
-                              data && data.length + " items found in " + textToTitleCase(lastCtg)
+                              products?.length + " items found in " + textToTitleCase(lastCtg)
                            }
                         </small>
+
+                        <div className="filter_by py-2">
+
+                           <select name="sorted" id="sorted" onChange={(e) => handleSortedPrice(e)}>
+                              <option selected={sorted === "relevant" ? true : false} value="relevant">Relevant</option>
+                              <option selected={sorted === "lowest" ? true : false} value="lowest">Lowest Price</option>
+                              <option selected={sorted === "highest" ? true : false} value="highest">Highest Price</option>
+                           </select>
+
+                           <br />
+                           {
+                              fBrand && fBrand.map((e, i) => {
+                                 return e ? (
+                                    <div className="badge_success m-1" key={i}>
+                                       Brand: {e}
+                                       &nbsp;
+                                       &nbsp;
+                                       &nbsp;
+                                       <b onClick={
+                                          () =>
+                                             setFBrand(f => {
+                                                let y = f?.filter(g => g !== e) || [];
+                                                router.push(`${basePath}?brand=${(y ? y.join("~") : "") + sort + priceR}`);
+                                                return y;
+                                             })
+                                       } style={{ cursor: "pointer" }}>X</b>
+                                    </div>
+                                 ) : ""
+                              })
+                           }
+                        </div>
                      </div>
 
                      <div className="row">
                         {
-                           Array.isArray(data) && data.map((product) => {
+                           Array.isArray(products) && products.map((product) => {
                               return (
                                  <Product key={product?._vrid} product={product}></Product>
                               )
@@ -148,21 +247,28 @@ export function __dynamicCategory({ p }) {
                </div>
             </div>
          </div>
-      </section>
+      </section >
    )
 }
 
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ params, query }) {
    const { ctg } = params;
+   const { brand, sorted, price_range } = query;
 
-   const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/product-by-category?categories=${ctg}`);
+   const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/product-by-category?categories=${ctg}`, {
+      method: "POST",
+      headers: {
+         "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ brand, sorted, price_range })
+   });
 
-   const data = await response.json();
+   const { products, filterData } = await response.json();
 
 
    return {
-      props: { p: data }
+      props: { products: products || [], filterData: filterData || null }
    }
 }
 

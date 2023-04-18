@@ -6,7 +6,7 @@ import React from 'react';
 import { useState } from 'react';
 
 
-const OrderTable = ({ orderList, setOpenModal, setLabelModal, orderRefetch, setMessage, userInfo, setOpenOrderPaymentInfo }) => {
+const OrderTable = ({ orderList, setOpenModal, setLabelModal, orders, orderRefetch, setMessage, userInfo, setOpenOrderPaymentInfo }) => {
    const [openBox, setOpenBox] = useState(false);
    const [openActionMenu, setOpenActionMenu] = useState(null);
    const [openCancelReasonForm, setOpenCancelReasonForm] = useState(false);
@@ -43,12 +43,12 @@ const OrderTable = ({ orderList, setOpenModal, setLabelModal, orderRefetch, setM
          return;
       }
 
-      const { customerEmail, productID, variationID, orderID, listingID, trackingID, quantity } = order;
+      const { customerEmail, productID, variationID, _id, listingID, trackingID, quantity } = order;
 
       const { success, message } = await apiHandler(`/dashboard/store/${userInfo?.seller?.storeInfos?.storeName}/order/order-status-management`,
          "POST", {
          type: "canceled",
-         customerEmail, productID, variationID, orderID, listingID, trackingID, quantity, cancelReason
+         customerEmail, productID, variationID, _id, listingID, trackingID, quantity, cancelReason
       });
 
       if (success) {
@@ -61,11 +61,11 @@ const OrderTable = ({ orderList, setOpenModal, setLabelModal, orderRefetch, setM
 
    const orderDispatchHandler = async (order) => {
       try {
-         const { customerEmail, orderID, trackingID } = order;
+         const { customerEmail, _id, trackingID } = order;
 
-         if (orderID && trackingID && customerEmail) {
+         if (_id && trackingID && customerEmail) {
             const { success, message } = await apiHandler(`/dashboard/store/${userInfo?.seller?.storeInfos?.storeName}/order/order-status-management`,
-               "POST", { type: "dispatch", orderID, trackingID, customerEmail });
+               "POST", { type: "dispatch", _id, trackingID, customerEmail });
             if (success) {
                setMessage(message, "success")
                orderRefetch();
@@ -79,9 +79,62 @@ const OrderTable = ({ orderList, setOpenModal, setLabelModal, orderRefetch, setM
    }
 
 
+   function gdg(items) {
+      return (
+         <table className="table" style={{ border: "1px solid black" }}>
+            <thead>
+               <tr>
+                  <th>Item ID</th>
+                  <th>Amount</th>
+               </tr>
+            </thead>
+            <tbody>
+               {
+                  items.map((item, i) => {
+                     return (
+                        <tr key={i}>
+                           <td>{item?.itemID}</td>
+                           <td>{item?.baseAmount}</td>
+                        </tr>
+                     )
+                  })
+               }
+            </tbody>
+         </table>
+      )
+
+   }
+
+
    return (
       <div className='table-responsive-sm'>
-         <table className="table">
+
+         {orders && orders.map((odr) => {
+
+            // const { orderID, orderPaymentID, customerEmail, paymentMode, orderStatus, baseAmount, paymentStatus } = odr;
+            const { _id, orderPaymentID, customerEmail, paymentMode, orderStatus, baseAmount, totalAmount, paymentStatus, items } = odr;
+            return (
+               <div className="card_default card_description" key={_id}>
+                  <div className="order_text">
+                     <small>
+                        Customer Email: {customerEmail} <br />
+                        Order Payment ID : {orderPaymentID} <br />
+                        Payment Mode: {paymentMode} <br />
+                        Payment Status: {paymentStatus} <br />
+                        Total Amount : {totalAmount}
+                     </small>
+                  </div>
+
+                  {
+                     gdg(items)
+                  }
+               </div>
+            )
+         })
+         }
+
+
+         {/* <table className="table">
             <thead>
                <tr>
                   <th>Order</th>
@@ -95,21 +148,22 @@ const OrderTable = ({ orderList, setOpenModal, setLabelModal, orderRefetch, setM
             </thead>
             <tbody>
                {
-                  orderList && orderList.map((odr) => {
+                  orders && orders.map((odr) => {
 
-                     const { orderID, orderPaymentID, customerEmail, paymentMode, orderStatus, baseAmount, paymentStatus } = odr;
+                     // const { orderID, orderPaymentID, customerEmail, paymentMode, orderStatus, baseAmount, paymentStatus } = odr;
+                     const { _id, orderPaymentID, customerEmail, paymentMode, orderStatus, baseAmount, paymentStatus, items } = odr;
                      return (
-                        <tr key={orderID}>
 
+                        <tr key={_id}>
                            <td>
                               <pre>
-                                 <span>Order ID   : {orderID}</span> <br />
+                                 <span>Order ID   : {_id}</span> <br />
                                  <span>Payment ID : {orderPaymentID}</span>
                               </pre>
                            </td>
                            <td>{customerEmail}</td>
                            <td>{paymentMode}</td>
-                           <td>{paymentStatus === "success" && <span className='badge_success'>{paymentStatus}</span>}</td>
+                           <td>{paymentStatus === "paid" && <span className='badge_success'>{paymentStatus}</span>}</td>
                            <td>$&nbsp;{baseAmount}</td>
                            <td>{orderStatus}</td>
 
@@ -119,12 +173,12 @@ const OrderTable = ({ orderList, setOpenModal, setLabelModal, orderRefetch, setM
                                  padding: "0.4rem",
                                  background: "transparent",
                                  fontSize: "1rem"
-                              }} onClick={() => setOpenActionMenu(orderID !== openActionMenu ? orderID : false)}>
+                              }} onClick={() => setOpenActionMenu(_id !== openActionMenu ? _id : false)}>
                                  <FontAwesomeIcon icon={faEllipsisV}></FontAwesomeIcon>
                               </button>
 
                               {
-                                 (openActionMenu === orderID) &&
+                                 (openActionMenu === _id) &&
                                  <div className='action_menu'>
                                     <ul>
                                        <li>
@@ -163,11 +217,11 @@ const OrderTable = ({ orderList, setOpenModal, setLabelModal, orderRefetch, setM
                                                 <button className='status_btn_alt' onClick={() => setLabelModal(true && odr)}>Download Label</button>
                                              </li>
                                              <li>
-                                                <button className='status_btn_alt' onClick={() => setOpenCancelReasonForm((orderID !== openCancelReasonForm) ? orderID : false)}>
+                                                <button className='status_btn_alt' onClick={() => setOpenCancelReasonForm((_id !== openCancelReasonForm) ? _id : false)}>
                                                    Cancel Now
                                                 </button>
                                                 {
-                                                   (openCancelReasonForm === orderID) &&
+                                                   (openCancelReasonForm === _id) &&
                                                    <div>
                                                       <form className="p-1" onSubmit={(e) => orderCancelHandler(e, odr)}>
                                                          <label htmlFor="cancelReason">Choose a Reason</label>
@@ -194,12 +248,13 @@ const OrderTable = ({ orderList, setOpenModal, setLabelModal, orderRefetch, setM
                               }
                            </td>
                         </tr>
+
                      )
                   })
                }
             </tbody>
 
-         </table>
+         </table> */}
 
          <ConfirmDialog payload={{
             reference: openBox, openBox, setOpenBox,

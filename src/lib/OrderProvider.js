@@ -13,6 +13,7 @@ const OrderProvider = ({ children }) => {
    const [ref, setRef] = useState(false);
    const viewMode = new URLSearchParams(window && window.location.search).get("view");
    const [view, setView] = useState(viewMode || "single" || "");
+   const [orders, setOrders] = useState([]);
 
    const orderRefetch = () => setRef(e => !e);
 
@@ -46,6 +47,7 @@ const OrderProvider = ({ children }) => {
                if (result?.success === true && result?.statusCode === 200) {
                   setOrderLoading(false);
                   setOrder(result?.data?.module);
+                  setOrders(result?.data?.orders);
                   setOrderCount(result?.data?.totalOrderCount);
                   setNewOrderCount(result?.data?.newOrderCount);
                }
@@ -69,7 +71,8 @@ const OrderProvider = ({ children }) => {
          orderCount,
          newOrderCount,
          orderError,
-         viewController
+         viewController,
+         orders
       }}>
          {children}
       </OrderContext.Provider>
