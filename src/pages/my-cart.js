@@ -62,7 +62,7 @@ export default withOutDashboard(function MyCart() {
                                        data: JSON.stringify(cartData && cartData)
                                     }
                                  }} as={`/checkout?spa=${userInfo?._uuid + "cart.proceed_to_checkout"}`}>
-                                    Proceed To Checkout
+                                    PROCEED TO CHECKOUT
                                  </Link>
                            }
                         </div>

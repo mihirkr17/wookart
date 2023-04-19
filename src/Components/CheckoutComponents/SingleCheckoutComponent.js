@@ -95,7 +95,7 @@ export default function SingleCheckoutComponent() {
 
          if (data?.container_p?.finalAmounts && paymentMethod) {
 
-            const { success, message, clientSecret, orderPaymentID, orderDocID, totalAmount } = await apiHandler(`/order/single-purchase`, "POST", {
+            const { success, message, clientSecret,productInfos, orderPaymentID, totalAmount } = await apiHandler(`/order/single-purchase`, "POST", {
                productID: product?.productID,
                listingID: product?.listingID,
                variationID: product?.variationID,
@@ -152,20 +152,20 @@ export default function SingleCheckoutComponent() {
 
             if (paymentIntent?.id && paymentIntent?.payment_method && paymentIntent?.status === "succeeded") {
                setMessage("Payment succeeded.", "success");
-               setConfirmLoading(true);
+          
                setOrderLoading(false);
 
                const { success } = await apiHandler(`/order/confirm-order`, "POST", {
                   orderPaymentID,
                   paymentIntentID: paymentIntent?.id,
                   paymentMethodID: paymentIntent?.payment_method,
-                  orderDocID,
-                  totalAmount
+                  productInfos,
+                  state: "byPurchase"
                }, clientSecret);
 
                if (success) {
                   setMessage("Order confirmed.", "success");
-                  setConfirmLoading(false);
+                  // setConfirmLoading(false);
 
                   return router.push("/user/orders-management");
                }

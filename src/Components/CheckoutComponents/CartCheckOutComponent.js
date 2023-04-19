@@ -12,16 +12,18 @@ import CartCalculation from "../CartComponents/CartCalculation";
 import { useState } from "react";
 import { useAuthContext } from "@/lib/AuthProvider";
 import { apiHandler } from "@/Functions/common";
+import { useCartContext } from "@/lib/CartProvider";
 
 
 export default function CartCheckoutComponent() {
    const { authRefetch, userInfo, setMessage } = useAuthContext();
    const router = useRouter();
    const { data } = router.query;
-   const [state, setState] = useState((data && JSON.parse(data)) || {});
+   // const [state, setState] = useState((data && JSON.parse(data)) || {});
 
    const [orderLoading, setOrderLoading] = useState(false);
    const [confirmLoading, setConfirmLoading] = useState(false);
+   const { cartData: state } = useCartContext();
 
    const stripe = useStripe();
    const elements = useElements();
@@ -64,6 +66,8 @@ export default function CartCheckoutComponent() {
 
          const { clientSecret, orderPaymentID, totalAmount, productInfos, message, success } = await apiHandler(`/order/cart-purchase/`, "POST", { state: "byCart", paymentMethod }, userInfo?.email);
 
+         setOrderLoading(false);
+
          if (!success || !clientSecret || !orderPaymentID) {
             setOrderLoading(false);
             return setMessage(message, "danger");
@@ -95,6 +99,8 @@ export default function CartCheckoutComponent() {
             },
          );
 
+         console.log(paymentIntent);
+
          if (intErr) {
             setOrderLoading(false);
             return setMessage(intErr?.message, "danger");
@@ -110,7 +116,7 @@ export default function CartCheckoutComponent() {
                paymentIntentID: paymentIntent?.id,
                paymentMethodID: paymentIntent?.payment_method,
                productInfos,
-               totalAmount
+               state
             }, clientSecret);
 
             if (success) {
