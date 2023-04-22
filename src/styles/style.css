@@ -820,6 +820,116 @@ label {
   background-color: var(--color-accent);
 }
 
+.my_order_items {
+  border-radius: 5px;
+  padding: 10px;
+  -webkit-box-shadow: 0 0 9px 2px rgba(0, 0, 0, 0.1490196078);
+          box-shadow: 0 0 9px 2px rgba(0, 0, 0, 0.1490196078);
+  margin: 0 0 10px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+.my_order_items table tbody {
+  vertical-align: middle !important;
+  border: unset !important;
+}
+.my_order_items table tbody tr {
+  border: unset !important;
+}
+.my_order_items table tbody td {
+  padding: 4px 0;
+}
+.my_order_items .ssg {
+  border-bottom: 1px solid rgba(95, 95, 95, 0.1098039216);
+  padding: 10px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+.my_order_items .ssg > div {
+  width: 100%;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+.my_order_items .ssg > div:last-child {
+  text-align: end;
+}
+
+.manage_order_button {
+  border: 1px solid transparent;
+  background-color: unset;
+  text-transform: uppercase;
+  padding: 5px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: steelblue;
+  cursor: pointer;
+  -webkit-transition: all 0.4s linear;
+  transition: all 0.4s linear;
+}
+.manage_order_button:hover {
+  border: 1px solid steelblue;
+}
+
+.billing-details-content {
+  padding: 0 30px 30px 30px;
+  border-radius: 20px 0px 20px 20px;
+}
+.billing-details-content .shipping_address {
+  color: #0e8e92;
+}
+
+.bil-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #0e8e92;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.billing-details-content table {
+  width: 100%;
+  color: #0e8e92;
+  border-collapse: collapse;
+}
+.billing-details-content table tr td {
+  padding: 2px;
+  letter-spacing: 1px;
+}
+.billing-details-content table tr td i {
+  width: 18px;
+  vertical-align: middle;
+}
+.billing-details-content table tr td.right-t {
+  text-align: right;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.br-top td {
+  border-top: 1px solid #01ac8f;
+  padding: 5px 0px 0px;
+}
+.br-top td.right-t {
+  font-size: 16px;
+}
+
 .main_spinner {
   width: 100%;
   height: 80vh;

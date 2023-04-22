@@ -5,7 +5,10 @@ import { useFetch } from '@/Hooks/useFetch';
 import Link from 'next/link';
 import FilterOption from '../Shared/FilterOption';
 import BtnSpinner from '../Shared/BtnSpinner/BtnSpinner';
-import { calcTime } from '@/Functions/common';
+import { apiHandler, calcTime } from '@/Functions/common';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClose } from '@fortawesome/free-solid-svg-icons';
+import ManageOrderModal from './ManageOrderModal';
 
 
 const MyOrder = () => {
@@ -13,11 +16,12 @@ const MyOrder = () => {
    const { data, refetch, loading } = useFetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/order/my-order/${userInfo?.email}`);
    const [actLoading, setActLoading] = useState(false);
    const [ratPoint, setRatPoint] = useState("5");
-   const [reason, setReason] = useState("");
-   const [openCancelForm, setOpenCancelForm] = useState(false);
+
+
    const [openReviewForm, setOpenReviewForm] = useState(false);
    const [filterOrder, setFilterOrder] = useState("");
    const [orderItems, setOrderItems] = useState([]);
+   const [manageOrderModal, setManageOrderModal] = useState(false);
 
 
    useEffect(() => {
@@ -34,22 +38,6 @@ const MyOrder = () => {
          setOpenReviewForm(false);
       } else {
          setOpenReviewForm(orderID);
-      }
-   }
-
-   const removeOrderHandler = async (orderID) => {
-      if (window.confirm("Want to cancel this order ?")) {
-         const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/order/remove-order/${userInfo?.email}/${orderID}`, {
-            method: "DELETE",
-            withCredentials: true,
-            credentials: "include",
-         });
-
-         const resData = await response.json();
-         if (response.ok) {
-            resData && refetch();
-            setMessage(resData?.message, 'success');
-         }
       }
    }
 
@@ -85,40 +73,20 @@ const MyOrder = () => {
       }
    }
 
-   const handleCancelOrder = async (e, order) => {
-      e.preventDefault();
-
-      const { orderID } = order;
-
-      if (reason === "Choose Reason" || reason === "") {
-         setMessage(<strong className='text-success'>Please Select Cancel Reason...</strong>);
-         return;
-      } else {
-         const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/order/cancel-my-order/${userInfo?.email}`, {
-            method: "PUT",
-            withCredentials: true,
-            credentials: "include",
-            headers: {
-               "Content-Type": "application/json",
-               authorization: userInfo?.email
-            },
-            body: JSON.stringify({ cancelReason: reason, orderID })
-         });
-
-         const resData = await response.json();
-
-         if (response.ok) {
-            refetch();
-            setMessage(resData?.message, 'success');
-         }
-      }
-   }
-
 
    if (loading) return <Spinner></Spinner>;
 
    return (
       <div className="container">
+         {
+            manageOrderModal && <ManageOrderModal
+               setMessage={setMessage}
+               refetch={refetch}
+               closeModal={() => setManageOrderModal(false)}
+               data={manageOrderModal}
+            />
+
+         }
          <h5 className="py-4 text-start">
             My Orders
          </h5>
@@ -138,38 +106,65 @@ const MyOrder = () => {
                   <div className="col-12">
                      {
                         Array.isArray(orderItems) && orderItems.map((orderItem, index) => {
-                           const { totalAmount, _id, orderPaymentID, paymentMode, paymentStatus, items } = orderItem;
+                           const { totalAmount, _id, orderStatus, isCanceled, paymentStatus, customerEmail, items, orderID, orderAT, sellerStore } = orderItem;
                            return (
-                              <div className="p-2 mb-2 border" key={index}>
-                                 <div className="div w-100">
-                                    <pre className="text-muted">
-                                       Total Amount     : $ {totalAmount}<br />
-                                       Payment Mode     : {paymentMode} <br />
-                                       Payment Status   : {paymentStatus}
+                              <div className="my_order_items" key={index}>
+                                 <div className="div ssg">
+                                    <div>
+                                       <small style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                          width: "100%",
+                                          flexWrap: "wrap",
+                                          justifyContent: "space-between",
+                                          fontSize: "0.8rem"
+                                       }}>
 
-                                    </pre>
+                                          <span>Order ID: {orderID}</span>
+                                          <i className='textMute'>Placed on {orderAT?.date + ", " + orderAT?.time}</i>
+                                       </small>
+                                    </div>
+
+                                    <div>
+                                       <small>
+                                          Status: <i style={orderStatus === "canceled" ? { color: "red" } : { color: "green" }}>
+                                             {orderStatus}</i>
+                                       </small>
+                                    </div>
+
+                                    <div>
+                                       <button className='manage_order_button' onClick={() => setManageOrderModal(orderItem)}>
+                                          Manage Order
+                                       </button>
+
+
+                                    </div>
                                  </div>
 
-                                 <table className='table'>
+
+                                 <table style={{ marginTop: "5px" }}>
+
                                     <thead>
                                        <tr>
-                                          <th>Items</th>
-                                          <th>Base Price</th>
-                                          <th>Sell Price</th>
+                                          <th>Image</th>
+                                          <th>Title</th>
+                                          <th>Amount (+ charge)</th>
                                           <th>Qty</th>
                                        </tr>
                                     </thead>
+
                                     <tbody>
                                        {
                                           Array.isArray(items) && items.map((nItem, i) => {
-                                             const { title, baseAmount, quantity, sellingPrice } = nItem;
+                                             const { title, baseAmount, quantity, sellingPrice, shippingCharge, image, productID, slug, variationID } = nItem;
                                              return (
                                                 <tr key={i}>
+                                                   <td><img src={image} alt="product-image" srcSet="" width={30} height={30} /></td>
                                                    <td>{title}</td>
-                                                   <td>{baseAmount}</td>
-                                                   <td>{sellingPrice}</td>
-                                                   <td>{quantity}</td>
+                                                   <td>{sellingPrice + shippingCharge} usd</td>
+                                                   <td>{quantity} Pcs</td>
                                                 </tr>
+
                                              )
                                           })
                                        }
@@ -185,7 +180,7 @@ const MyOrder = () => {
 
 
 
-<br /> <br /> <br />
+               {/* <br /> <br /> <br />
                <div className="row">
                   {
                      orderItems && orderItems.length > 0 ? orderItems.map(order => {
@@ -213,7 +208,7 @@ const MyOrder = () => {
                                                       Price            : $ {sellingPrice}<br />
                                                       Shipping Charge  : $ {shippingCharge}<br />
                                                       Qty              : {quantity} <br />
-                                                      Seller           : {sellerData?.storeName} <br />
+                                                      Seller           : {sellerData?.sellerStore} <br />
                                                       Payment Mode     : {paymentMode} <br />
                                                       Payment Status   : {paymentStatus}
 
@@ -332,11 +327,11 @@ const MyOrder = () => {
                         )
                      }).reverse() : <p>No Orders Available</p>
                   }
-               </div>
+               </div> */}
             </div>
-         </div>
+         </div >
 
-      </div>
+      </div >
    );
 };
 

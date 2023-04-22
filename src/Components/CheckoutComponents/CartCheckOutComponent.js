@@ -18,18 +18,14 @@ import { useCartContext } from "@/lib/CartProvider";
 export default function CartCheckoutComponent() {
    const { authRefetch, userInfo, setMessage } = useAuthContext();
    const router = useRouter();
-   const { data } = router.query;
-   // const [state, setState] = useState((data && JSON.parse(data)) || {});
-
    const [orderLoading, setOrderLoading] = useState(false);
    const [confirmLoading, setConfirmLoading] = useState(false);
-   const { cartData: state } = useCartContext();
+   const { cartData, cartRefetch } = useCartContext();
 
    const stripe = useStripe();
    const elements = useElements();
 
    const selectedAddress = (userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true)) || null;
-
 
    const buyBtnHandler = async (e) => {
       try {
@@ -56,7 +52,7 @@ export default function CartCheckoutComponent() {
             return setMessage(error?.message, "danger")
          }
 
-         let products = state?.products && state?.products;
+         let products = cartData?.products && cartData?.products;
 
          if (!Array.isArray(products) || products.length <= 0) {
             return setMessage("Please select product in your cart !", "danger");
@@ -99,8 +95,6 @@ export default function CartCheckoutComponent() {
             },
          );
 
-         console.log(paymentIntent);
-
          if (intErr) {
             setOrderLoading(false);
             return setMessage(intErr?.message, "danger");
@@ -116,10 +110,11 @@ export default function CartCheckoutComponent() {
                paymentIntentID: paymentIntent?.id,
                paymentMethodID: paymentIntent?.payment_method,
                productInfos,
-               state
+               orderState: "byCart"
             }, clientSecret);
 
             if (success) {
+               cartRefetch();
                setMessage("Order confirmed.", "success");
                setConfirmLoading(false);
 
@@ -224,7 +219,7 @@ export default function CartCheckoutComponent() {
                      <hr />
                      <div className="row px-3">
                         {
-                           Array.isArray(state?.products) && state?.products.filter(p => p?.stock === "in").map((product) => {
+                           Array.isArray(cartData?.products) && cartData?.products.filter(p => p?.stock === "in").map((product) => {
                               return (
                                  <CartItem
                                     cartType={"toCart"}
@@ -246,7 +241,7 @@ export default function CartCheckoutComponent() {
 
                   <div className="cart_card">
                      <CartCalculation
-                        product={(state?.container_p && state?.container_p)}
+                        product={(cartData?.container_p && cartData?.container_p)}
                         headTitle={"Order Details"}
                      />
 
@@ -258,7 +253,7 @@ export default function CartCheckoutComponent() {
                            width: "100%"
                         }} onSubmit={buyBtnHandler}>
                            <div className="py-4">
-                              <CardElement
+                              <CardElement id="card-element"
                                  options={{
                                     style: {
                                        base: {
@@ -288,7 +283,7 @@ export default function CartCheckoutComponent() {
 
                            {
                               (orderLoading || confirmLoading) ?
-                                 <span style={{ padding: "5px 8px" }}>{orderLoading ? "Paying..." : "Confirming..."}</span> : <button className='bt9_checkout' disabled={(state?.products && userInfo?.buyer?.defaultShippingAddress) ? false : true} type='submit'>
+                                 <span style={{ padding: "5px 8px" }}>{orderLoading ? "Paying..." : "Confirming..."}</span> : <button className='bt9_checkout' disabled={(cartData?.products && userInfo?.buyer?.defaultShippingAddress) ? false : true} type='submit'>
                                     Pay Now
                                  </button>
                            }
