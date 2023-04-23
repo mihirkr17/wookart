@@ -548,13 +548,13 @@ label {
   vertical-align: baseline;
 }
 
-.dollar_Symbol {
-  padding: 0 2px;
-  display: inline-block;
-  font-size: 1.1rem;
-  text-decoration-style: dotted;
-  vertical-align: text-top;
-}
+// .dollar_Symbol {
+//   padding: 0 2px;
+//   display: inline-block;
+//   font-size: 1.1rem;
+//   text-decoration-style: dotted;
+//   vertical-align: text-top;
+// }
 
 .category_main {
   border: 1px solid #cacaca85;
@@ -761,5 +761,15 @@ label {
   padding: 5px 0px 0px;
   &.right-t {
     font-size: 16px;
+  }
+}
+
+.currency_sign {
+  position: relative;
+  &::before {
+    content: "\09F3";
+    display: inline-block;
+    margin-right: 2px;
+    font-weight: bold;
   }
 }

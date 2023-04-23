@@ -69,11 +69,11 @@ export default function ProductContents({ product, variationID, setMessage, user
                </div>
 
                <div className="product_price_model">
-                  <big><span className="dollar_Symbol">$</span>{product?.pricing?.sellingPrice || product?.pricing?.price}</big>
+                  <big><span className="currency_sign"></span>{product?.pricing?.sellingPrice || product?.pricing?.price}</big>
 
                   <div>
                      <strike>
-                        <i>${product?.pricing?.price}</i>
+                        <i className='currency_sign'>{product?.pricing?.price}</i>
                      </strike>
                      <span>
                         ({product?.pricing?.discount || 0}%) off
@@ -200,7 +200,7 @@ export default function ProductContents({ product, variationID, setMessage, user
             }
          </div>
 
-         <div className="col-lg-4">
+         <div className="col-lg-4 product_right_side_col">
             <h6>Delivery</h6>
 
             <div className="pb-2 d-flex align-items-center justify-content-between">
@@ -246,7 +246,7 @@ export default function ProductContents({ product, variationID, setMessage, user
 
                <div>
                   {
-                     (product?.isFreeShipping) ? "Free" : "$ " + calculateShippingCost(product?.volumetricWeight, defShipAddrs?.area_type)
+                     (product?.isFreeShipping) ? "Free" : <span className='currency_sign'>{calculateShippingCost(product?.volumetricWeight, defShipAddrs?.area_type)}</span>
                   }
                </div>
             </div>

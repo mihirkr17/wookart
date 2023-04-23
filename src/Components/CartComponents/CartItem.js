@@ -135,8 +135,8 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
                   </b>
 
                   <div className="c_meta">
-                     <big className="c_price">
-                        <span className="dollar_Symbol">$</span>{cartProduct?.sellingPrice}
+                     <big className="c_price currency_sign">
+                        {cartProduct?.sellingPrice}
                      </big>
                      {
                         getVariant(cartProduct?.variant)

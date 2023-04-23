@@ -28,10 +28,10 @@ const Product = ({ product }) => {
                   </div>
 
                   <div className="price_model">
-                     <big><span className='dollar_Symbol'>$</span>{product?.pricing?.sellingPrice || product?.pricing?.price}</big>
+                     <big><span className='dollar_Symbol currency_sign'></span>{product?.pricing?.sellingPrice || product?.pricing?.price}</big>
                      <p>
-                        <strike>
-                           $ {product?.pricing?.price}
+                        <strike className="currency_sign">
+                           {product?.pricing?.price}
                         </strike>
                         ({product?.pricing?.discount || 0}%) off
                      </p>

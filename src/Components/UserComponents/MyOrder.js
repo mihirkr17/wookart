@@ -161,7 +161,7 @@ const MyOrder = () => {
                                                 <tr key={i}>
                                                    <td><img src={image} alt="product-image" srcSet="" width={30} height={30} /></td>
                                                    <td>{title}</td>
-                                                   <td>{sellingPrice + shippingCharge} usd</td>
+                                                   <td className='currency_sign'>{sellingPrice + shippingCharge}</td>
                                                    <td>{quantity} Pcs</td>
                                                 </tr>
 

@@ -26,13 +26,18 @@ export function ViewProduct({ data }) {
             <link rel="icon" href="/favicon.ico" />
          </Head>
          <div className="container">
-            {/* breadcrumbs  */}
-            <Breadcrumbs
-               path={(Array.isArray(product?.categories)) && product?.categories}
-            />
+            <div className="row">
+               {/* breadcrumbs  */}
+               <div className="product_bread col-12">
+                  <Breadcrumbs
+                     path={(Array.isArray(product?.categories)) && product?.categories}
+                  />
+               </div>
+            </div>
 
             {/* first content  */}
-            <div className=" mb-5 row">
+            <div className=" mb-5 row product_top">
+
                <div className="pb-3 col-lg-4">
                   <ProductImages
                      product={product}
@@ -54,7 +59,7 @@ export function ViewProduct({ data }) {
                </div>
             </div>
 
-            <div className="row">
+            <div className="row product_bottom_row">
                <div className="col-lg-12">
                   <ProductAdditionalDetails
                      product={product}

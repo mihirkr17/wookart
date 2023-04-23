@@ -23,7 +23,7 @@ const ProductAdditionalDetails = ({ product }) => {
    }
 
    return (
-      <div className="product-details row w-100">
+      <div className="product-details row">
 
          <div className="col-12 details_wrapper">
             <div className="tabHeader">

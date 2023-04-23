@@ -102,7 +102,7 @@ export default function ManageOrderModal({ closeModal, data, setMessage, refetch
                <br />
                <small className="textMute">Placed on {orderAT?.date + ", " + orderAT?.time}</small>
             </span>
-            <span>Total: $<b>{totalAmount}</b></span>
+            <span>Total: <b className="currency_sign">{totalAmount}</b></span>
          </div>
 
          <hr />
@@ -180,15 +180,15 @@ export default function ManageOrderModal({ closeModal, data, setMessage, refetch
                      <tbody>
                         <tr>
                            <td><i className="material-icons"></i>Subtotal ({subTotal || 0})</td>
-                           <td className="right-t">${baseAmounts || 0}</td>
+                           <td className="right-t currency_sign">{baseAmounts || 0}</td>
                         </tr>
                         <tr>
                            <td><i className="material-icons"></i> Shipping fee</td>
-                           <td className="right-t">${shippingFees}</td>
+                           <td className="right-t currency_sign">{shippingFees}</td>
                         </tr>
                         <tr className="br-top">
                            <td>Amount Payable</td>
-                           <td className="right-t">${totalAmount}</td>
+                           <td className="right-t currency_sign">{totalAmount}</td>
                         </tr>
                         <tr>
                            <td>
