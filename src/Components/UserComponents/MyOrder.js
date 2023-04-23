@@ -120,15 +120,12 @@ const MyOrder = () => {
                                           fontSize: "0.8rem"
                                        }}>
 
-                                          <span>Order ID: {orderID}</span>
+                                          <span># {orderID}</span>
                                           <i className='textMute'>Placed on {orderAT?.date + ", " + orderAT?.time}</i>
-                                       </small>
-                                    </div>
-
-                                    <div>
-                                       <small>
-                                          Status: <i style={orderStatus === "canceled" ? { color: "red" } : { color: "green" }}>
-                                             {orderStatus}</i>
+                                          <small>
+                                             Status: <i style={orderStatus === "canceled" ? { color: "red" } : { color: "green" }}>
+                                                {orderStatus}</i>
+                                          </small>
                                        </small>
                                     </div>
 
@@ -136,8 +133,6 @@ const MyOrder = () => {
                                        <button className='manage_order_button' onClick={() => setManageOrderModal(orderItem)}>
                                           Manage Order
                                        </button>
-
-
                                     </div>
                                  </div>
 

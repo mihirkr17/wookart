@@ -51,7 +51,7 @@ export default function Login() {
 
             setLoading(false);
 
-            const { name, u_data, uuid, message } = await response.json();
+            const { name, u_data, uuid, message, token2 } = await response.json();
 
             if (!response.ok) {
                return setMessage(message, 'danger');
