@@ -37,9 +37,6 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
    // search keywords
    const [searchKeywords, setSearchKeywords] = useState((data?.bodyInfo?.searchKeywords && data?.bodyInfo?.searchKeywords) || ['']);
 
-   // key features 
-   const [keyFeatures, setKeyFeatures] = useState((data?.bodyInfo?.searchKeywords && data?.bodyInfo?.keyFeatures) || [""]);
-
    // this is global variable of categories states
    const sub_category = newCategory && newCategory.find(e => e.category === category);
    const post_category = sub_category?.sub_category_items && sub_category?.sub_category_items.find(e => e.name === subCategory);
@@ -75,23 +72,6 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
       setSearchKeywords(list);
    }
 
-   // handle key features
-   const handleKeyFeaturesInput = (e, index) => {
-      const { value } = e.target;
-
-      let list = [...keyFeatures];
-      list[index] = value;
-
-      setKeyFeatures(list);
-   }
-
-   const removeKeyFeaturesInputHandler = (index) => {
-      let list = [...keyFeatures]
-      list.splice(index, 1);
-
-      setKeyFeatures(list);
-   }
-
    const handleTitle = (value) => {
       let slugs = slugMaker(value);
 
@@ -110,7 +90,6 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
          }
 
          let bodyInfo = {
-            keyFeatures,
             searchKeywords,
             metaDescription,
          }
@@ -551,38 +530,7 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
                               })
                            }
                         </div>
-
-                        <div className="col-lg-12 my-2">
-                           <label htmlFor='keyFeatures'>{required} Key Features&nbsp;</label>
-                           {
-                              keyFeatures && keyFeatures.map((keys, i) => {
-                                 return (
-                                    <div className='py-2 d-flex align-items-end justify-content-start' key={i}>
-                                       <input
-                                          className='form-control form-control-sm'
-                                          name="keyFeatures" id='keyFeatures'
-                                          value={keys} type="text"
-                                          placeholder="Key Features"
-                                          onChange={(e) => handleKeyFeaturesInput(e, i)}
-                                       />
-
-                                       {
-                                          keyFeatures.length !== 1 && <span style={btnStyle}
-                                             onClick={() => removeKeyFeaturesInputHandler(i)}>
-                                             <FontAwesomeIcon icon={faMinusSquare} />
-                                          </span>
-                                       }
-                                       {
-                                          keyFeatures.length - 1 === i && <span style={btnStyle}
-                                             onClick={() => setKeyFeatures([...keyFeatures, ''])}>
-                                             <FontAwesomeIcon icon={faPlusSquare} />
-                                          </span>
-                                       }
-                                    </div>
-                                 )
-                              })
-                           }
-                        </div>
+         
 
                         <div className='col-lg-12 my-2'>
                            <label htmlFor='metaDescription'>{required} Meta Description</label>

@@ -88,7 +88,7 @@ export async function apiHandler(url = "", method = "GET", body = {}, authorizat
 
 export function CookieParser() {
 
-   let cookie = document && document.cookie;
+   let cookie = document ? document.cookie : undefined;
 
    if (!cookie || typeof cookie === "undefined") {
       return;
@@ -119,6 +119,7 @@ export function addCookies(name, value, age) {
 
 export function deleteAuth() {
    deleteCookie("_uuid");
+   deleteCookie("log_tok");
    localStorage.removeItem("client_data");
    return true;
 }

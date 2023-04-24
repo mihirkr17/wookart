@@ -1,4 +1,6 @@
 import { useBaseContext } from '@/lib/BaseProvider';
+import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { useState } from 'react';
 
@@ -12,6 +14,33 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
    const [variant, setVariant] = useState(variation?.variant || {});
 
    const [attrs, setAttrs] = useState(variation?.attrs || {});
+
+   const [highlight, setHighlight] = useState((variation?.highlights && variation?.highlights) || [""]);
+
+
+   const btnStyle = {
+      cursor: "pointer",
+      display: "block",
+      padding: "0.2rem",
+      marginLeft: "0.5rem"
+   }
+
+   // handle key features
+   const handleHighlightInput = (e, index) => {
+      const { value } = e.target;
+
+      let list = [...highlight];
+      list[index] = value;
+
+      setHighlight(list);
+   }
+
+   const removeHighlightInputHandler = (index) => {
+      let list = [...highlight]
+      list.splice(index, 1);
+
+      setHighlight(list);
+   }
 
 
    async function handleVariationOne(e) {
@@ -42,6 +71,7 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
                attrs,
                status,
                available,
+               highlight,
                priceModifier
             }
          }
@@ -192,6 +222,38 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
                   cSl(super_category?.attrs, variation?.attrs, "attrs")
                }
 
+            </div>
+
+            <div className="col-lg-12 my-2">
+               <label htmlFor='highlight'>{required} Product Highlight&nbsp;</label>
+               {
+                  highlight && highlight.map((keys, i) => {
+                     return (
+                        <div className='py-2 d-flex align-items-end justify-content-start' key={i}>
+                           <input
+                              className='form-control form-control-sm'
+                              name="highlight" id='highlight'
+                              value={keys} type="text"
+                              placeholder="Key Features"
+                              onChange={(e) => handleHighlightInput(e, i)}
+                           />
+
+                           {
+                              highlight.length !== 1 && <span style={btnStyle}
+                                 onClick={() => removeHighlightInputHandler(i)}>
+                                 <FontAwesomeIcon icon={faMinusSquare} />
+                              </span>
+                           }
+                           {
+                              highlight.length - 1 === i && <span style={btnStyle}
+                                 onClick={() => setHighlight([...highlight, ''])}>
+                                 <FontAwesomeIcon icon={faPlusSquare} />
+                              </span>
+                           }
+                        </div>
+                     )
+                  })
+               }
             </div>
 
             <div className="col-lg-12 my-2 pt-4">

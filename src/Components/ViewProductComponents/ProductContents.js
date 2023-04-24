@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { faCartShopping, faHandshake, faLocationPin, faTruck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BtnSpinner from '../Shared/BtnSpinner/BtnSpinner';
-import { apiHandler, calculateShippingCost, camelToTitleCase } from '@/Functions/common';
+import { CookieParser, apiHandler, calculateShippingCost, camelToTitleCase } from '@/Functions/common';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCartContext } from '@/lib/CartProvider';
@@ -11,6 +11,7 @@ import { useCartContext } from '@/lib/CartProvider';
 export default function ProductContents({ product, variationID, setMessage, userInfo }) {
    const [addCartLoading, setAddCartLoading] = useState(false);
    const router = useRouter();
+   const { asPath } = router;
 
    const { cartRefetch, cartData } = useCartContext();
 
@@ -18,13 +19,16 @@ export default function ProductContents({ product, variationID, setMessage, user
 
    let inCart = Array.isArray(cartData?.products) && cartData?.products.find(e => e?.variationID === variationID);
 
+
    // add to cart handler
    const addToCartHandler = async (pId, _lid, vId, params) => {
       try {
          if (!userInfo?.email) {
-            router.push('/login');
+            router.push(`/login?from=${asPath}`);
             return;
          }
+
+         const { log_tok } = CookieParser();
 
          setAddCartLoading(true);
 
@@ -36,7 +40,7 @@ export default function ProductContents({ product, variationID, setMessage, user
                listingID: _lid,
                variationID: vId,
                action: params
-            });
+            }, `Berar ${log_tok}`);
 
             setAddCartLoading(false);
 
@@ -142,13 +146,13 @@ export default function ProductContents({ product, variationID, setMessage, user
                <br />
 
                {
-                  product?.bodyInfo?.keyFeatures && <ul>
+                  product?.variations?.highlights && <ul>
                      {
-                        Array.isArray(product?.bodyInfo?.keyFeatures) ? product?.bodyInfo?.keyFeatures.map((item, index) => {
+                        product?.variations?.highlights?.map((item, index) => {
                            return (
                               <li style={{ color: "green" }} key={index}>* {item}</li>
                            )
-                        }) : ""
+                        })
                      }
                   </ul>
                }

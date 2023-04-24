@@ -14,7 +14,8 @@ export default function Login() {
    const [loading, setLoading] = useState(false);
    const { setMessage, role, initialLoader } = useAuthContext();
    const router = useRouter();
-   const { email } = router.query;
+   const { email, from } = router.query;
+
 
    useEffect(() => {
       if (role) {
@@ -51,7 +52,7 @@ export default function Login() {
 
             setLoading(false);
 
-            const { name, u_data, uuid, message, token2 } = await response.json();
+            const { name, u_data, uuid, message, token } = await response.json();
 
             if (!response.ok) {
                return setMessage(message, 'danger');
@@ -64,12 +65,10 @@ export default function Login() {
                   const expireTime = new Date(now.getTime() + 16 * 60 * 60 * 1000);
 
                   document.cookie = `_uuid=${uuid}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
-
+                  document.cookie = `log_tok=${token}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
                   localStorage.setItem("client_data", u_data);
 
-                  initialLoader();
-
-                  router.back();
+                  initialLoader() && router.push(from || "/");
                }
 
                setMessage(message, "success");
@@ -81,6 +80,7 @@ export default function Login() {
          setLoading(false);
       }
    }
+
 
 
    return (

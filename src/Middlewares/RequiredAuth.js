@@ -6,13 +6,13 @@ export default function RequiredAuth({ children }) {
    const { role, authLoading } = useAuthContext();
    const router = useRouter();
 
-   if (typeof window === "undefined") return;
-
-   if (authLoading) return;
-
-   if (typeof role !== "undefined" && role === "BUYER") {
-      return children;
+   if (authLoading) {
+      return <Spinner />;
    }
 
-   router.push("/login");
+   else if (!role || role !== "BUYER") {
+      router.push("/login");
+   }
+
+   return children;
 }

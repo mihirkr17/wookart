@@ -1,4 +1,4 @@
-import { apiHandler } from '@/Functions/common';
+import { CookieParser, apiHandler } from '@/Functions/common';
 import { useAuthContext } from '@/lib/AuthProvider';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,7 +17,8 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
          setLoading(true);
 
          const { productID, title, variationID } = cp;
-         const result = await apiHandler(`/cart/delete-cart-item/${cartType && cartType}?vr=${variationID}`, "DELETE", {}, productID);
+         const { log_tok } = CookieParser();
+         const result = await apiHandler(`/cart/delete-cart-item/${productID}/${cartType && cartType}?vr=${variationID}`, "DELETE", {}, `Berar ${log_tok}`);
 
          if (result?.success) {
             setMessage(`${title} ${result?.message}`, 'success');
@@ -46,6 +47,8 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
             return;
          }
 
+         const { log_tok } = CookieParser();
+
          const { message, success, statusCode } = await apiHandler(`/cart/update-cart-product-quantity`, "PUT", {
             actionRequestContext: {
                pageUri: '/my-cart',
@@ -57,7 +60,7 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
                   productID, variationID, quantity: quantity, cartID
                }
             }
-         }, productID);
+         }, `Berar ${log_tok}`);
 
          setQtyLoading(false);
 

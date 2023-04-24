@@ -7,7 +7,9 @@ export const useFetch = (url, authorization = "") => {
    const [err, setErr] = useState(null);
    const [ref, setRef] = useState(false);
 
+
    useEffect(() => {
+
       const fetchData = setTimeout(() => {
          (async () => {
             try {
