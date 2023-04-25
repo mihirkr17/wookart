@@ -1,4 +1,4 @@
-import { deleteAuth } from "@/Functions/common";
+import { CookieParser, deleteAuth } from "@/Functions/common";
 import { useEffect, useState } from "react";
 
 export const useFetch = (url, authorization = "") => {
@@ -9,6 +9,8 @@ export const useFetch = (url, authorization = "") => {
 
 
    useEffect(() => {
+
+      const cookie = CookieParser();
 
       const fetchData = setTimeout(() => {
          (async () => {
@@ -21,7 +23,7 @@ export const useFetch = (url, authorization = "") => {
                      credentials: 'include',
                      method: "GET",
                      headers: {
-                        authorization
+                        authorization: `Berar ${cookie?.log_tok ? cookie?.log_tok : ""}`
                      }
                   });
 
