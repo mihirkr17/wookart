@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { faCartShopping, faHeart, faHeartCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { apiHandler } from '@/Functions/common';
 
 const ProductImages = ({ product, userInfo, authRefetch, setMessage }) => {
    const [tabImg, setTabImg] = useState("");
@@ -34,36 +35,21 @@ const ProductImages = ({ product, userInfo, authRefetch, setMessage }) => {
          seller: product?.seller?.name
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/wishlist/add-to-wishlist/${userInfo?.email}`, {
-         method: "POST",
-         withCredentials: true,
-         credentials: "include",
-         headers: {
-            'content-type': 'application/json'
-         },
-         body: JSON.stringify(wishlistProduct)
-      })
 
-      const resData = await response.json();
+      const { success, message } = await apiHandler(`/wishlist/add-to-wishlist/${userInfo?.email}`, "POST", wishlistProduct);
 
-      if (response.ok) {
+      if (success) {
          await authRefetch();
-         setMessage(<p className='py-2 text-success'><small><strong>{resData?.message}</strong></small></p>);
+         setMessage(<p className='py-2 text-success'><small><strong>{message}</strong></small></p>);
       }
    }
 
    const removeToWishlist = async (productID) => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/wishlist/remove-from-wishlist/${productID}`, {
-         method: "DELETE",
-         withCredentials: true,
-         credentials: "include"
-      })
+      const { success, message } = await apiHandler(`/wishlist/remove-from-wishlist/${productID}`, "DELETE");
 
-      const resData = await response.json();
-
-      if (response.ok) {
+      if (success) {
          await authRefetch();
-         setMessage(<p className='py-2 text-success'><small><strong>{resData?.message}</strong></small></p>);
+         setMessage(<p className='py-2 text-success'><small><strong>{message}</strong></small></p>);
       }
    }
 

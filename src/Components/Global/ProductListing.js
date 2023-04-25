@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 import BtnSpinner from '../Shared/BtnSpinner/BtnSpinner';
-import { slugMaker } from '@/Functions/common';
+import { apiHandler, slugMaker } from '@/Functions/common';
 import { usePrice } from '@/Hooks/usePrice';
 import { newCategory } from '@/CustomData/categories';
 
@@ -109,29 +109,18 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
          formData["isFree"] = e.target.isFree.checked;
          formData["images"] = images;
 
-      
+
          const notEmpty = Object.values(formData).every(x => x !== null && x !== '');
 
          if (!notEmpty) {
             return setMessage("Required all fields!!!", 'danger');
          }
 
-         const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/seller/${userInfo?.seller?.storeInfos?.storeName}/product/listing/${formTypes}`, {
-            method: 'POST',
-            withCredentials: true,
-            credentials: "include",
-            headers: {
-               "Content-Type": "application/json",
-               authorization: data?._lid
-            },
-            body: JSON.stringify(formData)
-         });
-
-         const resData = await response.json();
+         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.seller?.storeInfos?.storeName}/product/listing/${formTypes}/${data?._lid}`, "POST", formData);
          setActionLoading(false);
 
-         if (response.ok) {
-            setMessage(resData?.message, 'success');
+         if (success) {
+            setMessage(message, 'success');
             if (formTypes === "create") {
                // e.target.reset();
             } else {
@@ -530,7 +519,7 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
                               })
                            }
                         </div>
-         
+
 
                         <div className='col-lg-12 my-2'>
                            <label htmlFor='metaDescription'>{required} Meta Description</label>

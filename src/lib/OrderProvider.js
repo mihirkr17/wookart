@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext, createContext } from 'react';
 import { useAuthContext } from './AuthProvider';
+import { CookieParser } from '@/Functions/common';
 
 export const OrderContext = createContext();
 
@@ -24,6 +25,8 @@ const OrderProvider = ({ children }) => {
          return;
       }
 
+      const { log_tok } = CookieParser();
+
       const fetchData = setTimeout(() => {
          (async () => {
             try {
@@ -31,7 +34,10 @@ const OrderProvider = ({ children }) => {
                const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/store/${userInfo?.seller?.storeInfos?.storeName}/manage-orders?view=${view}`, {
                   method: "GET",
                   withCredentials: true,
-                  credentials: "include"
+                  credentials: "include",
+                  headers: {
+                     authorization: `Bearer ${log_tok || ""}`
+                  }
                });
 
                const result = await response.json();

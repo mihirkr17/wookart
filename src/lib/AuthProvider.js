@@ -39,13 +39,13 @@ export default function AuthProvider(props) {
       try {
          setAuthLoading(true);
 
-         const { log_tok } = CookieParser();
+         const cookie = CookieParser();
 
          const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/user/fau`, {
             withCredentials: true,
             credentials: 'include',
             method: "GET",
-            authorization: `Berar ${log_tok}`
+            authorization: `Berar ${cookie?.log_tok ? cookie?.log_tok : ""}`
          });
 
          if (response.status === 401) {

@@ -47,7 +47,7 @@ const MyProfile = () => {
          dob: inputValue.dob || "Not Set"
       }
 
-      const { success, message } = await apiHandler(`/user/update-profile-data`, "PUT", data, userInfo?.email);
+      const { success, message } = await apiHandler(`/user/update-profile-data?userEmail=${userInfo?.email}`, "PUT", data);
 
       if (success) {
          setActionLoading(false);

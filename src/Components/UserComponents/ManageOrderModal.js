@@ -24,30 +24,22 @@ export default function ManageOrderModal({ closeModal, data, setMessage, refetch
          setMessage(<strong className='text-success'>Please Select Cancel Reason...</strong>);
          return;
       } else {
-         const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/order/cancel-my-order/${customerEmail}`, {
-            method: "PUT",
-            withCredentials: true,
-            credentials: "include",
-            headers: {
-               "Content-Type": "application/json",
-               authorization: customerEmail
-            },
-            body: JSON.stringify({ cancelReason: reason, orderID, orderItems: items })
-         });
 
-         const resData = await response.json();
+         const { message, success } = await apiHandler(`/order/cancel-my-order/${customerEmail}`, "POST", { cancelReason: reason, orderID, orderItems: items });
 
-         if (response.ok) {
-            setMessage(resData?.message, 'success');
+         if (success) {
+            setMessage(message, 'success');
             closeModal();
             refetch();
          }
       }
    }
 
+
    const removeOrderHandler = async (orderID, customerEmail) => {
+
       if (window.confirm("Want to cancel this order ?")) {
-         const { success, message } = await apiHandler(`/order/remove-order/${customerEmail}/${orderID}`, "DELETE");
+         const { success, message } = await apiHandler(`/order/remove-order/${customerEmail}/${orderID}`, "DELETE", {});
 
          if (success) {
             setMessage(message, 'success');

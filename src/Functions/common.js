@@ -1,3 +1,24 @@
+export function CookieParser() {
+
+   let cookie = document ? document.cookie : undefined;
+
+   if (!cookie || typeof cookie === "undefined") {
+      return;
+   }
+
+   const cookies = {};
+   cookie.split(';').forEach(cookie => {
+      const [name, value] = cookie.split('=').map(c => c.trim());
+      cookies[name] = value;
+   });
+   return cookies;
+}
+
+export function deleteCookie(cookieName) {
+   if (!cookieName) return;
+   return document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
 export const authLogout = async () => {
    const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/auth/sign-out`, {
       method: "POST",
@@ -61,13 +82,15 @@ export const calcTime = (iso, offset) => {
 
 export async function apiHandler(url = "", method = "GET", body = {}, authorization = "") {
 
+   const { log_tok } = CookieParser();
+
    const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1${url}`, {
       method,
       withCredentials: true,
       credentials: "include",
       headers: {
          "Content-Type": "application/json",
-         authorization: authorization
+         authorization: `Bearer ${log_tok || ""}`
       },
       body: JSON.stringify(body)
    });
@@ -76,7 +99,7 @@ export async function apiHandler(url = "", method = "GET", body = {}, authorizat
 
    if (response.status === 401) {
       await authLogout();
-      deleteCookie("_uuid");
+      deleteAuth();
       localStorage.removeItem("client_data");
       return;
    }
@@ -86,27 +109,7 @@ export async function apiHandler(url = "", method = "GET", body = {}, authorizat
    }
 }
 
-export function CookieParser() {
 
-   let cookie = document ? document.cookie : undefined;
-
-   if (!cookie || typeof cookie === "undefined") {
-      return;
-   }
-
-   const cookies = {};
-   cookie.split(';').forEach(cookie => {
-      const [name, value] = cookie.split('=').map(c => c.trim());
-      cookies[name] = value;
-   });
-   return cookies;
-}
-
-
-export function deleteCookie(cookieName) {
-   if (!cookieName) return;
-   return document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-}
 
 export function addCookies(name, value, age) {
    let now = new Date();

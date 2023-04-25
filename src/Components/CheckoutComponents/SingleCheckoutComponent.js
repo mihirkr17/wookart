@@ -102,7 +102,7 @@ export default function SingleCheckoutComponent() {
                quantity: product?.quantity,
                customerEmail: product?.customerEmail,
                state: "byPurchase"
-            }, userInfo?.email);
+            });
 
             if (!success) {
                setMessage(message, "danger");
@@ -161,7 +161,7 @@ export default function SingleCheckoutComponent() {
                   paymentMethodID: paymentIntent?.payment_method,
                   productInfos,
                   orderState: "byPurchase"
-               }, clientSecret);
+               });
 
                if (success) {
                   setMessage("Order confirmed.", "success");

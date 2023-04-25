@@ -57,7 +57,7 @@ const ManageProductHome = (
    const deleteThisProductHandler = async (_id, _lid, storeName) => {
       if (window.confirm("Want href delete this product ?")) {
 
-         const { success, message } = await apiHandler(`/dashboard/${storeName}/product/delete-product`, "DELETE", {}, _id + ',' + _lid);
+         const { success, message } = await apiHandler(`/dashboard/${storeName}/product/delete-product/${_id}/${_lid}`, "DELETE");
 
          if (success) {
             refetch();
@@ -85,7 +85,7 @@ const ManageProductHome = (
       let available = parseInt(value);
 
       try {
-         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.seller?.storeInfos?.storeName}/product/update-stock`, "PUT", { variations: { available, _vrid }, MARKET_PLACE: 'WooKart' }, productID);
+         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.seller?.storeInfos?.storeName}/product/update-stock`, "PUT", { productID, variations: { available, _vrid }, MARKET_PLACE: 'WooKart' });
 
          if (success) {
             setMessage(message, 'success');

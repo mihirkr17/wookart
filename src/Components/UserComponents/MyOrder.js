@@ -54,17 +54,8 @@ const MyOrder = () => {
          ratingId, orderID: parseInt(orderID), rating_customer: userInfo?.fullName, rating_point: ratingPoint, rating_description: ratingDesc
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/review/add-product-rating/${productID}`, {
-         method: "PUT",
-         withCredentials: true,
-         credentials: "include",
-         headers: {
-            "Content-Type": "application/json"
-         },
-         body: JSON.stringify({ ...review })
-      });
 
-      const resData = await response.json();
+      const resData = await apiHandler(`/review/add-product-rating/${productID}`, "PUT", { ...review });
 
       if (response.ok) {
          setMessage(resData?.message, 'success');

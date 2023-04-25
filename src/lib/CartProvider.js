@@ -3,7 +3,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react"
 import { useAuthContext } from "./AuthProvider";
-import { deleteAuth } from "@/Functions/common";
+import { CookieParser, deleteAuth } from "@/Functions/common";
 
 const cartContext = createContext();
 
@@ -23,6 +23,8 @@ export default function CartProvider({ children }) {
 
       if (role !== "BUYER" || !role) return;
 
+      const cookie = CookieParser();
+
       const startFetch = setTimeout(() => {
          (async () => {
             try {
@@ -31,7 +33,10 @@ export default function CartProvider({ children }) {
                const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/cart/cart-context`, {
                   method: "GET",
                   withCredentials: true,
-                  credentials: "include"
+                  credentials: "include",
+                  headers: {
+                     authorization: `Berar ${cookie?.log_tok ? cookie?.log_tok : ""}`
+                  }
                });
 
                const result = await response.json();

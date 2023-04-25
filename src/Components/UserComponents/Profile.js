@@ -1,4 +1,4 @@
-import { CookieParser, apiHandler } from '@/Functions/common';
+import { apiHandler } from '@/Functions/common';
 import { useAuthContext } from '@/lib/AuthProvider';
 import React, { useState } from 'react';
 
@@ -12,7 +12,7 @@ const Profile = () => {
    async function submitProfileData() {
       try {
 
-         const data = await apiHandler(`/user/update-profile-data`, "PUT", inputs, userInfo?.email);
+         const data = await apiHandler(`/user/update-profile-data?userEmail=${userInfo?.email}`, "PUT", inputs);
 
          if (data?.success) {
             setMessage(data?.message, 'success');
@@ -43,9 +43,8 @@ const Profile = () => {
          if (newPassword === "") {
             return setMessage("Required new password !", "danger");
          }
-         const { log_tok } = CookieParser();
 
-         const data = await apiHandler(`/auth/user/changed-password`, "POST", { oldPassword, newPassword }, `Berar ${log_tok}`);
+         const data = await apiHandler(`/auth/user/changed-password`, "POST", { oldPassword, newPassword });
 
          if (data?.success) {
             setMessage(data?.message, "success");

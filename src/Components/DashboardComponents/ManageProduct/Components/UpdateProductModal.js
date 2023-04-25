@@ -1,6 +1,7 @@
 import React from 'react';
 import { useBaseContext } from '../../../../lib/BaseProvider';
 import ModalWrapper from '@/Components/Global/ModalWrapper';
+import { CookieParser } from '@/Functions/common';
 
 
 const UpdateProductModal = ({ data, closeModal, refetch }) => {
@@ -10,6 +11,7 @@ const UpdateProductModal = ({ data, closeModal, refetch }) => {
 
    async function handleAPI(uri = "", action = "", body = {}) {
       try {
+         const { log_tok } = CookieParser();
          const url = `${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/seller/store/product/update-product`;
          body["listingID"] = data?._lid;
          body["productID"] = data?._id;
@@ -20,7 +22,8 @@ const UpdateProductModal = ({ data, closeModal, refetch }) => {
             withCredentials: true,
             credentials: "include",
             headers: {
-               "Content-Type": "application/json"
+               "Content-Type": "application/json",
+               authorization: `Bearer ${log_tok || ""}`
             },
             body: JSON.stringify(body)
          });

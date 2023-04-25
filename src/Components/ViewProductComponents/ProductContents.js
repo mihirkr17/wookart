@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { faCartShopping, faHandshake, faLocationPin, faTruck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BtnSpinner from '../Shared/BtnSpinner/BtnSpinner';
-import { CookieParser, apiHandler, calculateShippingCost, camelToTitleCase } from '@/Functions/common';
+import { apiHandler, calculateShippingCost, camelToTitleCase } from '@/Functions/common';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCartContext } from '@/lib/CartProvider';
@@ -28,8 +28,6 @@ export default function ProductContents({ product, variationID, setMessage, user
             return;
          }
 
-         const { log_tok } = CookieParser();
-
          setAddCartLoading(true);
 
          if (product?.variations?.stock === "in") {
@@ -40,7 +38,7 @@ export default function ProductContents({ product, variationID, setMessage, user
                listingID: _lid,
                variationID: vId,
                action: params
-            }, `Berar ${log_tok}`);
+            });
 
             setAddCartLoading(false);
 

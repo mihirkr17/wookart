@@ -1,3 +1,4 @@
+import { apiHandler } from '@/Functions/common';
 import { useBaseContext } from '@/lib/BaseProvider';
 import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -76,16 +77,7 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
             }
          }
 
-         const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/seller/products/set-product-variation?formType=${formTypes}&vId=${variation?._vrid || ""}&requestFor=product_variations`, {
-            withCredentials: true,
-            credentials: 'include',
-            method: 'PUT',
-            headers: {
-               "Content-Type": "application/json",
-               authorization: data?._id && data?._id
-            },
-            body: JSON.stringify({ request: model })
-         });
+         const response = await apiHandler(`/dashboard/seller/products/set-product-variation?formType=${formTypes}&vId=${variation?._vrid || ""}&requestFor=product_variations`, "PUT", { request: model });
 
          const { message } = await response.json();
 

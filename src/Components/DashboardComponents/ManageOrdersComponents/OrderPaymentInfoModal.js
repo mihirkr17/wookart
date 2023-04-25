@@ -1,4 +1,5 @@
 import ModalWrapper from '@/Components/Global/ModalWrapper';
+import { apiHandler } from '@/Functions/common';
 import React from 'react';
 
 
@@ -35,26 +36,16 @@ const OrderPaymentInfoModal = ({ data, closeModal, orderRefetch }) => {
 
          const { baseAmount, orderID, customerEmail, trackingID } = order;
 
-         const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/payment/refund`, {
-            method: "POST",
-            withCredentials: true,
-            credentials: "include",
-            headers: {
-               "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-               chargeID,
-               reason: "requested_by_customer",
-               amount: parseInt(baseAmount),
-               orderID,
-               customerEmail,
-               trackingID
-            })
+         const { success, message } = await apiHandler(`/payment/refund`, "POST", {
+            chargeID,
+            reason: "requested_by_customer",
+            amount: parseInt(baseAmount),
+            orderID,
+            customerEmail,
+            trackingID
          });
 
-         const result = await response.json();
-
-         if (response.ok) {
+         if (success) {
             orderRefetch();
             closeModal();
          }

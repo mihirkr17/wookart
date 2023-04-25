@@ -60,7 +60,7 @@ export default function CartCheckoutComponent() {
 
          setOrderLoading(true);
 
-         const { clientSecret, orderPaymentID, totalAmount, productInfos, message, success } = await apiHandler(`/order/cart-purchase/`, "POST", { state: "byCart", paymentMethod }, userInfo?.email);
+         const { clientSecret, orderPaymentID, totalAmount, productInfos, message, success } = await apiHandler(`/order/cart-purchase/`, "POST", { state: "byCart", paymentMethod, customerEmail: userInfo?.email });
 
          setOrderLoading(false);
 
@@ -111,7 +111,7 @@ export default function CartCheckoutComponent() {
                paymentMethodID: paymentIntent?.payment_method,
                productInfos,
                orderState: "byCart"
-            }, clientSecret);
+            });
 
             if (success) {
                cartRefetch();
