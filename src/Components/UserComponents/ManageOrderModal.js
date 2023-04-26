@@ -4,11 +4,13 @@ import { useState } from "react";
 import ModalWrapper from "../Global/ModalWrapper";
 import FilterOption from "../Shared/FilterOption";
 import { apiHandler } from "@/Functions/common";
+import useMenu from "@/Hooks/useMenu";
 
 export default function ManageOrderModal({ closeModal, data, setMessage, refetch }) {
    const [openCancelForm, setOpenCancelForm] = useState(false);
    const [reason, setReason] = useState("");
-   const { totalAmount, orderStatus, isCanceled, paymentStatus, customerEmail, paymentMode, items, orderID, orderAT, sellerStore, shippingAddress } = data;
+   const { menuRef, openMenu, setOpenMenu } = useMenu();
+   const { totalAmount, orderStatus, isCanceled, paymentStatus, customerEmail, paymentMode, items, orderID, orderAT, seller, shippingAddress } = data;
 
    const subTotal = items?.reduce((p, c) => p + c?.quantity, 0);
    const baseAmounts = items?.reduce((p, c) => p + (c?.sellingPrice * c?.quantity), 0);
@@ -100,8 +102,14 @@ export default function ManageOrderModal({ closeModal, data, setMessage, refetch
          <hr />
 
          <div className="p-1 row">
-            <div className="col-lg-6">
-               <small>Sold by <b style={{ color: "blue" }}>{sellerStore}</b></small>
+            <div className="col-lg-6" ref={menuRef} style={{ position: "relative" }}>
+               <small>Sold by <b onClick={() => setOpenMenu(e => !e)} style={{ color: "blue", cursor: "pointer" }}>{seller?.store}</b></small>
+
+               {
+                  openMenu && <div className="sellerInfoMenu">
+                     Seller Email: {seller?.email}
+                  </div>
+               }
             </div>
 
             <div className="col-lg-6" style={{ textAlign: "end" }}>

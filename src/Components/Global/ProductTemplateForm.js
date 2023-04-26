@@ -1,8 +1,6 @@
 import React from 'react';
 import ProductListing from "./ProductListing";
-import ProductVariations from './ProductVariations';
 import { useState } from 'react';
-
 import { newCategory } from '@/CustomData/categories';
 import { useRouter } from 'next/router';
 import { useFetch } from '@/Hooks/useFetch';
@@ -15,7 +13,7 @@ const ProductTemplateForm = ({ formTypes, userInfo, setMessage }) => {
 
    const queryPID = new URLSearchParams(window && window.location.search).get("pid");
    const queryVID = new URLSearchParams(window && window.location.search).get("vId");
-   const uri = formTypes !== 'create' && `${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/get-one-product-in-seller-dsb?pid=${queryPID}&storeName=${userInfo?.seller?.storeInfos?.storeName}&vId=${queryVID || ""}`
+   const uri = formTypes !== 'create' && `/dashboard/get-one-product-in-seller-dsb?pid=${queryPID}&storeName=${userInfo?.seller?.storeInfos?.storeName}&vId=${queryVID || ""}`
    const { data, refetch } = useFetch(uri);
 
 
@@ -42,10 +40,6 @@ const ProductTemplateForm = ({ formTypes, userInfo, setMessage }) => {
       setToggle(null);
    }
 
-   const goThere = () => {
-      router.push(from, { replace: true });
-   }
-
    function getAttrs(obj = {}) {
 
       let str = [];
@@ -62,7 +56,7 @@ const ProductTemplateForm = ({ formTypes, userInfo, setMessage }) => {
    return (
       <>
          {
-            formTypes !== 'create' && <button className='btn' onClick={() => goThere()}>
+            formTypes !== 'create' && <button className='btn' onClick={() => router.push(`/dashboard/add-product`)}>
                Back
             </button>
          }
@@ -85,7 +79,7 @@ const ProductTemplateForm = ({ formTypes, userInfo, setMessage }) => {
             {toggle === 'productIntro' || formTypes === 'create' ?
                <>
                   {
-                     formTypes === 'create' && <button onClick={() => handleToggle(formTypes === 'create' && 'productIntro')} className='bt9_cancel' style={{
+                     formTypes === 'create' && <button onClick={() => router.push(`/dashboard/add-product`)} className='bt9_cancel' style={{
                         position: "absolute",
                         top: "0",
                         right: "0"

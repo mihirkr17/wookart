@@ -56,12 +56,18 @@ export default function SideBar({ dbSlug, shrink, setShrink, role }) {
                            <span>&nbsp;&nbsp;Catalog</span>
                         </button>
 
-                        <div style={(childLink === 'catalog' || dbSlug === "manage-product" || dbSlug === "add-product") ? { display: 'block' } : { display: 'none' }}>
+                        <div style={(childLink === 'catalog' || dbSlug === "manage-product" || dbSlug === "add-product" || dbSlug === "draft-product" || dbSlug === "queue-product") ? { display: 'block' } : { display: 'none' }}>
                            <Link className={dbSlug === "manage-product" ? "active_link" : ""} href='/dashboard/manage-product'>
                               <span>&nbsp;&nbsp;Products</span>
                            </Link>
                            <Link className={dbSlug === "add-product" ? "active_link" : ""} href={`/dashboard/add-product`}>
                               &nbsp;&nbsp;Add new product
+                           </Link>
+                           <Link className={dbSlug === "queue-product" ? "active_link" : ""} href={`/dashboard/queue-product`}>
+                              &nbsp;&nbsp;Queue
+                           </Link>
+                           <Link className={dbSlug === "draft-product" ? "active_link" : ""} href={`/dashboard/draft-product`}>
+                              &nbsp;&nbsp;Draft
                            </Link>
                         </div>
                      </li></>

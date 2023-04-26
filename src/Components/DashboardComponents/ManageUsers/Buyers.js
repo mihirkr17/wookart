@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 export default function Buyers() {
 
    const [url, setUrl] = useState("");
-   const { data, loading } = useFetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/all-buyers${url}`);
+   const { data, loading } = useFetch(`/dashboard/all-buyers${url}`);
    const [dropAction, setDropAction] = useState(false);
    const [getUserInfo, setGetUserInfo] = useState(false);
    const [searchQuery, setSearchQuery] = useState("");

@@ -2,11 +2,12 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useAdminContext } from '@/lib/AdminProvider';
 import { useBaseContext } from '@/lib/BaseProvider';
+import { apiHandler } from '@/Functions/common';
 
 const CheckAllIncomingProductListing = () => {
    const { data, refetch, triggers } = useAdminContext();
    const [items, setItems] = useState(1);
-   const {setMessage} = useBaseContext();
+   const { setMessage } = useBaseContext();
    const qProducts = data && (data?.queueProducts || []);
    const countQueueProduct = data && data?.countQueueProducts;
 
@@ -26,32 +27,21 @@ const CheckAllIncomingProductListing = () => {
    // handlers
    const takeThisProductHandler = async (product) => {
       try {
-         if (!product) {
+         if (!product)
+            return;
 
-         }
+         const { success, message, statusCode } = await apiHandler(`/dashboard/admin/take-this-product`, "PUT", { listingID: product?._lid });
 
-         const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/admin/take-this-product`, {
-            method: "PUT",
-            withCredentials: true,
-            credentials: "include",
-            headers: {
-               "Content-Type": "application/json",
-               authorization: product?._lid
-            }
-         });
-
-         const result = await response.json();
-
-         if (result?.success === true && result?.statusCode === 200) {
-            setMessage(result?.message, "success");
+         if (success === true && statusCode === 200) {
+            setMessage(message, "success");
             refetch();
             return;
-         } 
+         }
 
-         setMessage(result, 'danger');
+         setMessage(message, 'danger');
 
       } catch (error) {
-   
+
       }
    }
 

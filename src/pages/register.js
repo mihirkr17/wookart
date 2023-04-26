@@ -1,9 +1,11 @@
+import VerificationEmailByCode from "@/Components/AuthComponents/VerificationEmailByCode";
 import BtnSpinner from "@/Components/Shared/BtnSpinner/BtnSpinner";
-import { emailValidator } from "@/Functions/common";
+import { apiHandler, emailValidator } from "@/Functions/common";
 import { useBaseContext } from "@/lib/BaseProvider";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function Register() {
@@ -12,6 +14,12 @@ export default function Register() {
    const [accept, setAccept] = useState(false);
    const [showPwd, setShowPwd] = useState(false);
    const [verificationMsg, setVerificationMsg] = useState("");
+   const router = useRouter();
+
+   const { pathname, query } = router;
+
+   const { return_email, exTime } = query;
+
 
    async function handleRegister(e) {
       try {
@@ -58,27 +66,21 @@ export default function Register() {
 
          // if all input fields validate then call the api request
          else {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/auth/register-new-user`, {
-               method: "POST",
-               withCredentials: true,
-               credentials: 'include',
-               headers: {
-                  "Content-Type": "application/json"
-               },
-               body: JSON.stringify(formData)
-            });
-
             setLoading(false);
 
-            const data = await response.json();
+            const { message, success, verificationExpiredAt, returnEmail } = await apiHandler(`/auth/register-new-user`, "POST", formData);
 
-            if (!response.ok) {
-               setMessage(data?.message, 'danger');
+            if (!success) {
+               setMessage(message, 'danger');
                return;
             }
-            setVerificationMsg(data?.message);
-            setMessage(data?.message, "success");
+
+
+            setVerificationMsg(message);
+            setMessage(message, "success");
             e.target.reset();
+
+            router.push(`${pathname}?return_email=${returnEmail}&exTime=${verificationExpiredAt}`);
             return;
          }
 
@@ -115,69 +117,74 @@ export default function Register() {
                      </b>
                   }
 
-                  <form onSubmit={handleRegister}>
+                  {
+                     return_email ? <VerificationEmailByCode setMessage={setMessage} /> :
 
-                     <div className="input_group">
-                        <label htmlFor='phone'>Phone Number</label>
-                        <input className='form-control' id='phone' type="number" pattern="[0-9]*" name='phone' autoComplete='off' placeholder="Enter Phone Number!!!" />
-                     </div>
 
-                     <div className="input_group">
-                        <label htmlFor='email'>Email address</label>
-                        <input className='form-control' id='email' type="email" name='email' autoComplete='off' placeholder="Enter email address!!!" />
-                     </div>
+                        <form onSubmit={handleRegister}>
 
-                     <div className="input_group">
-                        <label htmlFor='password'>Password</label>
-                        <div style={{ position: 'relative' }}>
-                           <input className='form-control' type={showPwd ? "text" : "password"} name='password' id='password' autoComplete='off' placeholder="Please enter password !!!" />
-                           <span style={{
-                              transform: "translateY(-50%)",
-                              position: "absolute",
-                              right: "2%",
-                              top: "50%"
-                           }} className='bt9' onClick={() => setShowPwd(e => !e)}>
-                              {showPwd ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} />}
-                           </span>
-                        </div>
-                     </div>
-
-                     <div className="input_group">
-                        <label htmlFor="fullName">Full Name</label>
-                        <input type="text" className='form-control' name="fullName" id="fullName" placeholder='Enter your First and last name.' />
-                     </div>
-
-                     <div className="row">
-                        <div className="col-6">
                            <div className="input_group">
-                              <label htmlFor="dob">Birthday</label>
-                              <input type="date" className='form-control' name="dob" id="dob" placeholder='Enter your Birthday.' />
+                              <label htmlFor='phone'>Phone Number</label>
+                              <input className='form-control' id='phone' type="number" pattern="[0-9]*" name='phone' autoComplete='off' placeholder="Enter Phone Number!!!" />
                            </div>
-                        </div>
 
-                        <div className="col-6">
                            <div className="input_group">
-                              <label htmlFor="gender">Gender</label>
-                              <select className='form-select' name="gender" id="gender">
-                                 <option value="">Select Gender</option>
-                                 <option value="Male">Male</option>
-                                 <option value="Female">Female</option>
-                                 <option value="Others">Others</option>
-                              </select>
+                              <label htmlFor='email'>Email address</label>
+                              <input className='form-control' id='email' type="email" name='email' autoComplete='off' placeholder="Enter email address!!!" />
                            </div>
-                        </div>
-                     </div>
 
-                     <div className="mb-3 text-muted">
-                        <input type="checkbox" id='accept_terms' onChange={() => setAccept(e => !e)} />
-                        &nbsp;
-                        <label htmlFor="accept_terms">I would like to receive exclusive offers and promotions via SMS</label>
-                     </div>
+                           <div className="input_group">
+                              <label htmlFor='password'>Password</label>
+                              <div style={{ position: 'relative' }}>
+                                 <input className='form-control' type={showPwd ? "text" : "password"} name='password' id='password' autoComplete='off' placeholder="Please enter password !!!" />
+                                 <span style={{
+                                    transform: "translateY(-50%)",
+                                    position: "absolute",
+                                    right: "2%",
+                                    top: "50%"
+                                 }} className='bt9' onClick={() => setShowPwd(e => !e)}>
+                                    {showPwd ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} />}
+                                 </span>
+                              </div>
+                           </div>
 
-                     <button id="submit_btn" className='bt9_auth' disabled={accept === false ? true : false} type="submit">
-                        {loading ? <BtnSpinner text={"Registering..."}></BtnSpinner> : "Register"}
-                     </button>
-                  </form>
+                           <div className="input_group">
+                              <label htmlFor="fullName">Full Name</label>
+                              <input type="text" className='form-control' name="fullName" id="fullName" placeholder='Enter your First and last name.' />
+                           </div>
+
+                           <div className="row">
+                              <div className="col-6">
+                                 <div className="input_group">
+                                    <label htmlFor="dob">Birthday</label>
+                                    <input type="date" className='form-control' name="dob" id="dob" placeholder='Enter your Birthday.' />
+                                 </div>
+                              </div>
+
+                              <div className="col-6">
+                                 <div className="input_group">
+                                    <label htmlFor="gender">Gender</label>
+                                    <select className='form-select' name="gender" id="gender">
+                                       <option value="">Select Gender</option>
+                                       <option value="Male">Male</option>
+                                       <option value="Female">Female</option>
+                                       <option value="Others">Others</option>
+                                    </select>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div className="mb-3 text-muted">
+                              <input type="checkbox" id='accept_terms' onChange={() => setAccept(e => !e)} />
+                              &nbsp;
+                              <label htmlFor="accept_terms">I would like to receive exclusive offers and promotions via SMS</label>
+                           </div>
+
+                           <button id="submit_btn" className='bt9_auth' disabled={accept === false ? true : false} type="submit">
+                              {loading ? <BtnSpinner text={"Registering..."}></BtnSpinner> : "Register"}
+                           </button>
+                        </form>
+                  }
                </div>
             </div>
          </div>

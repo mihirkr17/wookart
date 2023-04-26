@@ -659,7 +659,7 @@ label {
 
 .my_order_items {
   border-radius: 5px;
-  // background: aliceblue;
+  border-bottom: 6px solid #00000036;
   padding: 10px;
   box-shadow: 0 0 9px 2px #00000026;
   margin: 0 0 10px 0;
@@ -678,6 +678,7 @@ label {
 
       td {
         padding: 4px 0;
+        word-break: break-word;
       }
     }
   }
@@ -691,29 +692,31 @@ label {
     flex-wrap: wrap;
 
     > div {
-      width: 100%;
-      flex: 1;
+      // width: 100%;
+      flex: 0 0 auto;
 
-      &:last-child {
-        text-align: end;
-      }
+      // &:last-child {
+      //   text-align: end;
+      // }
     }
   }
 }
 
 .manage_order_button {
-  border: 1px solid transparent;
+  border: 1px solid steelblue;
   background-color: unset;
   text-transform: uppercase;
-  padding: 5px;
-  font-size: 0.8rem;
+  padding: 3px;
+  font-size: 0.7rem;
   font-weight: bold;
   color: steelblue;
   cursor: pointer;
   transition: all 0.4s linear;
 
   &:hover {
-    border: 1px solid steelblue;
+    // border: 1px solid steelblue;
+    background-color: steelblue;
+    color: white;
   }
 }
 
@@ -772,4 +775,16 @@ label {
     margin-right: 2px;
     font-weight: bold;
   }
+}
+
+.sellerInfoMenu {
+  background: white;
+  position: absolute;
+  left: 0;
+  top: 30px;
+  padding: 10px;
+  z-index: 999;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  box-shadow: 0 0 10px 0 #00000045;
 }

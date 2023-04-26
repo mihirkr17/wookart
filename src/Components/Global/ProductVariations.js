@@ -77,18 +77,15 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
             }
          }
 
-         const response = await apiHandler(`/dashboard/seller/products/set-product-variation?formType=${formTypes}&vId=${variation?._vrid || ""}&requestFor=product_variations`, "PUT", { request: model });
+         const { success, message } = await apiHandler(`/dashboard/seller/products/set-product-variation?formType=${formTypes}&requestFor=product_variations`, "PUT", { request: model });
 
-         const { message } = await response.json();
-
-         if (response.ok) {
+         if (success) {
             setMessage(message, 'success');
             refetch();
             return;
          }
 
          setMessage(message, 'danger');
-
 
       } catch (error) {
          setMessage(error?.message, 'danger')

@@ -11,7 +11,7 @@ import Link from 'next/link';
 const MyDashboard = () => {
    const { userInfo, role } = useAuthContext();
    // const { state } = useSellerChecker();
-   const { data } = useFetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/overview`);
+   const { data } = useFetch(`/dashboard/overview`);
 
    const { newOrderCount } = useOrder();
 

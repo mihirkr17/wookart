@@ -80,9 +80,10 @@ export const calcTime = (iso, offset) => {
    return nd?.toLocaleTimeString();
 }
 
-export async function apiHandler(url = "", method = "GET", body = {}, authorization = "") {
+// global api handler
+export async function apiHandler(url = "", method = "GET", body = {}) {
 
-   const { log_tok } = CookieParser();
+   const cookie = window && CookieParser();
 
    const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1${url}`, {
       method,
@@ -90,9 +91,9 @@ export async function apiHandler(url = "", method = "GET", body = {}, authorizat
       credentials: "include",
       headers: {
          "Content-Type": "application/json",
-         authorization: `Bearer ${log_tok || ""}`
+         authorization: `Bearer ${cookie?.log_tok ? cookie?.log_tok : ""}`
       },
-      body: JSON.stringify(body)
+      ...["POST", 'PUT', "PATCH", "UPDATE"].includes(method) && { body: JSON.stringify(body) }
    });
 
    const result = await response.json();

@@ -1,6 +1,8 @@
 // pages/Login.js
 
 
+import VerificationEmailByCode from "@/Components/AuthComponents/VerificationEmailByCode";
+import { apiHandler } from "@/Functions/common";
 import { useAuthContext } from "@/lib/AuthProvider";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +16,8 @@ export default function Login() {
    const [loading, setLoading] = useState(false);
    const { setMessage, role, initialLoader } = useAuthContext();
    const router = useRouter();
-   const { email, from } = router.query;
+   const { pathname } = router;
+   const { email, from, return_email, exTime } = router.query;
 
 
    useEffect(() => {
@@ -40,23 +43,18 @@ export default function Login() {
          }
 
          else {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/auth/login`, {
-               method: "POST",
-               withCredentials: true,
-               credentials: 'include',
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify({ emailOrPhone, password })
-            });
 
             setLoading(false);
 
-            const { name, u_data, uuid, message, token } = await response.json();
+            const { name, u_data, uuid, message, token, success, verificationExpiredAt, returnEmail } = await apiHandler(`/auth/login`, "POST", { emailOrPhone, password });
 
-            if (!response.ok) {
+            if (!success) {
                return setMessage(message, 'danger');
             } else {
+
+               if (returnEmail && verificationExpiredAt) {
+                  return router.push(`${pathname}?return_email=${returnEmail}&exTime=${verificationExpiredAt}`)
+               }
 
                if (name === 'isLogin' && u_data) {
 
@@ -108,33 +106,37 @@ export default function Login() {
                      Become Seller &nbsp; <Link href={"/sell-online"}>Seller Registration</Link>
                   </p>
 
-                  <form onSubmit={handleLogin} className='text-start'>
-                     <div className="mb-3 input_group">
-                        <label htmlFor='emailOrPhone'>Email address or phone</label>
-                        <input className='form-control' type="text" name='emailOrPhone' id='emailOrPhone' defaultValue={email || ""} autoComplete='off' placeholder="Enter your email or phone" />
-                     </div>
+                  {
+                     return_email ? <VerificationEmailByCode setMessage={setMessage} /> :
 
-                     <div className="mb-3 input_group">
-                        <label htmlFor='password'>Password</label>
-                        <div style={{ position: 'relative' }}>
-                           <input className='form-control' type={showPwd ? "text" : "password"} name='password' id='password' autoComplete='off' placeholder="Please enter password !!!" />
-                           <span style={{
-                              transform: "translateY(-50%)",
-                              position: "absolute",
-                              right: "2%",
-                              top: "50%"
-                           }} className='bt9' onClick={() => setShowPwd(e => !e)}>
-                              {showPwd ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} />}
-                           </span>
-                        </div>
-                     </div>
+                        <form onSubmit={handleLogin} className='text-start'>
+                           <div className="mb-3 input_group">
+                              <label htmlFor='emailOrPhone'>Email address or phone</label>
+                              <input className='form-control' type="text" name='emailOrPhone' id='emailOrPhone' defaultValue={email || ""} autoComplete='off' placeholder="Enter your email or phone" />
+                           </div>
 
-                     <div className='mb-3 input_group'>
-                        <button className='bt9_auth' type="submit">
-                           {loading ? "Signing..." : "Login"}
-                        </button>
-                     </div>
-                  </form>
+                           <div className="mb-3 input_group">
+                              <label htmlFor='password'>Password</label>
+                              <div style={{ position: 'relative' }}>
+                                 <input className='form-control' type={showPwd ? "text" : "password"} name='password' id='password' autoComplete='off' placeholder="Please enter password !!!" />
+                                 <span style={{
+                                    transform: "translateY(-50%)",
+                                    position: "absolute",
+                                    right: "2%",
+                                    top: "50%"
+                                 }} className='bt9' onClick={() => setShowPwd(e => !e)}>
+                                    {showPwd ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} />}
+                                 </span>
+                              </div>
+                           </div>
+
+                           <div className='mb-3 input_group'>
+                              <button className='bt9_auth' type="submit">
+                                 {loading ? "Signing..." : "Login"}
+                              </button>
+                           </div>
+                        </form>
+                  }
                   <br />
                   <Link href={`/forgot-pwd`}>Forgot password ?</Link>
 

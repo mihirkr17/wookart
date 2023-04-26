@@ -13,7 +13,7 @@ import ManageOrderModal from './ManageOrderModal';
 
 const MyOrder = () => {
    const { userInfo, setMessage } = useAuthContext();
-   const { data, refetch, loading } = useFetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/order/my-order/${userInfo?.email}`);
+   const { data, refetch, loading } = useFetch(`/order/my-order/${userInfo?.email}`);
    const [actLoading, setActLoading] = useState(false);
    const [ratPoint, setRatPoint] = useState("5");
 
@@ -100,7 +100,7 @@ const MyOrder = () => {
                            const { totalAmount, _id, orderStatus, isCanceled, paymentStatus, customerEmail, items, orderID, orderAT, sellerStore } = orderItem;
                            return (
                               <div className="my_order_items" key={index}>
-                                 <div className="div ssg">
+                                 <div className="ssg">
                                     <div>
                                        <small style={{
                                           display: "flex",
@@ -111,16 +111,19 @@ const MyOrder = () => {
                                           fontSize: "0.8rem"
                                        }}>
 
-                                          <span># {orderID}</span>
+                                          <span style={{ color: "#d33900" }}><strong>{orderID}</strong></span>
                                           <i className='textMute'>Placed on {orderAT?.date + ", " + orderAT?.time}</i>
                                           <small>
                                              Status: <i style={orderStatus === "canceled" ? { color: "red" } : { color: "green" }}>
-                                                {orderStatus}</i>
+                                                {orderStatus}
+                                             </i>
                                           </small>
+
                                        </small>
                                     </div>
 
                                     <div>
+                                       <small>Total: <strong className='currency_sign'>{totalAmount}</strong></small> <br />
                                        <button className='manage_order_button' onClick={() => setManageOrderModal(orderItem)}>
                                           Manage Order
                                        </button>
@@ -128,7 +131,7 @@ const MyOrder = () => {
                                  </div>
 
 
-                                 <table style={{ marginTop: "5px" }}>
+                                 <table style={{ marginTop: "5px", overflowX: "auto" }}>
 
                                     <thead>
                                        <tr>

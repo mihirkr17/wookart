@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 export default function Sellers() {
 
-   const { data } = useFetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/all-sellers`);
+   const { data } = useFetch(`/dashboard/all-sellers`);
    const [dropAction, setDropAction] = useState(false);
 
    async function deleteSellerHandler() {

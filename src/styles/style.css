@@ -815,6 +815,7 @@ label {
 
 .my_order_items {
   border-radius: 5px;
+  border-bottom: 6px solid rgba(0, 0, 0, 0.2117647059);
   padding: 10px;
   -webkit-box-shadow: 0 0 9px 2px rgba(0, 0, 0, 0.1490196078);
           box-shadow: 0 0 9px 2px rgba(0, 0, 0, 0.1490196078);
@@ -838,6 +839,7 @@ label {
 }
 .my_order_items table tbody td {
   padding: 4px 0;
+  word-break: break-word;
 }
 .my_order_items .ssg {
   border-bottom: 1px solid rgba(95, 95, 95, 0.1098039216);
@@ -855,21 +857,17 @@ label {
       flex-wrap: wrap;
 }
 .my_order_items .ssg > div {
-  width: 100%;
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-}
-.my_order_items .ssg > div:last-child {
-  text-align: end;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
 }
 
 .manage_order_button {
-  border: 1px solid transparent;
+  border: 1px solid steelblue;
   background-color: unset;
   text-transform: uppercase;
-  padding: 5px;
-  font-size: 0.8rem;
+  padding: 3px;
+  font-size: 0.7rem;
   font-weight: bold;
   color: steelblue;
   cursor: pointer;
@@ -877,7 +875,8 @@ label {
   transition: all 0.4s linear;
 }
 .manage_order_button:hover {
-  border: 1px solid steelblue;
+  background-color: steelblue;
+  color: white;
 }
 
 .billing-details-content {
@@ -931,6 +930,19 @@ label {
   display: inline-block;
   margin-right: 2px;
   font-weight: bold;
+}
+
+.sellerInfoMenu {
+  background: white;
+  position: absolute;
+  left: 0;
+  top: 30px;
+  padding: 10px;
+  z-index: 999;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2705882353);
+          box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2705882353);
 }
 
 .main_spinner {

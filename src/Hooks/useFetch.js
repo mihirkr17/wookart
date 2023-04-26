@@ -18,7 +18,7 @@ export const useFetch = (url, authorization = "") => {
                if (url && typeof url !== 'undefined') {
                   setLoading(true);
 
-                  const response = await fetch(url, {
+                  const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1${url}`, {
                      withCredentials: true,
                      credentials: 'include',
                      method: "GET",

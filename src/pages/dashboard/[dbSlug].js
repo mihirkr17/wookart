@@ -6,6 +6,7 @@ import ManageProduct from "@/Components/DashboardComponents/ManageProduct/Manage
 import Buyers from "@/Components/DashboardComponents/ManageUsers/Buyers";
 import Sellers from "@/Components/DashboardComponents/ManageUsers/Sellers";
 import MyProfile from "@/Components/DashboardComponents/MyProfile/MyProfile";
+import QueueProduct from "@/Components/DashboardComponents/QueueProduct/QueueProduct";
 import RightNavbar from "@/Components/DashboardComponents/RightNavbar/RightNavbar";
 import SideBar from "@/Components/DashboardComponents/SideBar/SideBar";
 import { withAuthorization } from "@/Functions/withAuthorization";
@@ -59,6 +60,10 @@ export function DBSlug() {
 
                   {
                      (role === "SELLER" && dbSlug === "add-product") && <AddProduct></AddProduct>
+                  }
+
+                  {
+                     (role === "SELLER" && dbSlug === "queue-product") && <QueueProduct />
                   }
                   {
                      dbSlug === "my-profile" && <MyProfile></MyProfile>

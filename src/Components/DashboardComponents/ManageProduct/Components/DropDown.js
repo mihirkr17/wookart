@@ -7,12 +7,12 @@ const DropDown = ({ mProduct, location, productControlHandler, openDropDown, set
    return (
 
       <ul className="dropdown-menu" style={openDropDown?._lid === mProduct?._lid ? { display: 'block', right: 0 } : { display: 'none' }}>
-         <li>
+         {/* <li>
             <Link className='dropdown-item' state={{ from: location }} replace
                href={`/dashboard/manage-product?np=edit_product&store=${mProduct?.sellerData?.storeName}&pid=${mProduct?._id}`}>
                Edit Product
             </Link>
-         </li>
+         </li> */}
          <li>
             <button className="status_btn_alt dropdown-item" onClick={() => setUpdateProductForm(mProduct && mProduct)}>
                Edit Product

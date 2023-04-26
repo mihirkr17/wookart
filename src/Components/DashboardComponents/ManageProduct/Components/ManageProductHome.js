@@ -32,7 +32,6 @@ const ManageProductHome = (
    const [productDetailModal, setProductDetailModal] = useState(false);
    const [openDropDown, setOpenDropDown] = useState("");
    const { width } = useWindowDimensions();
-   const [flashSale, setFlashSale] = useState("");
    const [updateProductForm, setUpdateProductForm] = useState(false);
    const [openProductVariationModal, setOpenProductVariationModal] = useState(false);
 
@@ -65,16 +64,6 @@ const ManageProductHome = (
          } else {
             return setMessage(message, 'danger');
          }
-      }
-   }
-
-   const handleFlashSaleMenu = (params) => {
-      if (params !== flashSale) {
-         setFlashSale(params);
-      }
-
-      else {
-         setFlashSale("");
       }
    }
 
@@ -132,48 +121,6 @@ const ManageProductHome = (
       }
 
    }
-
-
-
-
-
-   async function flashSellFormHandler(e, product) {
-      try {
-         e.preventDefault();
-
-         const fSaleStart = e.target.fSaleStart?.value;
-         const fSaleEnd = e.target.fSaleEnd?.value;
-
-         if (fSaleEnd !== "" && fSaleStart !== "") {
-            const fSale = {
-               fSaleStart, fSaleEnd
-            }
-            const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/seller/${userInfo?.seller?.storeInfos?.storeName}/start-flash-sale`, {
-               method: "PUT",
-               withCredentials: true,
-               credentials: 'include',
-               headers: {
-                  "Content-Type": "application/json"
-               },
-               body: JSON.stringify({ market_place: 'woo-kart', actionType: "FLASH_SALE", data: { productID: product?._id, listingID: product?._lid, fSale } })
-            });
-
-
-            const result = await response.json();
-
-
-            if (result?.success === true) {
-               setMessage(result?.message, 'success')
-            } else {
-               setMessage(result?.message, 'danger');
-            }
-
-         }
-      } catch (error) {
-
-      }
-   }
-
 
    return (
       <>
@@ -237,34 +184,11 @@ const ManageProductHome = (
                                     SELLING PRICE   : {mProduct?.pricing?.sellingPrice} <br />
                                     CATEGORIES      : {mProduct?.categories && mProduct?.categories.join(" >> ")} <br />
                                     Total Variation : {(mProduct?.totalVariation && mProduct?.totalVariation) || 0} <br />
-                                    View            : <button onClick={() => setProductDetailModal(true && mProduct)}>view</button>
+                                    View            : <button className='bt9_primary' onClick={() => setProductDetailModal(true && mProduct)}>view</button>
                                  </pre>
                               </small>
                               <br />
 
-                              <button className='bt9_edit' onClick={() => handleFlashSaleMenu(mProduct)}>Start Flash Selling</button>
-
-                              {
-                                 flashSale?._lid === mProduct?._lid && <div className='card_default card_description'>
-
-                                    <form onSubmit={(e) => flashSellFormHandler(e, mProduct)}>
-                                       <div className='py-2'>
-                                          <label htmlFor="fSaleStart">Start Date</label> <br />
-                                          <input type="date" className='form-control form-control-sm' name='fSaleStart' id='fSaleStart' />
-                                       </div>
-
-                                       <div className='py-2'>
-                                          <label htmlFor="fSaleEnd">End date</label> <br />
-                                          <input type="date" className='form-control form-control-sm' name='fSaleEnd' id='fSaleEnd' />
-                                       </div>
-
-                                       <div className="py-2">
-                                          <button type='submit' className='bt9_create'>Start Sale</button>
-                                       </div>
-                                    </form>
-
-                                 </div>
-                              }
                            </div>
 
                            <div className={`dropdown`} style={width <= 567 ? { width: '100%' } : { width: 'unset' }}>

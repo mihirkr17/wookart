@@ -30,7 +30,7 @@ const ManageProduct = () => {
 
    useEffect(() => {
       const setTimeUrl = setTimeout(() => {
-         let url = `${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/view-products?page=${queryPage}&items=${8}&category=${filterCategory}&search=${searchValue}`
+         let url = `/dashboard/view-products?page=${queryPage}&items=${8}&category=${filterCategory}&search=${searchValue}`
 
          setUrl(url);
       }, 200);

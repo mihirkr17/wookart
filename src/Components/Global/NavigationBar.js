@@ -5,7 +5,7 @@ import { Navbar } from 'react-bootstrap';
 import Link from 'next/link';
 import { useAuthContext } from '@/lib/AuthProvider';
 import { useRouter } from 'next/router';
-import { authLogout } from '@/Functions/common';
+import { apiHandler, authLogout } from '@/Functions/common';
 import useMenu from '@/Hooks/useMenu';
 import { useCartContext } from '@/lib/CartProvider';
 
@@ -25,8 +25,7 @@ const NavigationBar = () => {
       const fetchData = setTimeout(() => {
          (async () => {
             if (searchQuery !== "" && searchQuery) {
-               const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/search-products/${searchQuery}`);
-               const resData = await response.json();
+               const resData = await apiHandler(`/product/search-products/${searchQuery}`, "GET", {});
                setData(resData);
             }
          })();
