@@ -2,7 +2,7 @@ import ModalWrapper from '@/Components/Global/ModalWrapper';
 import React from 'react';
 
 const OrderDetailsModal = ({ data, closeModal }) => {
-   const { orderID, title, customerEmail, paymentMode, image, trackingID, shipping, orderStatus, variant, quantity, orderAT, shippingAddress, sellingPrice, baseAmount } = data && data;
+   const { orderID, title, customerEmail, paymentMode, image, trackingID, shipping, orderStatus, quantity, orderAT, shippingAddress, packaged, sellingPrice, baseAmount } = data && data;
 
 
    function getAttrs(obj = {}, optStr = "") {
@@ -101,18 +101,6 @@ const OrderDetailsModal = ({ data, closeModal }) => {
                         </ul>
                      </td>
                   </tr>
-
-                  <tr>
-                     <th>Variant</th>
-                     <td>
-                        <ul>
-                           {
-                              getAttrs(variant)
-                           }
-                        </ul>
-                     </td>
-                  </tr>
-
 
                   <tr>
                      <th>In The Box</th>

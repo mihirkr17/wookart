@@ -352,7 +352,7 @@ label {
   background-color: #f3f3f3;
   position: absolute;
   right: 10px;
-  top: 37px;
+  top: 50px;
   min-width: 150px;
   border-radius: 10px;
   box-shadow: 0 0 20px 10px #00000026;
@@ -366,10 +366,18 @@ label {
 }
 
 .status_btn_alt {
-  padding: 0.3rem;
+  padding: 0.2rem;
   background-color: transparent;
-  border: none;
+  border: 1px solid black;
   cursor: pointer;
+  margin: 0.3rem;
+  font-size: 0.8rem;
+  border-radius: 3px;
+
+  &:hover {
+    color: gray;
+    border-color: gray;
+  }
 }
 
 .headers {

@@ -37,7 +37,7 @@ const ManageProductHome = (
 
    const deleteProductVariationHandler = async (vid, pid) => {
       try {
-         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.seller?.storeInfos?.storeName}/product/delete-product-variation/${pid}/${vid}`,
+         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.store?.name}/product/delete-product-variation/${pid}/${vid}`,
             "DELETE");
 
          if (success) {
@@ -74,7 +74,7 @@ const ManageProductHome = (
       let available = parseInt(value);
 
       try {
-         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.seller?.storeInfos?.storeName}/product/update-stock`, "PUT", { productID, variations: { available, _vrid }, MARKET_PLACE: 'WooKart' });
+         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.store?.name}/product/update-stock`, "PUT", { productID, variations: { available, _vrid }, MARKET_PLACE: 'WooKart' });
 
          if (success) {
             setMessage(message, 'success');

@@ -19,7 +19,7 @@ const SellerProfile = ({ userInfo }) => {
                <article>
                   <address>
                      <pre>
-                        <p><strong>Store Name          : </strong>{userInfo?.seller?.storeInfos?.storeName}<span className="text-muted">(Not Changeable)</span></p>
+                        <p><strong>Store Name          : </strong>{userInfo?.store?.name}<span className="text-muted">(Not Changeable)</span></p>
                         <p><strong>Email Address       : </strong>{userInfo?.email}</p>
                         <p><strong>Area                : </strong>{userInfo?.seller?.address?.area}</p>
                         <p><strong>District            : </strong>{userInfo?.seller?.address?.city}</p>

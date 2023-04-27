@@ -28,7 +28,7 @@ const RightNavbar = ({ shrink, userInfo, setShrink, dbSlug }) => {
 
          <div className="db_dropdown_profile" ref={menuRef}>
             <button onClick={() => setOpenMenu(e => !e)}>
-               <strong>{userInfo?.seller?.storeInfos?.storeName || userInfo?.fullName?.split(" ")[0]}</strong>
+               <strong>{userInfo?.store?.name || userInfo?.fullName?.split(" ")[0]}</strong>
             </button>
 
             <ul className="db_dropdown_profile_body" style={openMenu ? { display: 'block' } : { display: 'none' }}>

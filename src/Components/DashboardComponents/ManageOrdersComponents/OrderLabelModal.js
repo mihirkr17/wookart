@@ -81,11 +81,11 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
                      borderTop: "1px solid black",
                      width: "100%"
                   }}>
-                     <h6 style={{ fontSize: "0.9rem" }}>Shipper Name : {userInfo?.seller?.storeInfos?.storeName}</h6>
+                     <h6 style={{ fontSize: "0.9rem" }}>Shipper Name : {userInfo?.store?.name}</h6>
                      <p style={{ fontSize: "0.8rem" }}>
                         <small>
-                           {userInfo?.seller?.address?.area},&nbsp;{userInfo?.seller?.address?.city}, <br />
-                           {userInfo?.seller?.address?.country},&nbsp;{userInfo?.seller?.address?.postal_code} <br />
+                           {userInfo?.store?.address?.area},&nbsp;{userInfo?.store?.address?.city}, <br />
+                           {userInfo?.store?.address?.country},&nbsp;{userInfo?.store?.address?.postal_code} <br />
                            Phone : {userInfo?.phone}
                         </small>
                      </p>

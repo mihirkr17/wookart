@@ -46,7 +46,7 @@ const MyDashboard = () => {
                                  <div className="d_p_mid_img">
                                     <img src={userInfo?.photoURL} alt="" style={{ width: "100%", height: "100%" }} />
                                  </div>
-                                 <h5>{role === 'SELLER' && userInfo?.seller?.storeInfos?.storeName}</h5>
+                                 <h5>{role === 'SELLER' && userInfo?.store?.name}</h5>
                               </div>
                            </div>
 

@@ -116,7 +116,7 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
             return setMessage("Required all fields!!!", 'danger');
          }
 
-         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.seller?.storeInfos?.storeName}/product/listing/${formTypes}/${data?._lid}`, "POST", formData);
+         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.store?.name}/product/listing/${formTypes}/${data?._lid}`, "POST", formData);
          setActionLoading(false);
 
          if (success) {

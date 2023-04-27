@@ -58,7 +58,7 @@ const ManageProduct = () => {
       <div className='section_default'>
          <div className="container">
             {
-               queryParams && queryStoreName === userInfo?.seller?.storeInfos?.storeName ?
+               queryParams && queryStoreName === userInfo?.store?.name ?
                   <ProductTemplateForm
                      userInfo={userInfo}
                      formTypes={

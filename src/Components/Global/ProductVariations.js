@@ -62,7 +62,7 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
          vTitle = vTitle.trim();
 
          let model = {
-            pageURL: '/dashboard/manage-product?np=update-variation&store=' + userInfo?.seller?.storeInfos?.storeName + "&pid=" + data?._id && data?._id,
+            pageURL: '/dashboard/manage-product?np=update-variation&store=' + userInfo?.store?.name + "&pid=" + data?._id && data?._id,
             productID: data?._id && data?._id,
             variationID,
             variations: {

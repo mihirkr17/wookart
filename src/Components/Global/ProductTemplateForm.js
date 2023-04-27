@@ -13,7 +13,7 @@ const ProductTemplateForm = ({ formTypes, userInfo, setMessage }) => {
 
    const queryPID = new URLSearchParams(window && window.location.search).get("pid");
    const queryVID = new URLSearchParams(window && window.location.search).get("vId");
-   const uri = formTypes !== 'create' && `/dashboard/get-one-product-in-seller-dsb?pid=${queryPID}&storeName=${userInfo?.seller?.storeInfos?.storeName}&vId=${queryVID || ""}`
+   const uri = formTypes !== 'create' && `/dashboard/get-one-product-in-seller-dsb?pid=${queryPID}&storeName=${userInfo?.store?.name}&vId=${queryVID || ""}`
    const { data, refetch } = useFetch(uri);
 
 
