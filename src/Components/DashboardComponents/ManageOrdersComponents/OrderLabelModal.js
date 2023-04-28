@@ -7,17 +7,19 @@ import ModalWrapper from '@/Components/Global/ModalWrapper';
 const OrderLabelModal = ({ data, closeModal, userInfo }) => {
    const ref = useRef();
    const canvasRef = useRef();
-   const { orderID, trackingID, paymentMode, orderAT, quantity, shippingAddress, packaged, shippingCharge, baseAmount } = data && data;
+   const { orderID, trackingID, paymentMode, orderAT, totalAmount, shippingAddress, shippingCharge, items } = data && data;
+
+   const quantity = items?.reduce((p, c) => p + c?.quantity, 0);
 
    useEffect(() => {
-      let str = "OrderID: " + orderID + ", Total Amount: " + baseAmount + " USD" + ", Quantity: " + quantity;
+      let str = `Order ID: ${orderID}, Total: ${totalAmount} Tk, Qty: ${quantity}`;
 
       QRCode.toCanvas(
          canvasRef.current,
          str || " ",
          (error) => error && console.error(error)
       );
-   }, [orderID, baseAmount, quantity]);
+   }, [orderID, totalAmount, quantity]);
 
    return (
       <ModalWrapper closeModal={closeModal}>
@@ -27,11 +29,11 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
             </Pdf>
          </div>
          <div className="wrapper mx-auto card_default card_description" style={{ width: "432px", height: "624px", margin: "1rem 0", padding: "1rem" }} ref={ref}>
-            
-            <p style={{textAlign: "center", padding: "0.3rem 0"}}>
+
+            <p style={{ textAlign: "center", padding: "0.3rem 0" }}>
                WooKart Sales Order
             </p>
-            
+
             <div className="d-flex align-items-center justify-content-around flex-wrap">
                <small><strong>Order ID : {orderID}</strong></small>
                <small><strong>Tracking ID : {trackingID}</strong></small>
@@ -46,13 +48,15 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
             <div className="barcode" style={{ width: "100%", display: "flex" }}>
                <canvas style={{ width: "100px" }} ref={canvasRef}></canvas>
 
-               <pre style={{ fontSize: "0.7rem", margin: "auto" }}>
-                  Total Amount    : <b>{baseAmount} USD</b> <br />
-                  Quantity        : {quantity} <br />
-                  Shipping Charge : {shippingCharge} USD <br />
-                  Weight          : {packaged?.weight} Kg <br />
-                  Payment Mode    : {paymentMode}
-               </pre>
+               <div>
+                  <span style={{ marginBottom: "50px", display: "block" }}>
+                     Total: <big className='currency_sign'>{totalAmount}</big> <small className='textMute'>(+ charges)</small>
+                  </span>
+                  <pre style={{ fontSize: "0.8rem", margin: "auto" }}>
+                     Quantity        : {quantity} <br />
+                     Payment Mode    : {paymentMode}
+                  </pre>
+               </div>
             </div>
 
             <hr />

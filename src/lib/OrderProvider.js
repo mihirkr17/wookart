@@ -1,23 +1,28 @@
 import React, { useEffect, useState, useContext, createContext } from 'react';
 import { useAuthContext } from './AuthProvider';
-import { CookieParser } from '@/Functions/common';
+import { CookieParser, deleteAuth } from '@/Functions/common';
+import { useRouter } from 'next/router';
 
 export const OrderContext = createContext();
 
 const OrderProvider = ({ children }) => {
+   const router = useRouter();
+   const { filters } = router?.query;
    const { role, userInfo } = useAuthContext();
    const [orderCount, setOrderCount] = useState(0);
-   const [newOrderCount, setNewOrderCount] = useState(0);
+   const [placeOrderCount, setPlaceOrderCount] = useState(0);
+   const [dispatchOrderCount, setDispatchOrderCount] = useState(0);
    const [orderLoading, setOrderLoading] = useState(false);
    const [orderError, setOrderError] = useState("");
    const [ref, setRef] = useState(false);
-   const viewMode = new URLSearchParams(window && window.location.search).get("view");
-   const [view, setView] = useState(viewMode || "single" || "");
    const [orders, setOrders] = useState([]);
-console.log(userInfo);
+
+
    const orderRefetch = () => setRef(e => !e);
 
-   const viewController = (e) => setView(e);
+   function filterOrders(params, slug) {
+      router.push(`/dashboard/${slug}?filters=${params}`);
+   }
 
    useEffect(() => {
       if (role !== "SELLER") {
@@ -30,7 +35,7 @@ console.log(userInfo);
          (async () => {
             try {
                setOrderLoading(true);
-               const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/store/${userInfo?.store?.name}/manage-orders?view=${view}`, {
+               const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/store/${userInfo?.store?.name}/manage-orders?filters=${filters ?? "placed"}`, {
                   method: "GET",
                   withCredentials: true,
                   credentials: "include",
@@ -42,19 +47,19 @@ console.log(userInfo);
                const result = await response.json();
 
                if (response.status === 401) {
-                  localStorage.removeItem("client_data");
+                  deleteAuth();
                }
 
                if (!response.ok) {
                   setOrderLoading(false);
+                  return;
                }
 
-               if (result?.success === true && result?.statusCode === 200) {
-                  setOrderLoading(false);
-                  setOrders(result?.data?.orders);
-                  setOrderCount(result?.data?.totalOrderCount);
-                  setNewOrderCount(result?.data?.newOrderCount);
-               }
+               setOrderLoading(false);
+               setOrders(result?.data?.orders);
+               setOrderCount(result?.data?.totalOrderCount);
+               setPlaceOrderCount(result?.data?.placeOrderCount);
+               setDispatchOrderCount(result?.data?.dispatchOrderCount)
 
             } catch (error) {
                setOrderError(error?.message || "");
@@ -65,16 +70,17 @@ console.log(userInfo);
       }, 0);
 
       return () => clearTimeout(fetchData);
-   }, [ref, role, userInfo?.store?.name, view]);
+   }, [ref, role, userInfo?.store?.name, filters]);
 
    return (
       <OrderContext.Provider value={{
          orderLoading,
          orderRefetch,
          orderCount,
-         newOrderCount,
+         placeOrderCount,
          orderError,
-         viewController,
+         filterOrders,
+         dispatchOrderCount,
          orders
       }}>
          {children}

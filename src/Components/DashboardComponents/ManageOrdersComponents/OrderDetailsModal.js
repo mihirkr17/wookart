@@ -2,7 +2,7 @@ import ModalWrapper from '@/Components/Global/ModalWrapper';
 import React from 'react';
 
 const OrderDetailsModal = ({ data, closeModal }) => {
-   const { orderID, title, customerEmail, paymentMode, image, trackingID, shipping, orderStatus, quantity, orderAT, shippingAddress, packaged, sellingPrice, baseAmount } = data && data;
+   const { orderID, title, customerEmail, paymentMode, image, trackingID, sku, variationID, paymentStatus, shippingCharge, orderStatus, quantity, orderAT, shippingAddress, packaged, sellingPrice, baseAmount } = data && data;
 
 
    function getAttrs(obj = {}, optStr = "") {
@@ -46,11 +46,22 @@ const OrderDetailsModal = ({ data, closeModal }) => {
                      <td>{orderID}</td>
                   </tr>
                   <tr>
-                     <th>Tracking ID</th>
-                     <td>{trackingID}</td>
+                     <th>SKU</th>
+                     <td>{sku}</td>
                   </tr>
                   <tr>
-                     <th>Order Email</th>
+                     <th>Variation ID</th>
+                     <td>{variationID}</td>
+                  </tr>
+                  {
+                     trackingID &&
+                     <tr>
+                        <th>Tracking ID</th>
+                        <td>{trackingID}</td>
+                     </tr>
+                  }
+                  <tr>
+                     <th>Customer Email</th>
                      <td>{customerEmail}</td>
                   </tr>
                   <tr>
@@ -62,7 +73,11 @@ const OrderDetailsModal = ({ data, closeModal }) => {
                      <td>{quantity}</td>
                   </tr>
                   <tr>
-                     <th>Total Amount</th>
+                     <th>Shipping Charge</th>
+                     <td>{shippingCharge} Tk</td>
+                  </tr>
+                  <tr>
+                     <th>Base Total</th>
                      <td>{baseAmount} Tk</td>
                   </tr>
                   <tr>
@@ -70,7 +85,11 @@ const OrderDetailsModal = ({ data, closeModal }) => {
                      <td>{paymentMode}</td>
                   </tr>
                   <tr>
-                     <th>Status</th>
+                     <th>Payment Status</th>
+                     <td>{paymentStatus}</td>
+                  </tr>
+                  <tr>
+                     <th>Order Status</th>
                      <td>{orderStatus}</td>
                   </tr>
                   <tr>

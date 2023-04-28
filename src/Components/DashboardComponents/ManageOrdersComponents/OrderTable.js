@@ -84,7 +84,7 @@ const OrderTable = ({ setOpenModal, setLabelModal, orders, orderRefetch, setMess
 
          {orders && orders.map((odr) => {
 
-            const { orderID, orderPaymentID, customerEmail, paymentMode, shippingAddress, orderStatus, totalAmount, paymentStatus, orderAT, items } = odr;
+            const { orderID, trackingID, customerEmail, paymentMode, shippingAddress, orderStatus, totalAmount, paymentStatus, orderAT, items } = odr;
             return (
                <div className="my_order_items" key={orderID}>
                   <div className="ssg">
@@ -130,11 +130,14 @@ const OrderTable = ({ setOpenModal, setLabelModal, orders, orderRefetch, setMess
                                        <button className='status_btn_alt' onClick={() => getPaymentInfo(odr && odr?.paymentIntentID, odr)}>Refund Now</button>
                                     </li>
                                  }
-            
+
                                  {
                                     orderStatus === "dispatch" && <>
                                        <li>
                                           <button className='status_btn_alt' onClick={() => setOpenBox(odr)}>Shipped Now</button>
+                                       </li>
+                                       <li>
+                                          <button className='status_btn_alt' onClick={() => setLabelModal(true && odr)}>Download Label</button>
                                        </li>
                                     </>
                                  }
@@ -163,7 +166,7 @@ const OrderTable = ({ setOpenModal, setLabelModal, orders, orderRefetch, setMess
                                        </li>
                                     </>
                                  }
-         
+
                                  {
                                     orderStatus === "shipped" && <>
                                        <li>
@@ -201,6 +204,9 @@ const OrderTable = ({ setOpenModal, setLabelModal, orders, orderRefetch, setMess
                               nItem["shippingAddress"] = shippingAddress;
                               nItem["paymentMode"] = paymentMode;
                               nItem["orderAT"] = orderAT;
+                              nItem["trackingID"] = trackingID;
+                              nItem["customerEmail"] = customerEmail;
+                              nItem["paymentStatus"] = paymentStatus;
                               return (
                                  <tr key={i}>
                                     <td><img src={image} alt="product-image" srcSet="" width={30} height={30} /></td>
@@ -213,7 +219,6 @@ const OrderTable = ({ setOpenModal, setLabelModal, orders, orderRefetch, setMess
                                     <td>{quantity}</td>
                                     <td>
                                        <button className="status_btn_alt" onClick={() => setOpenModal(true && nItem)}>Details</button>
-                                       {orderStatus === "dispatch" && <button className='status_btn_alt' onClick={() => setLabelModal(true && nItem)}>Download Label</button>}
                                     </td>
                                  </tr>
 
