@@ -15,6 +15,8 @@ export default function Login() {
    const [showPwd, setShowPwd] = useState(false);
    const [loading, setLoading] = useState(false);
    const { setMessage, role, initialLoader } = useAuthContext();
+   const [verifyReturnEmail, setVerifyReturnEmail] = useState("");
+   const [verifyCodeTime, setVerifyCodeTime] = useState(0);
    const router = useRouter();
    const { pathname } = router;
    const { email, from, return_email, exTime } = router.query;
@@ -53,7 +55,8 @@ export default function Login() {
             } else {
 
                if (returnEmail && verificationExpiredAt) {
-                  return router.push(`${pathname}?return_email=${returnEmail}&exTime=${verificationExpiredAt}`)
+                  setVerifyCodeTime(verificationExpiredAt);
+                  return setVerifyReturnEmail(returnEmail);
                }
 
                if (name === 'isLogin' && u_data) {
@@ -96,18 +99,23 @@ export default function Login() {
 
 
                <div className="ac_right">
-                  <h5>Login</h5>
-                  <p>Do not have an account?
-                     &nbsp;<Link href={'/register'}>Create Your Account</Link>&nbsp;
-                     it takes less than a minute
-                  </p>
-                  <br />
-                  <p>
-                     Become Seller &nbsp; <Link href={"/sell-online"}>Seller Registration</Link>
-                  </p>
-
                   {
-                     return_email ? <VerificationEmailByCode setMessage={setMessage} /> :
+
+                     verifyReturnEmail ? <VerificationEmailByCode setMessage={setMessage}
+                        verifyCodeTime={verifyCodeTime}
+                        setVerifyCodeTime={setVerifyCodeTime}
+                        setVerifyReturnEmail={setVerifyReturnEmail}
+                        verifyReturnEmail={verifyReturnEmail}
+                     /> : <>
+                        <h5>Login</h5>
+                        <p>Do not have an account?
+                           &nbsp;<Link className="links" href={'/register'}>Create Your Account</Link>&nbsp;
+                           it takes less than a minute
+                        </p>
+                        <br />
+                        <p>
+                           Become Seller &nbsp; <Link href={"/sell-online"}>Seller Registration</Link>
+                        </p>
 
                         <form onSubmit={handleLogin} className='text-start'>
                            <div className="mb-3 input_group">
@@ -136,9 +144,12 @@ export default function Login() {
                               </button>
                            </div>
                         </form>
+
+                        <br />
+                        <Link href={`/forgot-pwd`}>Forgot password ?</Link>
+                     </>
                   }
-                  <br />
-                  <Link href={`/forgot-pwd`}>Forgot password ?</Link>
+
 
                </div>
 

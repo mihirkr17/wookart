@@ -1,12 +1,13 @@
 // src/Components/UserComponents/ManageOrderModal.js
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ModalWrapper from "../Global/ModalWrapper";
 import FilterOption from "../Shared/FilterOption";
 import { apiHandler } from "@/Functions/common";
 import useMenu from "@/Hooks/useMenu";
+import React from "react";
 
-export default function ManageOrderModal({ closeModal, data, setMessage, refetch }) {
+function ManageOrderModal({ closeModal, data, setMessage, refetch }) {
    const [openCancelForm, setOpenCancelForm] = useState(false);
    const [reason, setReason] = useState("");
    const { menuRef, openMenu, setOpenMenu } = useMenu();
@@ -15,7 +16,6 @@ export default function ManageOrderModal({ closeModal, data, setMessage, refetch
    const subTotal = items?.reduce((p, c) => p + c?.quantity, 0);
    const baseAmounts = items?.reduce((p, c) => p + (c?.sellingPrice * c?.quantity), 0);
    const shippingFees = items?.reduce((p, c) => p + c?.shippingCharge, 0);
-
 
    const handleCancelOrder = async (e, order) => {
       e.preventDefault();
@@ -37,7 +37,6 @@ export default function ManageOrderModal({ closeModal, data, setMessage, refetch
       }
    }
 
-
    const removeOrderHandler = async (orderID, customerEmail) => {
 
       if (window.confirm("Want to cancel this order ?")) {
@@ -53,7 +52,6 @@ export default function ManageOrderModal({ closeModal, data, setMessage, refetch
          return setMessage(message, "danger");
       }
    }
-
 
 
    function cancelTemplate(orderID, customerEmail, items) {
@@ -207,3 +205,5 @@ export default function ManageOrderModal({ closeModal, data, setMessage, refetch
    )
 
 }
+
+export default React.memo(ManageOrderModal);

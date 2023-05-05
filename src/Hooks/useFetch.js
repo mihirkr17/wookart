@@ -1,7 +1,7 @@
 import { CookieParser, deleteAuth } from "@/Functions/common";
 import { useEffect, useState } from "react";
 
-export const useFetch = (url, authorization = "") => {
+export const useFetch = (url) => {
    const [data, setData] = useState();
    const [loading, setLoading] = useState(true);
    const [err, setErr] = useState(null);
@@ -51,7 +51,7 @@ export const useFetch = (url, authorization = "") => {
          })();
       }, 0);
       return () => clearTimeout(fetchData);
-   }, [url, authorization, ref]);
+   }, [url, ref]);
 
 
    const refetch = () => setRef(e => !e);

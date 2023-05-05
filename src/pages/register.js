@@ -15,10 +15,12 @@ export default function Register() {
    const [showPwd, setShowPwd] = useState(false);
    const [verificationMsg, setVerificationMsg] = useState("");
    const router = useRouter();
+   const [verifyReturnEmail, setVerifyReturnEmail] = useState("");
+   const [verifyCodeTime, setVerifyCodeTime] = useState(0);
 
    const { pathname, query } = router;
 
-   const { return_email, exTime } = query;
+   const { return_email } = query;
 
 
    async function handleRegister(e) {
@@ -30,7 +32,7 @@ export default function Register() {
 
          formData = Object.fromEntries(formData.entries());
 
-         const { phone, email, password, gender, fullName, dob } = formData;
+         const { phone, email, password, gender, fullName } = formData;
 
          if (phone.length <= 0) {
             return setMessage('Phone number required !!!', 'danger');
@@ -38,10 +40,6 @@ export default function Register() {
 
          else if (!gender && gender.length <= 0) {
             return setMessage('Please select your gender !!!', 'danger');
-         }
-
-         else if (!dob && dob.length <= 0) {
-            return setMessage('Please select your birthday !!!', 'danger');
          }
 
          else if (!fullName && fullName.length <= 0) {
@@ -66,21 +64,19 @@ export default function Register() {
 
          // if all input fields validate then call the api request
          else {
-            setLoading(false);
 
             const { message, success, verificationExpiredAt, returnEmail } = await apiHandler(`/auth/register-new-user`, "POST", formData);
 
-            if (!success) {
-               setMessage(message, 'danger');
-               return;
-            }
+            setLoading(false);
 
+            if (!success) return setMessage(message, 'danger');
 
+            setVerifyReturnEmail(returnEmail);
+            setVerifyCodeTime(verificationExpiredAt);
             setVerificationMsg(message);
             setMessage(message, "success");
-            e.target.reset();
 
-            router.push(`${pathname}?return_email=${returnEmail}&exTime=${verificationExpiredAt}`);
+            e.target.reset();
             return;
          }
 
@@ -104,39 +100,56 @@ export default function Register() {
                   </div>
                </div>
                <div className="ac_right">
-                  <h5>Register</h5>
-                  <p>Already have an account?
-                     &nbsp;<Link href={'/login'}>Go To Login</Link>&nbsp;
-                     it takes less than a minute
-                  </p>
-
-
                   {
-                     verificationMsg && <b style={{ color: "green" }}>
-                        {verificationMsg}
-                     </b>
-                  }
+                     verifyReturnEmail ? <VerificationEmailByCode
+                        setMessage={setMessage}
+                        verifyCodeTime={verifyCodeTime}
+                        setVerifyCodeTime={setVerifyCodeTime}
+                        setVerifyReturnEmail={setVerifyReturnEmail}
+                        verifyReturnEmail={verifyReturnEmail} /> : <>
 
-                  {
-                     return_email ? <VerificationEmailByCode setMessage={setMessage} /> :
+                        <h5>Register</h5>
+                        <p>Already have an account?
+                           &nbsp;<Link className="links" href={'/login'}>Go To Login</Link>&nbsp;
+                           it takes less than a minute
+                        </p>
 
 
+                        {
+                           verificationMsg && <b style={{ color: "green" }}>
+                              {verificationMsg}
+                           </b>
+                        }
                         <form onSubmit={handleRegister}>
 
                            <div className="input_group">
+                              <label htmlFor="fullName">Full Name</label>
+                              <input type="text" className='form-control'
+                                 name="fullName" id="fullName"
+                                 placeholder='enter full name...' required />
+                           </div>
+
+                           <div className="input_group">
                               <label htmlFor='phone'>Phone Number</label>
-                              <input className='form-control' id='phone' type="number" pattern="[0-9]*" name='phone' autoComplete='off' placeholder="Enter Phone Number!!!" />
+                              <input className='form-control' id='phone'
+                                 type="number" pattern="[0-9]*" name='phone'
+                                 autoComplete='off' placeholder="enter phone number..." required />
                            </div>
 
                            <div className="input_group">
                               <label htmlFor='email'>Email address</label>
-                              <input className='form-control' id='email' type="email" name='email' autoComplete='off' placeholder="Enter email address!!!" />
+                              <input className='form-control' id='email'
+                                 type="email" name='email' autoComplete='off'
+                                 placeholder="enter email address..." required
+                              />
                            </div>
 
                            <div className="input_group">
                               <label htmlFor='password'>Password</label>
                               <div style={{ position: 'relative' }}>
-                                 <input className='form-control' type={showPwd ? "text" : "password"} name='password' id='password' autoComplete='off' placeholder="Please enter password !!!" />
+                                 <input className='form-control' type={showPwd ? "text" : "password"}
+                                    name='password' id='password' autoComplete='off'
+                                    placeholder="enter password..." />
                                  <span style={{
                                     transform: "translateY(-50%)",
                                     position: "absolute",
@@ -149,29 +162,13 @@ export default function Register() {
                            </div>
 
                            <div className="input_group">
-                              <label htmlFor="fullName">Full Name</label>
-                              <input type="text" className='form-control' name="fullName" id="fullName" placeholder='Enter your First and last name.' />
-                           </div>
-
-                           <div className="row">
-                              <div className="col-6">
-                                 <div className="input_group">
-                                    <label htmlFor="dob">Birthday</label>
-                                    <input type="date" className='form-control' name="dob" id="dob" placeholder='Enter your Birthday.' />
-                                 </div>
-                              </div>
-
-                              <div className="col-6">
-                                 <div className="input_group">
-                                    <label htmlFor="gender">Gender</label>
-                                    <select className='form-select' name="gender" id="gender">
-                                       <option value="">Select Gender</option>
-                                       <option value="Male">Male</option>
-                                       <option value="Female">Female</option>
-                                       <option value="Others">Others</option>
-                                    </select>
-                                 </div>
-                              </div>
+                              <label htmlFor="gender">Gender</label>
+                              <select className='form-select' name="gender" id="gender" required>
+                                 <option value="">Select Gender</option>
+                                 <option value="Male">Male</option>
+                                 <option value="Female">Female</option>
+                                 <option value="Others">Others</option>
+                              </select>
                            </div>
 
                            <div className="mb-3 text-muted">
@@ -184,6 +181,7 @@ export default function Register() {
                               {loading ? <BtnSpinner text={"Registering..."}></BtnSpinner> : "Register"}
                            </button>
                         </form>
+                     </>
                   }
                </div>
             </div>
