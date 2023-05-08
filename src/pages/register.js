@@ -1,4 +1,4 @@
-import VerificationEmailByCode from "@/Components/AuthComponents/VerificationEmailByCode";
+import VerifyEmailByOtp from "@/Components/AuthComponents/VerifyEmailByOtp";
 import BtnSpinner from "@/Components/Shared/BtnSpinner/BtnSpinner";
 import { apiHandler, emailValidator } from "@/Functions/common";
 import { useBaseContext } from "@/lib/BaseProvider";
@@ -101,7 +101,7 @@ export default function Register() {
                </div>
                <div className="ac_right">
                   {
-                     verifyReturnEmail ? <VerificationEmailByCode
+                     verifyReturnEmail ? <VerifyEmailByOtp
                         setMessage={setMessage}
                         verifyCodeTime={verifyCodeTime}
                         setVerifyCodeTime={setVerifyCodeTime}

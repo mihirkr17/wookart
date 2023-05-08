@@ -1,4 +1,4 @@
-import VerificationEmailByCode from "@/Components/AuthComponents/VerificationEmailByCode";
+import VerifyEmailByOtp from "@/Components/AuthComponents/VerifyEmailByOtp";
 import { sellerAddressBook } from "@/CustomData/sellerAddressBook";
 import { apiHandler, slugMaker } from "@/Functions/common";
 import { withOutDashboard } from "@/Functions/withOutDashboard";
@@ -97,7 +97,7 @@ export default withOutDashboard(function SellOnline() {
                   <div className="p-3">
 
                      {
-                        (return_email) ? <VerificationEmailByCode setMessage={setMessage} email={return_email} expiredTime={exTime} /> :
+                        (return_email) ? <VerifyEmailByOtp setMessage={setMessage} email={return_email} expiredTime={exTime} /> :
                            <form onSubmit={handleSellerRequest} encType='multipart/form-data'>
                               <small><strong>Be a Seller ? Add your information below...</strong></small>
 

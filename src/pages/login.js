@@ -1,8 +1,8 @@
 // pages/Login.js
 
 
-import VerificationEmailByCode from "@/Components/AuthComponents/VerificationEmailByCode";
-import { apiHandler } from "@/Functions/common";
+import VerifyEmailByOtp from "@/Components/AuthComponents/VerifyEmailByOtp";
+import { apiHandler, validPassword } from "@/Functions/common";
 import { useAuthContext } from "@/lib/AuthProvider";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,7 +19,7 @@ export default function Login() {
    const [verifyCodeTime, setVerifyCodeTime] = useState(0);
    const router = useRouter();
    const { pathname } = router;
-   const { email, from, return_email, exTime } = router.query;
+   const { email, from } = router.query;
 
 
    useEffect(() => {
@@ -31,15 +31,16 @@ export default function Login() {
    async function handleLogin(e) {
       try {
          e.preventDefault();
-         let emailOrPhone = e.target.emailOrPhone.value;
+         const emailOrPhone = e.target.emailOrPhone.value;
          const cPwd = e.target.password.value;
 
          if (emailOrPhone.length <= 0)
             return setMessage('Phone or email address required !!!', 'danger');
 
+         if (!validPassword(cPwd)) return setMessage("Password should contains at least 1 digit, lowercase letter, special character !");
 
-         if (cPwd.length <= 0)
-            return setMessage('Password required !!!', 'danger');
+         if (cPwd.length < 5 || cPwd.length > 8)
+            return setMessage('Password length should be 5 to 8 characters !', 'danger');
 
          setLoading(true);
 
@@ -96,7 +97,7 @@ export default function Login() {
                <div className="ac_right">
                   {
 
-                     verifyReturnEmail ? <VerificationEmailByCode setMessage={setMessage}
+                     verifyReturnEmail ? <VerifyEmailByOtp setMessage={setMessage}
                         verifyCodeTime={verifyCodeTime}
                         setVerifyCodeTime={setVerifyCodeTime}
                         setVerifyReturnEmail={setVerifyReturnEmail}

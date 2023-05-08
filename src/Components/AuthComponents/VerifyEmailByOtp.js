@@ -7,7 +7,7 @@ import BtnSpinner from "../Shared/BtnSpinner/BtnSpinner";
 import { apiHandler } from "@/Functions/common";
 
 
-export default function VerificationEmailByCode({ verifyReturnEmail, verifyCodeTime, setVerifyCodeTime, setVerifyReturnEmail }) {
+export default function VerifyEmailByOtp({ verifyReturnEmail, verifyCodeTime, setVerifyCodeTime, setVerifyReturnEmail }) {
 
    const [loading, setLoading] = useState(false);
    const [reLoading, setReLoading] = useState(false);
@@ -40,6 +40,8 @@ export default function VerificationEmailByCode({ verifyReturnEmail, verifyCodeT
 
          if (!verificationCode) return setMsg("Required verify token !");
 
+         if (verificationCode.length <= 5 || verificationCode.length >= 7) return setMsg("Verification code should be 6 digits !");
+
          setLoading(true);
 
          const { success, message, returnEmail } = await apiHandler(`/auth/verify-register-user`, "POST", {
@@ -67,6 +69,9 @@ export default function VerificationEmailByCode({ verifyReturnEmail, verifyCodeT
    // regenerate new verification code 
    async function generateNewVerificationCode() {
       try {
+
+         if (!verifyReturnEmail) return setMsg("Required return email !");
+
          setReLoading(true);
 
          const { success, message, returnEmail, verificationExpiredAt } = await apiHandler(`/auth/generate-verification-code?email=${verifyReturnEmail}`, "GET");
@@ -92,9 +97,9 @@ export default function VerificationEmailByCode({ verifyReturnEmail, verifyCodeT
 
    return (
       <div>
-         {welcomeMsg && <p className="alerts alerts_success">{welcomeMsg}</p>}
+         {welcomeMsg && <span className="alerts alerts_success">{welcomeMsg}</span>}
          {
-            msg && <p className="alerts alerts_danger">{msg}</p>
+            msg && <span className="alerts alerts_danger">{msg}</span>
          }
          <form onSubmit={verificationCodeHandler}>
             <div className="mb-3 input_group">
