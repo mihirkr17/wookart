@@ -91,9 +91,9 @@ export default function VerificationEmailByCode({ verifyReturnEmail, verifyCodeT
 
    return (
       <div>
-         {welcomeMsg && <p>{welcomeMsg}</p>}
+         {welcomeMsg && <p className="alerts alerts_success">{welcomeMsg}</p>}
          {
-            msg && <p className="alert">{msg}</p>
+            msg && <p className="alerts alerts_danger">{msg}</p>
          }
          <form onSubmit={verificationCodeHandler}>
             <div className="mb-3 input_group">
