@@ -30,51 +30,46 @@ export default function Login() {
 
    async function handleLogin(e) {
       try {
-
-         setLoading(true);
          e.preventDefault();
          let emailOrPhone = e.target.emailOrPhone.value;
          const cPwd = e.target.password.value;
 
-         if (emailOrPhone.length <= 0) {
+         if (emailOrPhone.length <= 0)
             return setMessage('Phone or email address required !!!', 'danger');
-         }
 
-         else if (cPwd.length <= 0) {
+
+         if (cPwd.length <= 0)
             return setMessage('Password required !!!', 'danger');
+
+         setLoading(true);
+
+         const { name, u_data, uuid, message, token, success, verificationExpiredAt, returnEmail } = await apiHandler(`/auth/login`, "POST", { emailOrPhone, cPwd });
+
+         setLoading(false);
+
+         if (!success) {
+            return setMessage(message, 'danger');
          }
 
-         else {
-
-            setLoading(false);
-
-            const { name, u_data, uuid, message, token, success, verificationExpiredAt, returnEmail } = await apiHandler(`/auth/login`, "POST", { emailOrPhone, cPwd });
-
-            if (!success) {
-               return setMessage(message, 'danger');
-            } else {
-
-               if (returnEmail && verificationExpiredAt) {
-                  setVerifyCodeTime(verificationExpiredAt);
-                  return setVerifyReturnEmail(returnEmail);
-               }
-
-               if (name === 'Login' && u_data) {
-
-                  let now = new Date();
-
-                  const expireTime = new Date(now.getTime() + 16 * 60 * 60 * 1000);
-
-                  document.cookie = `_uuid=${uuid}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
-                  document.cookie = `log_tok=${token}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
-                  localStorage.setItem("client_data", u_data);
-
-                  initialLoader() && router.push(from || "/");
-               }
-
-               setMessage(message, "success");
-            }
+         if (returnEmail && verificationExpiredAt) {
+            setVerifyCodeTime(verificationExpiredAt);
+            return setVerifyReturnEmail(returnEmail);
          }
+
+         if (name === 'Login' && u_data) {
+
+            let now = new Date();
+
+            const expireTime = new Date(now.getTime() + 16 * 60 * 60 * 1000);
+
+            document.cookie = `_uuid=${uuid}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
+            document.cookie = `log_tok=${token}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
+            localStorage.setItem("client_data", u_data);
+
+            initialLoader() && router.push(from || "/");
+         }
+         setMessage(message, "success");
+
       } catch (error) {
          setMessage(error?.message, "danger");
       } finally {
