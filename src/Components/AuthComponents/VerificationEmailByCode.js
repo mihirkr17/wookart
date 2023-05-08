@@ -51,6 +51,7 @@ export default function VerificationEmailByCode({ verifyReturnEmail, verifyCodeT
          if (success) {
 
             setWelcomeMsg(message);
+            setVerifyReturnEmail("");
 
             return router.push(`/login?email=${returnEmail}`);
          }
