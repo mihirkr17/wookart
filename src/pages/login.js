@@ -34,13 +34,13 @@ export default function Login() {
          setLoading(true);
          e.preventDefault();
          let emailOrPhone = e.target.emailOrPhone.value;
-         let password = e.target.password.value;
+         const cPwd = e.target.password.value;
 
          if (emailOrPhone.length <= 0) {
             return setMessage('Phone or email address required !!!', 'danger');
          }
 
-         else if (password.length <= 0) {
+         else if (cPwd.length <= 0) {
             return setMessage('Password required !!!', 'danger');
          }
 
@@ -48,7 +48,7 @@ export default function Login() {
 
             setLoading(false);
 
-            const { name, u_data, uuid, message, token, success, verificationExpiredAt, returnEmail } = await apiHandler(`/auth/login`, "POST", { emailOrPhone, password });
+            const { name, u_data, uuid, message, token, success, verificationExpiredAt, returnEmail } = await apiHandler(`/auth/login`, "POST", { emailOrPhone, cPwd });
 
             if (!success) {
                return setMessage(message, 'danger');
@@ -59,7 +59,7 @@ export default function Login() {
                   return setVerifyReturnEmail(returnEmail);
                }
 
-               if (name === 'isLogin' && u_data) {
+               if (name === 'Login' && u_data) {
 
                   let now = new Date();
 

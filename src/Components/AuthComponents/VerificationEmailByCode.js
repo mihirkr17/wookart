@@ -50,15 +50,15 @@ export default function VerificationEmailByCode({ verifyReturnEmail, verifyCodeT
 
          if (success) {
 
-            setMsg(message, 'success');
+            setWelcomeMsg(message);
 
             return router.push(`/login?email=${returnEmail}`);
          }
 
-         return setMsg(message, 'danger');
+         return setMsg(message);
 
       } catch (error) {
-         setMsg(error?.message, 'danger');
+         setMsg(error?.message);
       }
    }
 
