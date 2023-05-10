@@ -111,13 +111,13 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
                         className='border px-2' type="number"
                         value={cartProduct?.quantity || 0}
                         onChange={(e) => itemQuantityHandler(e.target.value, cartProduct?.productID, cartProduct?.variationID, cartProduct?.cartID)}
-                        maxLength='3'
+                        maxLength='5'
                         style={{ width: '50px' }}
                      />
 
                      <button
                         className='badge bg-primary my-1'
-                        disabled={cartProduct && cartProduct?.quantity >= cartProduct && cartProduct?.variations?.available ? true : false}
+                        disabled={cartProduct && cartProduct?.quantity >= cartProduct?.available ? true : false}
                         onClick={() => itemQuantityHandler(parseInt(cartProduct?.quantity) + 1, cartProduct?.productID, cartProduct?.variationID, cartProduct?.cartID)}>
                         +
                      </button>
