@@ -19,18 +19,6 @@ export function deleteCookie(cookieName) {
    return document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
 
-export const authLogout = async () => {
-   const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/auth/sign-out`, {
-      method: "POST",
-      withCredentials: true,
-      credentials: "include",
-   });
-   if (response.ok) {
-      deleteAuth();
-      window.location.reload();
-   }
-};
-
 export const slugMaker = (string) => {
    return string.toLowerCase()
       .replace(/ /g, '-')
@@ -85,28 +73,29 @@ export async function apiHandler(url = "", method = "GET", body = {}) {
 
    const cookie = window && CookieParser();
 
-   const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1${url}`, {
-      method,
-      withCredentials: true,
-      credentials: "include",
-      headers: {
-         "Content-Type": "application/json",
-         authorization: `Bearer ${cookie?.log_tok ? cookie?.log_tok : ""}`
-      },
-      ...["POST", 'PUT', "PATCH", "UPDATE"].includes(method) && { body: JSON.stringify(body) }
-   });
+   try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1${url}`, {
+         method,
+         withCredentials: true,
+         credentials: "include",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${cookie?.log_tok ? cookie?.log_tok : ""}`
+         },
+         ...["POST", 'PUT', "PATCH", "UPDATE"].includes(method) && { body: JSON.stringify(body) }
+      });
 
-   const result = await response.json();
+      const result = await response.json();
 
-   if (response.status === 401) {
-      await authLogout();
-      deleteAuth();
-      localStorage.removeItem("client_data");
-      return;
-   }
+      if (response.status === 401) {
+         return deleteAuth();
+      }
 
-   if (result) {
-      return result;
+      if (result) {
+         return result;
+      }
+   } catch (error) {
+      return error;
    }
 }
 
@@ -125,7 +114,7 @@ export function deleteAuth() {
    deleteCookie("_uuid");
    deleteCookie("log_tok");
    localStorage.removeItem("client_data");
-   return true;
+   window && window.location.reload();
 }
 
 

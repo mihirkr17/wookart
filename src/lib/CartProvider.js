@@ -39,20 +39,17 @@ export default function CartProvider({ children }) {
                   }
                });
 
-               const result = await response.json();
+               setCartLoading(false);
 
                if (response.status === 401) {
                   deleteAuth();
                }
 
-               if (!response.ok) {
-                  setCartLoading(false);
-               }
+               const { statusCode, success, data } = await response.json();
 
-               if (result?.statusCode === 200 && result?.success === true) {
-                  setCartQuantity((result?.data?.module?.products && result?.data?.module?.products.length) || 0)
-                  setCartLoading(false);
-                  setCartData(result?.data?.module);
+               if (statusCode === 200 && success === true) {
+                  setCartQuantity((data?.module?.products && data?.module?.products.length) || 0)
+                  setCartData(data?.module);
                }
             } catch (error) {
                setCartError(error?.message);

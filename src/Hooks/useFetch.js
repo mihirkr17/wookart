@@ -27,6 +27,8 @@ export const useFetch = (url) => {
                      }
                   });
 
+                  setLoading(false);
+
                   if (response.status === 401) {
                      deleteAuth();
                   }
@@ -34,13 +36,8 @@ export const useFetch = (url) => {
                   const resData = await response.json();
 
                   if (response.ok) {
-                     setLoading(false);
                      setData(resData);
-                  } else {
-                     setLoading(false);
-                  }
-               } else {
-                  setLoading(false);
+                  } 
                }
 
             } catch (error) {

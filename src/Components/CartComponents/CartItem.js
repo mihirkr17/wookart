@@ -17,13 +17,15 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
          setLoading(true);
 
          const { productID, title, variationID } = cp;
-         const result = await apiHandler(`/cart/delete-cart-item/${productID}/${cartType && cartType}?vr=${variationID}`, "DELETE", {});
+         const { success, message } = await apiHandler(`/cart/delete-cart-item/${productID}/${variationID}/${cartType && cartType}`, "DELETE", {});
 
-         if (result?.success) {
-            setMessage(`${title} ${result?.message}`, 'success');
+         setLoading(false);
+
+         if (success) {
+            setMessage(`${title} ${message}`, 'success');
             cartRefetch();
          } else {
-            setMessage(`${title} ${result?.message}`, 'danger');
+            setMessage(`${title} ${message}`, 'danger');
          }
       } catch (error) {
          setMessage(error?.message, "danger");
@@ -46,7 +48,7 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
             return;
          }
 
-         const { message, success, statusCode } = await apiHandler(`/cart/update-cart-product-quantity`, "PUT", {
+         const { message, success } = await apiHandler(`/cart/update-cart-product-quantity`, "PUT", {
             actionRequestContext: {
                pageUri: '/my-cart',
                type: cartType,
@@ -61,14 +63,12 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
 
          setQtyLoading(false);
 
-         if (success === true && statusCode >= 200) {
+         if (!success) {
+            return setMessage("Something went wrong !", 'danger')
+         } else {
             cartRefetch();
-            setMessage(message, 'success');
-            return;
-         }
-
-         setMessage(message, 'danger');
-
+            return setMessage(message, 'success');
+         };
       } catch (error) {
          return setMessage(error?.message, 'danger');
       }

@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useBaseContext } from "./BaseProvider";
 import jwt_decode from "jwt-decode";
-import { CookieParser, authLogout, deleteAuth } from "@/Functions/common";
+import { CookieParser, deleteAuth } from "@/Functions/common";
 
 export const AuthContext = createContext();
 
@@ -17,20 +17,23 @@ export default function AuthProvider(props) {
    useEffect(() => {
       setAuthLoading(true);
 
-      let client_data = localStorage.getItem("client_data");
+      let encodedToken = localStorage.getItem("client_data");
 
-      if (client_data && typeof client_data === "string") {
-         setAuthLoading(false);
-         // decode u_data token by jwt_decode function
-         const decoded = jwt_decode(client_data);
+      if (encodedToken && typeof encodedToken === "string") {
 
-         if (decoded) {
-            setUserInfo(decoded);
-            return;
+         try {
+            // decode u_data token by jwt_decode function
+            const decoded = jwt_decode(encodedToken);
+
+            decoded && setUserInfo(decoded);
+
+         } catch (error) {
+            console.error("Error decoding JWT token:", error);
          }
       }
 
       setAuthLoading(false);
+
    }, [ref]);
 
    const initialLoader = () => setRef(e => !e);
@@ -42,35 +45,30 @@ export default function AuthProvider(props) {
          const cookie = CookieParser();
 
          const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/user/fau`, {
-            withCredentials: true,
             credentials: 'include',
             method: "GET",
-            authorization: `Berar ${cookie?.log_tok ? cookie?.log_tok : ""}`
+            headers: {
+               Authorization: `Bearer ${cookie?.log_tok ? cookie?.log_tok : ""}`,
+               Accept: "application/json",
+            }
          });
 
+         setAuthLoading(false);
+
          if (response.status === 401) {
-            setAuthLoading(false);
             deleteAuth();
-            await authLogout();
-            return;
          }
 
          const { u_data } = await response.json();
 
          if (response.ok) {
 
-            setAuthLoading(false);
-
             if (u_data && typeof u_data !== "undefined") {
                localStorage.setItem("client_data", u_data);
             }
 
             setRef(e => !e);
-
-         } else {
-            setAuthLoading(false);
          }
-
       } catch (error) {
          setAuthErr(error?.message);
       } finally {

@@ -5,7 +5,7 @@ import { Navbar } from 'react-bootstrap';
 import Link from 'next/link';
 import { useAuthContext } from '@/lib/AuthProvider';
 import { useRouter } from 'next/router';
-import { apiHandler, authLogout } from '@/Functions/common';
+import { apiHandler, deleteAuth } from '@/Functions/common';
 import useMenu from '@/Hooks/useMenu';
 import { useCartContext } from '@/lib/CartProvider';
 
@@ -33,10 +33,6 @@ const NavigationBar = () => {
 
       return () => clearTimeout(fetchData);
    }, [searchQuery]);
-
-   const handleLogout = async () => {
-      await authLogout();
-   }
 
    return (
       <>
@@ -102,7 +98,7 @@ const NavigationBar = () => {
                            <Link className="drp_item" href="/user/my-account">My Account</Link>
                            <Link className='drp_item' href='/user/orders-management'>My Order</Link>
                            <br />
-                           <button style={{ color: "red" }} className='drp_item' onClick={handleLogout}>Logout Now</button>
+                           <button style={{ color: "red" }} className='drp_item' onClick={() => deleteAuth()}>Logout Now</button>
                         </div>
                      </div>
                   }

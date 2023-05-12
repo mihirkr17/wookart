@@ -1,4 +1,4 @@
-import { authLogout } from '@/Functions/common';
+import { deleteAuth } from '@/Functions/common';
 import useMenu from '@/Hooks/useMenu';
 import { useAdminContext } from '@/lib/AdminProvider';
 import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
@@ -40,7 +40,7 @@ const RightNavbar = ({ shrink, userInfo, setShrink, dbSlug }) => {
                </li>
 
                <li>
-                  <button className='logout_btn' onClick={async () => await authLogout()}>
+                  <button className='logout_btn' onClick={deleteAuth()}>
                      Log Out
                   </button>
                </li>
