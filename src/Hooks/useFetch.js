@@ -1,4 +1,4 @@
-import { CookieParser, deleteAuth } from "@/Functions/common";
+import { CookieParser } from "@/Functions/common";
 import { useEffect, useState } from "react";
 
 export const useFetch = (url) => {
@@ -9,36 +9,33 @@ export const useFetch = (url) => {
 
 
    useEffect(() => {
+      if (!url || typeof url === 'undefined' || url === null) return;
 
       const cookie = CookieParser();
 
       const fetchData = setTimeout(() => {
          (async () => {
             try {
-               if (url && typeof url !== 'undefined') {
-                  setLoading(true);
 
-                  const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1${url}`, {
-                     withCredentials: true,
-                     credentials: 'include',
-                     method: "GET",
-                     headers: {
-                        authorization: `Berar ${cookie?.log_tok ? cookie?.log_tok : ""}`
-                     }
-                  });
+               setLoading(true);
 
-                  setLoading(false);
-
-                  if (response.status === 401) {
-                     deleteAuth();
+               const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1${url}`, {
+                  credentials: 'include',
+                  method: "GET",
+                  headers: {
+                     Authorization: `Berar ${cookie?.appSession ?? ""}`
                   }
+               });
 
-                  const resData = await response.json();
+               setLoading(false);
 
-                  if (response.ok) {
-                     setData(resData);
-                  } 
+               if (response.status === 401) {
+                  return deleteAuth();
                }
+
+               const resData = await response.json();
+
+               response.ok && setData(resData);
 
             } catch (error) {
                setErr(error);

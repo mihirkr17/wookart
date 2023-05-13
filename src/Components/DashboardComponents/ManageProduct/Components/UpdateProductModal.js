@@ -11,7 +11,7 @@ const UpdateProductModal = ({ data, closeModal, refetch }) => {
 
    async function handleAPI(uri = "", action = "", body = {}) {
       try {
-         const { log_tok } = CookieParser();
+         const { appSession } = CookieParser();
          const url = `${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/dashboard/seller/store/product/update-product`;
          body["listingID"] = data?._lid;
          body["productID"] = data?._id;
@@ -23,7 +23,7 @@ const UpdateProductModal = ({ data, closeModal, refetch }) => {
             credentials: "include",
             headers: {
                "Content-Type": "application/json",
-               authorization: `Bearer ${log_tok || ""}`
+               authorization: `Bearer ${appSession || ""}`
             },
             body: JSON.stringify(body)
          });

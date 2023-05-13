@@ -1,8 +1,6 @@
 import { faBagShopping, faBell, faEye, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-
-// import { useSellerChecker } from '../../../lib/SellerCheckProvider';
 import { useFetch } from '@/Hooks/useFetch';
 import { useOrder } from '@/lib/OrderProvider';
 import { useAuthContext } from '@/lib/AuthProvider';
@@ -10,11 +8,10 @@ import Link from 'next/link';
 
 const MyDashboard = () => {
    const { userInfo, role } = useAuthContext();
-   // const { state } = useSellerChecker();
-   const { data } = useFetch(`/dashboard/overview`);
 
-   const { newOrderCount } = useOrder();
+   const { data } = useFetch(["SELLER", "ADMIN", "OWNER"].includes(role) ? `/dashboard/overview` : null);
 
+   const { placeOrderCount } = useOrder();
 
    return (
       <div className='section_default'>
@@ -30,9 +27,9 @@ const MyDashboard = () => {
                                  {
                                     (role === 'SELLER') &&
                                     <>
-                                       <Link href={`manage-orders`} title="Pending orders">
+                                       <Link href={`/dashboard/manage-orders`} title="Pending orders">
                                           <FontAwesomeIcon icon={faBell} />
-                                          <span className="o_counter">{newOrderCount}</span>
+                                          <span className="o_counter">{placeOrderCount}</span>
                                        </Link>
                                     </>
                                  }

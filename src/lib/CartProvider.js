@@ -35,14 +35,14 @@ export default function CartProvider({ children }) {
                   withCredentials: true,
                   credentials: "include",
                   headers: {
-                     authorization: `Berar ${cookie?.log_tok ? cookie?.log_tok : ""}`
+                     Authorization: `Berar ${cookie?.appSession ? cookie?.appSession : ""}`
                   }
                });
 
                setCartLoading(false);
 
                if (response.status === 401) {
-                  deleteAuth();
+                  return deleteAuth();
                }
 
                const { statusCode, success, data } = await response.json();

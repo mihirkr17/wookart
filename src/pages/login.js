@@ -2,7 +2,7 @@
 
 
 import VerifyEmailByOtp from "@/Components/AuthComponents/VerifyEmailByOtp";
-import { apiHandler, validPassword } from "@/Functions/common";
+import { addCookie, apiHandler, validPassword } from "@/Functions/common";
 import { useAuthContext } from "@/lib/AuthProvider";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,8 +18,7 @@ export default function Login() {
    const [verifyReturnEmail, setVerifyReturnEmail] = useState("");
    const [verifyCodeTime, setVerifyCodeTime] = useState(0);
    const router = useRouter();
-   const { pathname } = router;
-   const { email, from } = router.query;
+   const { email } = router.query;
 
 
    useEffect(() => {
@@ -28,23 +27,35 @@ export default function Login() {
       }
    }, [role, router, email]);
 
+   // handle login
    async function handleLogin(e) {
       try {
          e.preventDefault();
+
          const emailOrPhone = e.target.emailOrPhone.value;
          const cPwd = e.target.password.value;
 
          if (emailOrPhone.length <= 0)
             return setMessage('Phone or email address required !!!', 'danger');
 
-         if (!validPassword(cPwd)) return setMessage("Password should contains at least 1 digit, lowercase letter, special character !");
+         if (!validPassword(cPwd))
+            return setMessage("Password should contains at least 1 digit, lowercase letter, special character !");
 
          if (cPwd.length < 5 || cPwd.length > 8)
             return setMessage('Password length should be 5 to 8 characters !', 'danger');
 
          setLoading(true);
 
-         const { name, u_data, uuid, message, token, success, verificationExpiredAt, returnEmail } = await apiHandler(`/auth/login`, "POST", { emailOrPhone, cPwd });
+         const {
+            name,
+            u_data,
+            message,
+            token,
+            success,
+            verificationExpiredAt,
+            returnEmail,
+            role
+         } = await apiHandler(`/auth/login`, "POST", { emailOrPhone, cPwd });
 
          setLoading(false);
 
@@ -57,19 +68,19 @@ export default function Login() {
             return setVerifyReturnEmail(returnEmail);
          }
 
-         if (name === 'Login' && u_data) {
+         setMessage(message, "success");
 
-            let now = new Date();
+         if (name === 'Login' && u_data && token) {
+            let cookieResult = addCookie("appSession", token, 16);
 
-            const expireTime = new Date(now.getTime() + 16 * 60 * 60 * 1000);
+            if (!cookieResult)
+               return setMessage("Failed to set authentication !", "danger");
 
-            document.cookie = `_uuid=${uuid}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
-            document.cookie = `log_tok=${token}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
             localStorage.setItem("client_data", u_data);
 
-            initialLoader() && router.push(from || "/");
+            initialLoader() && router.push(["SELLER", "ADMIN", "OWNER"].includes(role) ? "/dashboard/" : "/");
+            return;
          }
-         setMessage(message, "success");
 
       } catch (error) {
          setMessage(error?.message, "danger");
@@ -77,8 +88,6 @@ export default function Login() {
          setLoading(false);
       }
    }
-
-
 
    return (
       <div className='section_default'>

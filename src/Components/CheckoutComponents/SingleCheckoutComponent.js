@@ -39,11 +39,10 @@ export default function SingleCheckoutComponent() {
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/purchase`, {
                method: "POST",
-               withCredentials: true,
                credentials: "include",
                headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Bearer ${cookie?.log_tok ? cookie?.log_tok : ""}`
+                  Authorization: `Bearer ${cookie?.appSession ? cookie?.appSession : ""}`
                },
                body: JSON.stringify(productData)
             });
@@ -186,78 +185,6 @@ export default function SingleCheckoutComponent() {
                setOrderLoading(false);
             }
 
-
-
-            // const { success, message, clientSecret, orderPaymentID } = await apiHandler(`/payment/create-payment-intent`, "POST", {
-            //    totalAmount: parseInt(data?.container_p?.finalAmounts)
-            // });
-
-            // if (!success) {
-            //    setOrderLoading(false);
-            //    return setMessage(message, "danger");
-            // }
-
-            // if (clientSecret && orderPaymentID) {
-
-            //    const { paymentIntent, error } = await stripe.confirmCardPayment(
-            //       clientSecret,
-            //       {
-            //          payment_method: {
-            //             card: card,
-            //             billing_details: {
-            //                name: selectedAddress?.name,
-            //                email: userInfo?.email,
-            //                phone: selectedAddress?.phone_number,
-            //                address: {
-            //                   city: selectedAddress?.city,
-            //                   state: selectedAddress?.division,
-            //                   line1: selectedAddress?.area,
-            //                   line2: selectedAddress?.landmark,
-            //                   country: "BD"
-            //                }
-            //             },
-            //             metadata: {
-            //                order_id: orderPaymentID
-            //             },
-            //          },
-            //       },
-            //    );
-
-            //    if (error) {
-            //       setOrderLoading(false);
-            //       return setMessage(error?.message, "danger");
-            //    }
-
-            //    if (!paymentIntent?.id) {
-            //       setOrderLoading(false);
-            //       return;
-            //    }
-
-            //    setOrderLoading(true);
-
-            //    const result = await apiHandler(`/order/single-purchase`, "POST", {
-            //       productID: product?.productID,
-            //       listingID: product?.listingID,
-            //       variationID: product?.variationID,
-            //       quantity: product?.quantity,
-            //       customerEmail: product?.customerEmail,
-            //       state: "byPurchase",
-            //       orderPaymentID,
-            //       paymentMethodID: paymentIntent?.payment_method,
-            //       paymentIntentID: paymentIntent?.id,
-            //    }, userInfo?.email);
-
-            //    if (result.success) {
-            //       setOrderLoading(false);
-            //       return router.push("/user/orders-management");
-
-            //    } else {
-            //       setOrderLoading(false);
-            //    }
-            // } else {
-            //    setOrderLoading(false);
-            //    return setMessage("Payment intent creation failed !", "danger");
-            // }
 
          }
       } catch (error) {

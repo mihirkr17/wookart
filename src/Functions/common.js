@@ -7,6 +7,7 @@ export function CookieParser() {
    }
 
    const cookies = {};
+
    cookie.split(';').forEach(cookie => {
       const [name, value] = cookie.split('=').map(c => c.trim());
       cookies[name] = value;
@@ -16,8 +17,28 @@ export function CookieParser() {
 
 export function deleteCookie(cookieName) {
    if (!cookieName) return;
-   return document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+   if (typeof cookieName === "object" && Array.isArray(cookieName)) {
+
+      for (const cookie of cookieName) {
+         document.cookie = cookie + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      }
+   }
+
+   return typeof cookieName === "string" && (document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;");
 }
+
+
+export function deleteAuth() {
+
+   deleteCookie("appSession");
+   localStorage.removeItem("client_data");
+
+   if (window) {
+      return window.location.replace(window.location.origin);
+   }
+}
+
 
 export const slugMaker = (string) => {
    return string.toLowerCase()
@@ -31,9 +52,7 @@ export const emailValidator = (email) => {
 }
 
 export const camelToTitleCase = (str) => {
-   if (!str) {
-      return false;
-   }
+   if (!str) return;
 
    let newStr = str.replace(/([A-Z])/g, " $1");
 
@@ -69,27 +88,26 @@ export const calcTime = (iso, offset) => {
 }
 
 // global api handler
-export async function apiHandler(url = "", method = "GET", body = {}) {
+export async function apiHandler(url = "", method = "GET", body = {}, cb) {
 
    const cookie = window && CookieParser();
 
    try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1${url}`, {
          method,
-         withCredentials: true,
          credentials: "include",
          headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${cookie?.log_tok ? cookie?.log_tok : ""}`
+            Authorization: `Bearer ${cookie?.appSession ?? ""}`
          },
          ...["POST", 'PUT', "PATCH", "UPDATE"].includes(method) && { body: JSON.stringify(body) }
       });
 
-      const result = await response.json();
-
       if (response.status === 401) {
          return deleteAuth();
       }
+
+      const result = await response.json();
 
       if (result) {
          return result;
@@ -99,24 +117,17 @@ export async function apiHandler(url = "", method = "GET", body = {}) {
    }
 }
 
+export function addCookie(name, value, age) {
 
+   if (typeof age !== "number") return;
 
-export function addCookies(name, value, age) {
    let now = new Date();
 
-   const expireTime = new Date(now.getTime() + parseFloat(age) * 60 * 60 * 1000);
+   const expireTime = new Date(now.getTime() + age * 60 * 60 * 1000);
 
-   document.cookie = `${name}=${value}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/`;
+   document.cookie = `${name}=${value}; max-age=${(expireTime.getTime() - now.getTime()) / 1000}; path=/;`;
    return true;
 }
-
-export function deleteAuth() {
-   deleteCookie("_uuid");
-   deleteCookie("log_tok");
-   localStorage.removeItem("client_data");
-   window && window.location.replace("/login");
-}
-
 
 export function calculateShippingCost(volWeight, areaType) {
 
@@ -131,32 +142,6 @@ export function calculateShippingCost(volWeight, areaType) {
       charge = areaType === "local" ? 50 : areaType === "zonal" ? 60 : 60;
    }
    return charge;
-
-
-
-   // let n = 0; // price initial 0.5 kg = 0.5 dollar
-   // let charge;
-   // let arr = [];
-
-   // if (volWeight <= 3) {
-   //    charge = areaType === "local" ? 0.5 : areaType === "zonal" ? 0.8 : 0.8;
-   // }
-   // else if (volWeight > 3 && volWeight <= 8) {
-   //    charge = areaType === "local" ? 0.4 : areaType === "zonal" ? 0.7 : 0.7;
-   // }
-   // else if (volWeight > 8) {
-   //    charge = areaType === "local" ? 0.3 : areaType === "zonal" ? 0.5 : 0.5;
-   // }
-
-   // do {
-   //    n += 0.5;
-   //    arr.push(n);
-   // } while (n < volWeight);
-
-   // let count = arr.length;
-
-   // let sum = (count * charge).toFixed(0);
-   // return parseInt(sum);
 }
 
 export function validPassword(password) {

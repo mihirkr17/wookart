@@ -48,7 +48,7 @@ export default function AuthProvider(props) {
             credentials: 'include',
             method: "GET",
             headers: {
-               Authorization: `Bearer ${cookie?.log_tok ? cookie?.log_tok : ""}`,
+               Authorization: `Bearer ${cookie?.appSession ? cookie?.appSession : ""}`,
                Accept: "application/json",
             }
          });

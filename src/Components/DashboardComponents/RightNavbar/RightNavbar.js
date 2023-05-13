@@ -40,7 +40,7 @@ const RightNavbar = ({ shrink, userInfo, setShrink, dbSlug }) => {
                </li>
 
                <li>
-                  <button className='logout_btn' onClick={deleteAuth()}>
+                  <button className='logout_btn' onClick={() => deleteAuth()}>
                      Log Out
                   </button>
                </li>
