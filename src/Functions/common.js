@@ -114,7 +114,7 @@ export function deleteAuth() {
    deleteCookie("_uuid");
    deleteCookie("log_tok");
    localStorage.removeItem("client_data");
-   window && window.location.reload();
+   window && window.location.replace("/login");
 }
 
 

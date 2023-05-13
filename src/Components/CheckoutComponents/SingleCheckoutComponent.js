@@ -31,6 +31,7 @@ export default function SingleCheckoutComponent() {
 
 
    useEffect(() => {
+
       const cookie = CookieParser();
 
       const fetchData = setTimeout(() => {
@@ -47,7 +48,7 @@ export default function SingleCheckoutComponent() {
                body: JSON.stringify(productData)
             });
 
-            if (response.status === 401) return deleteAuth();
+            if (response.status === 401) { return deleteAuth() };
 
             const result = await response.json();
 
