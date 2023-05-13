@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import CartAddress from "../CartComponents/CartAddress";
-import { apiHandler } from "@/Functions/common";
+import { CookieParser, apiHandler, deleteAuth } from "@/Functions/common";
 
 
 export default function SingleCheckoutComponent() {
@@ -31,6 +31,7 @@ export default function SingleCheckoutComponent() {
 
 
    useEffect(() => {
+      const cookie = CookieParser();
 
       const fetchData = setTimeout(() => {
          (async () => {
@@ -40,10 +41,13 @@ export default function SingleCheckoutComponent() {
                withCredentials: true,
                credentials: "include",
                headers: {
-                  "Content-Type": "application/json"
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${cookie?.log_tok ? cookie?.log_tok : ""}`
                },
                body: JSON.stringify(productData)
             });
+
+            if (response.status === 401) return deleteAuth();
 
             const result = await response.json();
 
@@ -60,8 +64,6 @@ export default function SingleCheckoutComponent() {
    const buyBtnHandler = async (e) => {
       try {
          e.preventDefault();
-         let clientSecret;
-         let orderPaymentID;
 
          let product = data?.product ? data?.product : null;
 
