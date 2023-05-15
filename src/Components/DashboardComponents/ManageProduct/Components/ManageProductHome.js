@@ -90,14 +90,20 @@ const ManageProductHome = (
    }
 
 
-   async function productControlHandler(action, lId, pId, vId, mProduct) {
+   async function productControlHandler(actionType, actionFor, mProduct) {
       try {
 
-         if ((mProduct?.variations && mProduct?.variations.filter(v => v?.status === 'active').length <= 1) && (action === 'inactive')) {
-            return setMessage("At least one variation need href active !", 'danger');
-         }
+         if (!actionType || !actionFor || !mProduct) return;
 
-         const { success, message } = await apiHandler(`/dashboard/seller/${mProduct?.sellerData?.storeName}/product-control`, "PUT", { market_place: 'woo-kart', actionType: action, data: { action, lId, pId, vId } });
+         const { _lid, _id } = mProduct;
+
+         const { success, message } = await apiHandler(`/dashboard/seller/${mProduct?.sellerData?.storeName}/product-control`, "PUT", {
+            market_place: 'wooKart',
+            actionType,
+            actionFor,
+            listingID: _lid,
+            productID: _id
+         });
 
          if (success) {
             setMessage(message, "success");
@@ -172,22 +178,32 @@ const ManageProductHome = (
                      <div className='border my-3 card_default card_description w-100' key={index}>
 
                         <div className={`p-1 d-flex justify-content-between flex-wrap`}>
-                           <div className="p-1">
+                           <div className="p-1" style={{
+                              display: "flex"
+                           }}>
                               <img src={mProduct?.images && mProduct?.images[0]} alt="" style={{ width: "60px", height: "60px" }} />
 
-                              <small>
-                                 <pre style={{ whiteSpace: 'break-spaces' }}>
-                                    TITLE           : {mProduct?.title} <br />
-                                    PID             : {mProduct?._id} <br />
-                                    Listing ID      : {mProduct?._lid} <br />
-                                    BRAND           : {mProduct?.brand} <br />
-                                    SELLING PRICE   : {mProduct?.pricing?.sellingPrice} <br />
-                                    CATEGORIES      : {mProduct?.categories && mProduct?.categories.join(" >> ")} <br />
-                                    Total Variation : {(mProduct?.totalVariation && mProduct?.totalVariation) || 0} <br />
-                                    View            : <button className='bt9_primary' onClick={() => setProductDetailModal(true && mProduct)}>view</button>
-                                 </pre>
-                              </small>
-                              <br />
+                              <div style={{paddingLeft: "10px"}}>
+                                 <small>
+                                    <pre style={{ whiteSpace: 'break-spaces' }}>
+                                       TITLE           : {mProduct?.title} <br />
+                                       Product ID      : {mProduct?._id} <br />
+                                       BRAND           : {mProduct?.brand} <br />
+                                       SELLING PRICE   : {mProduct?.pricing?.sellingPrice} <br />
+                                       CATEGORIES      : {mProduct?.categories && mProduct?.categories.join(" >> ")} <br />
+                                       Total Variation : {(mProduct?.totalVariation && mProduct?.totalVariation) || 0} <br />
+                                    </pre>
+                                 </small>
+
+                                 <button className={`${mProduct?.status === 'active' ? 'bt9_warning' : 'bt9_edit'}`}
+                                    onClick={() => productControlHandler(mProduct?.status === 'active' ? "inactive" : 'active', "status", mProduct)}
+                                 >
+                                    {
+                                       mProduct?.status === 'active' ? 'Inactive Now' : 'Active Now'
+                                    }
+                                 </button>
+                                 <button className='bt9_primary ms-2' onClick={() => setProductDetailModal(true && mProduct)}>view</button>
+                              </div>
 
                            </div>
 
@@ -247,13 +263,6 @@ const ManageProductHome = (
                                              </td>
                                              <td>{variation?.stock}</td>
                                              <td>
-                                                <button className={`${variation?.status === 'active' ? 'bt9_warning' : 'bt9_edit'}`}
-                                                   onClick={() => productControlHandler(variation?.status === 'active' ? "inactive" : 'active', mProduct?._lid, mProduct?._id, variation?._vrid, mProduct)}
-                                                >
-                                                   {
-                                                      variation?.status === 'active' ? 'Inactive Now' : 'Active Now'
-                                                   }
-                                                </button>
 
                                                 <button className='bt9_edit' onClick={() => setOpenProductVariationModal(
                                                    {
@@ -339,7 +348,7 @@ const ManageProductHome = (
                                  {
                                     (Array.isArray(mProduct?.variations) && mProduct?.variations.length >= 1 && mProduct?.save_as === 'draft') ?
                                        <button className='bt9_edit me-2'
-                                          onClick={() => productControlHandler("fulfilled", mProduct?._lid, mProduct?._id)}
+                                          onClick={() => productControlHandler("fulfilled", "save_as", mProduct)}
                                        >
                                           Publish
                                        </button> : <p>Please Create at least one variation for publish this product</p>
@@ -419,7 +428,7 @@ const ManageProductHome = (
                                                    {
                                                       mProduct?.save_as === 'draft' &&
                                                       <button className='bt9_edit me-2'
-                                                         onClick={() => productControlHandler("fulfilled", mProduct?._lid, mProduct?._id)}
+                                                         onClick={() => productControlHandler("fulfilled", "save_as", mProduct)}
                                                       >Publish</button>
                                                    }
                                                 </>

@@ -36,6 +36,89 @@ const NavigationBar = () => {
 
    return (
       <>
+         {/* <nav className="topBar">
+            <div className="container">
+               <ul className="list-inline pull-left hidden-sm hidden-xs">
+                  <li><span className="text-primary">Have a question? </span> Call +120 558 7885</li>
+               </ul>
+               <ul className="topBarNav pull-right">
+                  <li className="dropdown">
+                     <Link href="#" className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="false"> <i className="fa fa-usd mr-5"></i>USD<i className="fa fa-angle-down ml-5"></i>
+                     </Link>
+                     <ul className="dropdown-menu w-100" role="menu">
+                        <li><Link href="#"><i className="fa fa-eur mr-5"></i>EUR</Link>
+                        </li>
+                        <li className=""><Link href="#"><i className="fa fa-usd mr-5"></i>USD</Link>
+                        </li>
+                        <li><Link href="#"><i className="fa fa-gbp mr-5"></i>GBP</Link>
+                        </li>
+                     </ul>
+                  </li>
+
+                  <li className="dropdown">
+                     <Link href="#" className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="false"> <i className="fa fa-user mr-5"></i><span className="hidden-xs">My Account<i className="fa fa-angle-down ml-5"></i></span> </Link>
+                     <ul className="dropdown-menu w-150" role="menu">
+                        <li><Link href="login.html">Login</Link>
+                        </li>
+                        <li><Link href="register.html">Create Account</Link>
+                        </li>
+                        <li className="divider"></li>
+                        <li><Link href="wishlist.html">Wishlist (5)</Link>
+                        </li>
+                        <li><Link href="cart.html">My Cart</Link>
+                        </li>
+                        <li><Link href="checkout.html">Checkout</Link>
+                        </li>
+                     </ul>
+                  </li>
+                  <li className="dropdown">
+                     <Link href="#" className="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="false"> <i className="fa fa-shopping-basket mr-5"></i> <span className="hidden-xs">
+                        Cart<sup className="text-primary">(3)</sup>
+                        <i className="fa fa-angle-down ml-5"></i>
+                     </span> </Link>
+                     <ul className="dropdown-menu cart w-250" role="menu">
+                        <li>
+                           <div className="cart-items">
+                              <ol className="items">
+                                 <li>
+                                    <Link href="#" className="product-image">
+                                       <img src="https://lh3.googleusercontent.com/-uwagl9sPHag/WM7WQa00ynI/AAAAAAAADtA/hio87ZnTpakcchDXNrKc_wlkHEcpH6vMwCJoC/w140-h148-p-rw/profile-pic.jpg" className="img-responsive" alt="Sample Product " /> </Link>
+                                    <div className="product-details">
+                                       <div className="close-icon"> <Link href="#"><i className="fa fa-close"></i></Link> </div>
+                                       <p className="product-name"> <Link href="#">Sumi9xm@gmail.com</Link> </p> <strong>1</strong> x <span className="price text-primary">$59.99</span> </div>
+
+                                 </li>
+
+                                 <li>
+                                    <Link href="#" className="product-image"> <img src="https://lh3.googleusercontent.com/-Gy3KAlilHAw/WNf7a2eL5YI/AAAAAAAAD2Y/V3jUt14HiZA3HLpeOKkSaOu57efGuMw9ACL0B/w245-d-h318-n-rw/shoes_01.jpg" className="img-responsive" alt="Sample Product " /> </Link>
+                                    <div className="product-details">
+                                       <div className="close-icon"> <Link href="#"><i className="fa fa-close"></i></Link> </div>
+                                       <p className="product-name"> <Link href="#">Lorem Ipsum dolor sit</Link> </p> <strong>1</strong> x <span className="price text-primary">$39.99</span> </div>
+
+                                 </li>
+
+                                 <li>
+                                    <Link href="#" className="product-image">
+                                       <img src="https://lh3.googleusercontent.com/-ydDc-0L0WFY/WNf7a6Awe_I/AAAAAAAAD2Y/I8IzJtYRWegkOUxCZ5SCK6vbdiiSxVsCQCL0B/w245-d-h318-n-rw/bags_07.jpg" className="img-responsive" alt="Sample Product " /> </Link>
+                                    <div className="product-details">
+                                       <div className="close-icon"> <Link href="#"><i className="fa fa-close"></i></Link> </div>
+                                       <p className="product-name"> <Link href="#">Lorem Ipsum dolor sit</Link> </p> <strong>1</strong> x <span className="price text-primary">$29.99</span> </div>
+
+                                 </li>
+
+                              </ol>
+                           </div>
+                        </li>
+                        <li>
+                           <div className="cart-footer"> <Link href="#" className="pull-left"><i className="fa fa-cart-plus mr-5"></i>View
+                              Cart</Link> <Link href="#" className="pull-right"><i className="fa fa-shopping-basket mr-5"></i>Checkout</Link> </div>
+                        </li>
+                     </ul>
+                  </li>
+               </ul>
+            </div>
+         </nav> */}
+
          <Navbar sticky='top' className='navigation_bar' expand="lg">
             <div className='container nav_container'>
                <div className="nav_brand_logo">

@@ -166,20 +166,6 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
                   <input className='form-control form-control-sm' name='sku' id='sku' type='text' defaultValue={variation?.sku || ""} />
                </div>
 
-               <div className="col-lg-12 my-2">
-                  <b>Status Details</b>
-                  <div className="row">
-                     <div className="col-lg-3 mb-3">
-                        <label htmlFor="status">{required} Product Status</label>
-                        <select className='form-select form-select-sm' name="status" id="status">
-                           <option value={variation?.status || ""}>{variation?.status || "Select Status"}</option>
-                           <option value="active">Active</option>
-                           <option value="inactive">Inactive</option>
-                        </select>
-                     </div>
-                  </div>
-               </div>
-
                {/* Price Details */}
                <div className="col-lg-12 my-2">
                   <b>Stock Details</b>

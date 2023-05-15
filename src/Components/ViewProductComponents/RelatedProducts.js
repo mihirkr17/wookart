@@ -5,7 +5,7 @@ export default function RelatedProducts({ relatedProducts }) {
 
    return (
       <div className='pt-5'>
-         <h5>Related Product</h5>
+         <h6 className="dwhYrQ">People also viewed</h6>
          <div className="row product_wrapper w-100">
             {
                relatedProducts && relatedProducts.map((p, i) => {

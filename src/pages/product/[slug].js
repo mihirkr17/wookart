@@ -38,7 +38,7 @@ export function ViewProduct({ data }) {
             {/* first content  */}
             <div className=" mb-5 row product_top">
 
-               <div className="pb-3 col-lg-4">
+               <div className="pb-3 col-lg-5">
                   <ProductImages
                      product={product}
                      userInfo={userInfo}
@@ -48,7 +48,7 @@ export function ViewProduct({ data }) {
                </div>
 
 
-               <div className="pb-3 product_description col-lg-8">
+               <div className="pb-3 product_description col-lg-7">
                   <ProductContents
                      product={product}
                      variationID={vId && vId}
@@ -63,6 +63,7 @@ export function ViewProduct({ data }) {
                <div className="col-lg-12">
                   <ProductAdditionalDetails
                      product={product}
+                     userInfo={userInfo}
                   />
                </div>
                <div className="col-lg-12">

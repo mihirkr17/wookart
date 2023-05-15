@@ -21,48 +21,9 @@ const ProductImages = ({ product, userInfo, authRefetch, setMessage }) => {
       setZoom({ transform: `translate3d(${x}px, ${y}px, 0px)` })
    }
 
-   const addToWishlist = async (product) => {
-
-      let wishlistProduct = {
-         _id: product._id,
-         title: product.title,
-         slug: product.slug,
-         brand: product.brand,
-         image: product.images[0],
-         pricing: product?.pricing?.sellingPrice,
-         stock: product?.stockInfo?.stock,
-         user_email: userInfo?.email,
-         seller: product?.seller?.name
-      }
-
-
-      const { success, message } = await apiHandler(`/wishlist/add-to-wishlist/${userInfo?.email}`, "POST", wishlistProduct);
-
-      if (success) {
-         await authRefetch();
-         setMessage(<p className='py-2 text-success'><small><strong>{message}</strong></small></p>);
-      }
-   }
-
-   const removeToWishlist = async (productID) => {
-      const { success, message } = await apiHandler(`/wishlist/remove-from-wishlist/${productID}`, "DELETE");
-
-      if (success) {
-         await authRefetch();
-         setMessage(<p className='py-2 text-success'><small><strong>{message}</strong></small></p>);
-      }
-   }
-
    return (
       <div className="view_product_sidebar">
-         {
-            product?.inWishlist ? <button title='Remove from wishlist' className='wishlistBtn active' onClick={() => removeToWishlist(product?._id)}>
-               <FontAwesomeIcon icon={faHeart} />
-            </button>
-               : <button className='wishlistBtn' title='Add to wishlist' onClick={() => addToWishlist(product)}>
-                  <FontAwesomeIcon icon={faHeart} />
-               </button>
-         }
+         
          <div className="product_image" onMouseOver={handleImageZoom}>
             <img src={tabImg && tabImg} alt="" />
          </div>

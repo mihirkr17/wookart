@@ -14,13 +14,12 @@ const DropDown = ({ mProduct, location, productControlHandler, openDropDown, set
             </Link>
          </li> */}
          <li>
-            <button className="status_btn_alt dropdown-item" onClick={() => setUpdateProductForm(mProduct && mProduct)}>
+            <button className="dropdown-item" onClick={() => setUpdateProductForm(mProduct && mProduct)}>
                Edit Product
             </button>
-
          </li>
          <li>
-            <button className="status_btn_alt dropdown-item" onClick={() => setOpenProductVariationModal(mProduct && {
+            <button className="dropdown-item" onClick={() => setOpenProductVariationModal(mProduct && {
                _id: mProduct?._id,
                formType: "new-variation",
                title: mProduct?.title,
@@ -34,7 +33,7 @@ const DropDown = ({ mProduct, location, productControlHandler, openDropDown, set
             {
                mProduct?.save_as === 'fulfilled' &&
                <button className='dropdown-item text-danger'
-                  onClick={() => productControlHandler("draft", mProduct?._lid, mProduct?._id)}
+                  onClick={() => productControlHandler("draft", "save_as", mProduct)}
                >
                   Move To Draft
                </button>
