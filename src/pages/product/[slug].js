@@ -25,10 +25,11 @@ export function ViewProduct({ data }) {
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" href="/favicon.ico" />
          </Head>
+         
          <div className="container">
             <div className="row">
                {/* breadcrumbs  */}
-               <div className="product_bread col-12">
+               <div className="p_content_wrapper col-12">
                   <Breadcrumbs
                      path={(Array.isArray(product?.categories)) && product?.categories}
                   />

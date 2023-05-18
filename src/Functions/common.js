@@ -1,3 +1,87 @@
+
+export function sanitizeHtml(html) {
+   // Define a whitelist of allowed HTML tags and attributes
+   const allowedTags = [
+      'a',
+      'abbr',
+      'address',
+      'article',
+      'aside',
+      'audio',
+      'b',
+      'blockquote',
+      'body',
+      'br',
+      'button',
+      'canvas',
+      'caption',
+      'cite',
+      'code',
+      'col',
+      'div',
+      'dl',
+      'dt',
+      'dd',
+      'em',
+      'figcaption',
+      'figure',
+      'footer',
+      'form',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'header',
+      'hr',
+      'i',
+      'img',
+      'input',
+      'label',
+      'li',
+      'main',
+      'nav',
+      'ol',
+      'p',
+      'pre',
+      'section',
+      'select',
+      'small',
+      'span',
+      'strong',
+      'table',
+      'tbody',
+      'td',
+      'textarea',
+      'tfoot',
+      'th',
+      'thead',
+      'tr',
+      'ul',
+      'video'
+   ];
+
+   const allowedAttributes = ['href'];
+
+   // Remove any disallowed tags and attributes
+   const sanitized = html.replace(/<(\/)?([^>]+)>/g, (match, closing, tagName) => {
+
+      if (allowedTags.includes(tagName.toLowerCase())) {
+         return `<${closing ?? ""}${tagName}>`;
+      }
+
+      return '';
+   }).replace(/\s([a-z\-]+)=(['"])(.*?)\2/gi, (match, attribute, quote, value) => {
+      if (allowedAttributes.includes(attribute.toLowerCase())) {
+         return ` ${attribute}=${quote}${value}${quote}`;
+      }
+      return '';
+   });
+
+   return { __html: sanitized };
+}
+
 export function CookieParser() {
 
    let cookie = document ? document.cookie : undefined;
@@ -52,7 +136,7 @@ export const emailValidator = (email) => {
 }
 
 export const camelToTitleCase = (str) => {
-   if (!str) return;
+   if (!str) return "Not Available";
 
    let newStr = str.replace(/([A-Z])/g, " $1");
 
@@ -146,4 +230,21 @@ export function calculateShippingCost(volWeight, areaType) {
 
 export function validPassword(password) {
    return (/^(?=.*\d)(?=.*[a-z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{5,}$/).test(password);
+}
+
+
+export function getSpecs(specs = {}) {
+   let str = [];
+   if (specs) {
+
+      for (const spec in specs) {
+         let items = specs[spec];
+
+         str.push(<li className="list" key={spec + Math.round(Math.random() * 999)}>
+            <span>{textToTitleCase(spec)}</span> <span>{items.split(",#")[0]}</span>
+         </li>)
+      }
+   }
+
+   return str;
 }

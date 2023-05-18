@@ -821,7 +821,6 @@ label {
   border: 1px solid rgb(72, 255, 0);
 }
 
-
 .dwhYrQ {
   color: rgb(51, 51, 51);
   font-style: normal;
@@ -831,4 +830,24 @@ label {
   text-align: left;
   margin: 0px;
   padding: 0px 0px 16px;
+}
+
+.list {
+  padding: 0.2rem 0;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  font-size: 0.8rem;
+
+  > span {
+    color: var(--color-mute);
+    margin-right: 0.6rem;
+    font-weight: 500;
+    width: 50%;
+    display: block;
+
+    &:nth-child(2) {
+      color: var(--color-text);
+    }
+  }
 }

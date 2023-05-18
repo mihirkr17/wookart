@@ -2,8 +2,8 @@ import React from 'react';
 
 const ProductReviews = ({ product }) => {
    return (
-      <div className='pt-5'>
-         <h5 id='rating'>Rating & Review Of {product?.title}</h5>
+      <div className='p_content_wrapper'>
+         <h6 className='dwhYrQ'>Rating & Review Of {product?.title}</h6>
          <div className="row mt-5 border w-100">
             <div className="py-1 my-4 border-bottom">
                <div className="row">

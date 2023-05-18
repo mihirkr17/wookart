@@ -4,7 +4,7 @@ import Product from '../Shared/Product';
 export default function RelatedProducts({ relatedProducts }) {
 
    return (
-      <div className='pt-5'>
+      <div className='p_content_wrapper'>
          <h6 className="dwhYrQ">People also viewed</h6>
          <div className="row product_wrapper w-100">
             {

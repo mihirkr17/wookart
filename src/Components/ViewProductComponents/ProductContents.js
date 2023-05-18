@@ -88,7 +88,7 @@ export default function ProductContents({ product, variationID, setMessage, user
    }
 
    return (
-      <div>
+      <div style={{ width: "100%" }}>
          <article>
 
             <h5 className="product_title py-2">
@@ -186,48 +186,47 @@ export default function ProductContents({ product, variationID, setMessage, user
             }
          </article>
 
-         {
-            <div className="py-3 mt-4 product_handler">
 
-               <button className='ph_btn addToCartBtn'
-                  onClick={() => (inCart ? router.push('/my-cart') :
-                     addToCartHandler(product?._id, product?._lid, product?.variations?._vrid, "toCart"))}>
-                  <FontAwesomeIcon icon={faCartShopping} />&nbsp;
-                  {inCart ? "Go To Cart" : addCartLoading ? <BtnSpinner text={"Adding..."} /> : "Add To Cart"}
-               </button>
+         <div className="py-3 mt-4 product_handler">
 
-               {
-                  product?.variations?.stock === "in" &&
-                  <Link href={{
-                     pathname: `/single-checkout`,
-                     query: {
-                        data: JSON.stringify({
-                           listingID: product?._lid,
-                           productID: product?._id,
-                           variationID: product?.variations?._vrid,
-                           quantity: 1,
-                           customerEmail: userInfo?.email
-                        }),
-                        oTracker: `buy.${product?.title}`
-                     }
-                  }}
+            <button className='ph_btn addToCartBtn'
+               onClick={() => (inCart ? router.push('/my-cart') :
+                  addToCartHandler(product?._id, product?._lid, product?.variations?._vrid, "toCart"))}>
+               <FontAwesomeIcon icon={faCartShopping} />&nbsp;
+               {inCart ? "Go To Cart" : addCartLoading ? <BtnSpinner text={"Adding..."} /> : "Add To Cart"}
+            </button>
 
-                     as={`/single-checkout?oTracker=buy.${product?.title}`}
-                     className='buyBtn ph_btn'
-                  >
-                     Buy Now
-                  </Link>
-               }
+            {
+               product?.variations?.stock === "in" &&
+               <Link href={{
+                  pathname: `/single-checkout`,
+                  query: {
+                     data: JSON.stringify({
+                        listingID: product?._lid,
+                        productID: product?._id,
+                        variationID: product?.variations?._vrid,
+                        quantity: 1,
+                        customerEmail: userInfo?.email
+                     }),
+                     oTracker: `buy.${product?.title}`
+                  }
+               }}
 
-               {/* <button title={`${product?.inWishlist ? "Remove from wishlist" : "Add to wishlist"}`}
+                  as={`/single-checkout?oTracker=buy.${product?.title}`}
+                  className='buyBtn ph_btn'
+               >
+                  Buy Now
+               </Link>
+            }
+
+            {/* <button title={`${product?.inWishlist ? "Remove from wishlist" : "Add to wishlist"}`}
                   className={`wishlistBtn ph_btn ${product?.inWishlist ? "active" : ""}`}
                   onClick={() => (product?.inWishlist ? removeToWishlist(product?._id) : addToWishlist(product))}>
                   <FontAwesomeIcon icon={faHeart} />
                </button> */}
 
 
-            </div>
-         }
+         </div>
 
       </div>
    );

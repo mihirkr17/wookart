@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Interweave } from 'interweave';
-import { calculateShippingCost, camelToTitleCase, textToTitleCase } from '@/Functions/common';
+import { calculateShippingCost, camelToTitleCase, getSpecs, sanitizeHtml, textToTitleCase } from '@/Functions/common';
 
 
 const ProductAdditionalDetails = ({ product, userInfo }) => {
@@ -8,35 +7,20 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
    const specs = product?.specification;
    const defShipAddrs = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true);
 
-
-   function getSpecs(specs = {}) {
-      let str = [];
-      if (specs) {
-
-         for (const [key, value] of Object.entries(specs)) {
-            let pp = <li key={value + Math.round(Math.random() * 999)}>
-               <span>{textToTitleCase(key)}</span> <span>{value.split(",#")[0]}</span>
-            </li>
-            str.push(pp);
-         }
-      }
-      return str;
-   }
-
    return (
       <div className="product-details row pt-4">
 
          <div className="col-lg-6">
 
-            <div className='p_meta_info'>
+            <div className='p_content_wrapper'>
                <h6 className='dwhYrQ'>Delivery</h6>
 
-               <div className='pb-3 d-flex align-items-center justify-content-between'>
-                  <div className="delivery_meta">
-                     <div className="delivery_meta__img">
+               <div className='pb-3'>
+                  <div className="p_content">
+                     <div className="p_content__img">
                         <img src="/ecom/map-location-svgrepo-com.svg" width="28" height="28" alt="" />
                      </div>
-                     <div className="delivery_meta__text">
+                     <div className="p_content__text">
                         {
                            defShipAddrs ?
                               <span>
@@ -51,33 +35,35 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
                   </div>
                </div>
 
-               {
-                  product?.fulfilledBy &&
-                  <div className='pb-3 d-flex align-items-center justify-content-between'>
-                     <div className="delivery_meta">
-                        <div className="delivery_meta__img">
-                           <img src="/ecom/agreement-svgrepo-com.svg" width="28" height="28" alt="" />
-                        </div>
-                        <div className="delivery_meta__text">
-                           <span>Fulfilled by</span>
-                           <div>
-                              {camelToTitleCase(product?.fulfilledBy)}
-                           </div>
+
+               <div className='pb-3'>
+                  <div className="p_content">
+                     <div className="p_content__img">
+                        <img src="/ecom/agreement-svgrepo-com.svg" width="28" height="28" alt="" />
+                     </div>
+                     <div className="p_content__text">
+                        <span>Fulfilled by</span>
+                        <div>
+                           {camelToTitleCase(product?.fulfilledBy)}
                         </div>
                      </div>
                   </div>
-               }
+               </div>
 
-               <div className='pb-3 d-flex align-items-center justify-content-between'>
-                  <div className='delivery_meta'>
-                     <div className="delivery_meta__img">
+
+               <div className='pb-3'>
+                  <div className='p_content'>
+                     <div className="p_content__img">
                         <img src="/ecom/delivery-truck-svgrepo-com.svg" width="28" height="28" alt="" />
                      </div>
-                     <div className="delivery_meta__text">
+                     <div className="p_content__text">
                         <span>Standard Delivery</span>
                         <div>
                            {
-                              (product?.isFreeShipping) ? "Free" : <span className='currency_sign'>{calculateShippingCost(product?.volumetricWeight, defShipAddrs?.area_type)}</span>
+                              (product?.isFreeShipping) ? "Free" :
+                                 <span className='currency_sign'>
+                                    {calculateShippingCost(product?.volumetricWeight, defShipAddrs?.area_type)}
+                                 </span>
                            }
                         </div>
                      </div>
@@ -85,7 +71,7 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
                </div>
             </div>
 
-            <div className="p_meta_info">
+            <div className="p_content_wrapper">
                <h6 className='dwhYrQ'>
                   Sold By
                </h6>
@@ -99,11 +85,32 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
                   </div>
                </div>
             </div>
+
+            <div className="row p_mouka">
+               <div className="col-4 mouka">
+                  <div className="p-1">
+                     <img src="/ecom/discount-svgrepo-com.svg" width="32" height="32" alt="" />
+                  </div>
+                  <span>Lowest Price</span>
+               </div>
+               <div className="col-4 mouka">
+                  <div className="p-1">
+                     <img src="/ecom/cash-dollar-svgrepo-com.svg" width="32" height="32" alt="" />
+                  </div>
+                  <span>Cash On Delivery</span>
+               </div>
+               <div className="col-4 mouka">
+                  <div className="p-1">
+                     <img src="/ecom/deliver-svgrepo-com .svg" width="32" height="32" alt="" />
+                  </div>
+                  <span>7-days Return</span>
+               </div>
+            </div>
          </div>
 
          <div className="col-lg-6">
 
-            <div className='p_meta_info'>
+            <div className='p_content_wrapper'>
                <h6 className='dwhYrQ'>Specification of {product?.title}</h6>
                <div className="product-details__items">
                   <ul>
@@ -119,20 +126,14 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
                   </ul>
                </div>
             </div>
-
-
          </div>
 
          <div className="col-12">
-            <div className="p_meta_info">
+            <div className="p_content_wrapper">
                <h6 className='dwhYrQ'>Description of {product?.title}</h6>
-               <article>
-                  {/* <Interweave content={product?.description} /> */}
-               </article>
+               <article dangerouslySetInnerHTML={sanitizeHtml(product?.description)}></article>
             </div>
          </div>
-
-         {/* </div> */}
       </div>
    );
 };

@@ -987,6 +987,29 @@ label {
   padding: 0px 0px 16px;
 }
 
+.list {
+  padding: 0.2rem 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  font-size: 0.8rem;
+}
+.list > span {
+  color: var(--color-mute);
+  margin-right: 0.6rem;
+  font-weight: 500;
+  width: 50%;
+  display: block;
+}
+.list > span:nth-child(2) {
+  color: var(--color-text);
+}
+
 .main_spinner {
   width: 100%;
   height: 80vh;
@@ -2838,28 +2861,6 @@ label {
      -moz-column-gap: 30px;
           column-gap: 30px;
 }
-.product-details__items ul > li {
-  padding: 0.2rem 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  font-size: 0.8rem;
-}
-.product-details__items ul > li > span {
-  color: var(--color-mute);
-  margin-right: 0.6rem;
-  font-weight: 500;
-  width: 50%;
-  display: block;
-}
-.product-details__items ul > li > span:nth-child(2) {
-  color: var(--color-text);
-}
 
 .tabHeader {
   padding: 2rem 0;
@@ -2934,12 +2935,6 @@ label {
   border-radius: 10px;
 }
 
-.product_bread {
-  padding: 10px;
-  background-color: ghostwhite;
-  margin-bottom: 10px;
-}
-
 .product_right_side_col {
   padding: 13px;
 }
@@ -2965,7 +2960,7 @@ label {
   margin: auto;
 }
 
-.delivery_meta {
+.p_content {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2975,7 +2970,7 @@ label {
   width: 100%;
 }
 
-.delivery_meta__text {
+.p_content__text {
   padding: 0.3rem 0.4rem;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2989,7 +2984,7 @@ label {
   width: 100%;
 }
 
-.delivery_meta__img {
+.p_content__img {
   border-radius: 100%;
   width: 42px;
   height: 42px;
@@ -3005,7 +3000,7 @@ label {
   background-color: rgba(120, 170, 243, 0.1882352941);
 }
 
-.p_meta_info {
+.p_content_wrapper {
   background-color: rgb(255, 255, 255);
   border-radius: 8px;
   margin-bottom: 16px;
@@ -3080,6 +3075,35 @@ label {
       -ms-flex-pack: center;
           justify-content: center;
   background-color: rgba(120, 170, 243, 0.1882352941);
+}
+
+.p_mouka {
+  border-radius: 10px;
+  padding: 1rem 0.5rem;
+  background-color: rgba(227, 247, 255, 0.5882352941);
+  margin: 20px 0;
+}
+
+.mouka {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.mouka > span {
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  font-weight: 500;
+  font-variant: all-petite-caps;
 }
 
 @media (max-width: 567px) {

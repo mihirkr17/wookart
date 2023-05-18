@@ -1,3 +1,4 @@
+import { textToTitleCase } from '@/Functions/common';
 import { faHome, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
@@ -15,7 +16,7 @@ const Breadcrumbs = ({ path: newPath }) => {
          <Link href={"/"}>
             <FontAwesomeIcon style={{ fontSize: "13px", color: "var(--color-dark)" }} icon={faHome} />
          </Link>
-         <span>&nbsp;<FontAwesomeIcon style={{ fontSize: "13px", color: "orange" }} icon={faChevronRight} />&nbsp;</span>
+         <span>&nbsp;<FontAwesomeIcon style={{ fontSize: "10px", color: "black" }} icon={faChevronRight} />&nbsp;</span>
          {
             path && path.map((e, i, arr) => {
 
@@ -24,9 +25,9 @@ const Breadcrumbs = ({ path: newPath }) => {
                return (
                   <React.Fragment key={i}>
                      <Link href={"/category/" + routeTo} style={lastOne ? { pointerEvents: "none", color: "gray" } : { pointerEvents: "auto" }}>
-                        {e.replace(/[-]/g, " ").toUpperCase()}
+                        {textToTitleCase(e.replace(/[-]/g, " "))}
                      </Link>
-                     {i < path.length - 1 && <span>&nbsp;<FontAwesomeIcon style={{ fontSize: "13px", color: "orange" }} icon={faChevronRight} />&nbsp;</span>}
+                     {i < path.length - 1 && <span>&nbsp;<FontAwesomeIcon style={{ fontSize: "10px", color: "black" }} icon={faChevronRight} />&nbsp;</span>}
                   </React.Fragment>
                )
             })
