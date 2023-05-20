@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { calculateShippingCost, camelToTitleCase, getSpecs, sanitizeHtml, textToTitleCase } from '@/Functions/common';
+import MoreInfoModal from './MoreInfoModal';
 
 
 const ProductAdditionalDetails = ({ product, userInfo }) => {
+   const [openMoreInfo, setOpenMoreInfo] = useState(false);
 
    const specs = product?.specification;
    const defShipAddrs = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true);
@@ -69,6 +71,15 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
                      </div>
                   </div>
                </div>
+
+               <div className="pb-3">
+                  <button className="more_info_btn" onClick={() => setOpenMoreInfo(product)}>
+                     More Information
+                  </button>
+
+                  {openMoreInfo && <MoreInfoModal data={openMoreInfo} closeModal={() => setOpenMoreInfo(false)} />}
+
+               </div>
             </div>
 
             <div className="p_content_wrapper">
@@ -80,7 +91,7 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
                      <img src="/ecom/store-official-ecommerce-svgrepo-com.svg" width="32" height="32" alt="" />
                   </div>
                   <div className='seller_div_text'>
-                     <span>{product?.sellerData?.storeName}</span>
+                     <span>{product?.supplier?.store_name}</span>
                      <button>View Shop</button>
                   </div>
                </div>

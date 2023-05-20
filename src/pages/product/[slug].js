@@ -25,7 +25,7 @@ export function ViewProduct({ data }) {
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" href="/favicon.ico" />
          </Head>
-         
+
          <div className="container">
             <div className="row">
                {/* breadcrumbs  */}
@@ -93,7 +93,8 @@ export async function getServerSideProps({ query, params, req }) {
       withCredentials: true,
       credentials: "include",
       headers: {
-         Cookie: cookie || ""
+         Cookie: cookie || "",
+         "Content-Type": "application/json"
       }
    });
 

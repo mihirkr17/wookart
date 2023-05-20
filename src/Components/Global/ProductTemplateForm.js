@@ -93,7 +93,7 @@ const ProductTemplateForm = ({ formTypes, userInfo, setMessage }) => {
                : <div className='row py-2'>
                   <div className="col-lg-6"><small>CATEGORIES : {data?.categories && data?.categories.join("-->")}</small></div>
                   <div className="col-lg-6"><small>SELLER : {data?.sellerData?.sellerName}</small></div>
-                  <div className="col-lg-6"><small>Store Name : {data?.sellerData?.storeName}</small></div>
+                  <div className="col-lg-6"><small>Store Name : {data?.supplier?.store_name}</small></div>
                   <div className="col-lg-6"><small>BRAND : {data?.brand}</small></div>
                   <div className="col-lg-6"><small>SAVE AS : {data?.save_as}</small></div>
                   <div className="col-lg-6"><small>Product Title : {data?.title}</small></div>

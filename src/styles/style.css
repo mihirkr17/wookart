@@ -2787,9 +2787,9 @@ label {
   padding: 1px 0;
 }
 .swatch_size_btn.active {
-  color: var(--color-green);
+  color: var(--color-accent);
   font-weight: bold;
-  border: 1px solid var(--color-green);
+  border: 1px solid var(--color-accent);
 }
 
 .seeMore {
@@ -2818,9 +2818,9 @@ label {
   padding: 0.1rem 0;
 }
 .product_price_model big {
-  color: var(--color-green);
+  color: var(--color-dark);
   padding-right: 0.3rem;
-  font-weight: 500;
+  font-weight: bold;
   font-size: 2rem;
 }
 .product_price_model strike {
@@ -2831,7 +2831,7 @@ label {
   font-size: 1rem;
 }
 .product_price_model span {
-  color: var(--color-green);
+  color: var(--color-dark);
   font-weight: 500;
 }
 
@@ -3248,6 +3248,50 @@ label {
 
 .view_product_sidebar {
   position: relative;
+}
+
+.more_info_btn {
+  border: unset;
+  border-bottom: 1px dashed black;
+  background: transparent;
+  cursor: pointer;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.more_info_policies {
+  background: transparent;
+}
+.more_info_policies > ul > li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+.more_info_policies > ul > li span {
+  font-size: 12px;
+}
+.more_info_policies > ul > li .qqr {
+  color: rgb(51, 51, 51);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0px;
+  padding: 0px;
+}
+.more_info_policies > ul > li .qqs {
+  color: rgb(153, 153, 153);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 8px 0px 0px;
+  padding: 0px;
 }
 
 @media (max-width: 567px) {

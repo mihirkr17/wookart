@@ -9,7 +9,7 @@ const DropDown = ({ mProduct, location, productControlHandler, openDropDown, set
       <ul className="dropdown-menu" style={openDropDown?._lid === mProduct?._lid ? { display: 'block', right: 0 } : { display: 'none' }}>
          {/* <li>
             <Link className='dropdown-item' state={{ from: location }} replace
-               href={`/dashboard/manage-product?np=edit_product&store=${mProduct?.sellerData?.storeName}&pid=${mProduct?._id}`}>
+               href={`/dashboard/manage-product?np=edit_product&store=${mProduct?.supplier?.store_name}&pid=${mProduct?._id}`}>
                Edit Product
             </Link>
          </li> */}

@@ -65,7 +65,7 @@ export function sanitizeHtml(html) {
    const allowedAttributes = ['href'];
 
    // Remove any disallowed tags and attributes
-   const sanitized = html.replace(/<(\/)?([^>]+)>/g, (match, closing, tagName) => {
+   const sanitized = html?.replace(/<(\/)?([^>]+)>/g, (match, closing, tagName) => {
 
       if (allowedTags.includes(tagName.toLowerCase())) {
          return `<${closing ?? ""}${tagName}>`;
@@ -240,9 +240,11 @@ export function getSpecs(specs = {}) {
       for (const spec in specs) {
          let items = specs[spec];
 
-         str.push(<li className="list" key={spec + Math.round(Math.random() * 999)}>
-            <span>{textToTitleCase(spec)}</span> <span>{items.split(",#")[0]}</span>
-         </li>)
+         if (typeof items !== "object") {
+            str.push(<li className="list" key={spec + Math.round(Math.random() * 999)}>
+               <span>{textToTitleCase(spec)}</span> <span>{items.split(",#")[0]}</span>
+            </li>)
+         }
       }
    }
 

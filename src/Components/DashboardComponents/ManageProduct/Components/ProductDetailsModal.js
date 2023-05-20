@@ -45,7 +45,7 @@ const ProductDetailsModal = ({ data: product, closeModal }) => {
 
                   <br />
 
-                  <small className='textMute'>Seller : {product?.sellerData?.storeName}</small><br />
+                  <small className='textMute'>Seller : {product?.supplier?.store_name}</small><br />
                </article>
 
             </div>

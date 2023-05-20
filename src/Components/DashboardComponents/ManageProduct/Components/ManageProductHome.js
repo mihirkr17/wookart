@@ -97,7 +97,7 @@ const ManageProductHome = (
 
          const { _lid, _id } = mProduct;
 
-         const { success, message } = await apiHandler(`/dashboard/seller/${mProduct?.sellerData?.storeName}/product-control`, "PUT", {
+         const { success, message } = await apiHandler(`/dashboard/seller/${mProduct?.supplier?.store_name}/product-control`, "PUT", {
             market_place: 'wooKart',
             actionType,
             actionFor,
@@ -339,12 +339,12 @@ const ManageProductHome = (
                                  </small>
 
                                  <Link className='bt9_edit' state={{ from: location }} replace
-                                    href={`/dashboard/manage-product?np=edit_product&store=${mProduct?.sellerData?.storeName}&pid=${mProduct?._id}`}>
+                                    href={`/dashboard/manage-product?np=edit_product&store=${mProduct?.supplier?.store_name}&pid=${mProduct?._id}`}>
                                     <FontAwesomeIcon icon={faPenToSquare} />
                                     &nbsp;Edit Product
                                  </Link>
                                  &nbsp;
-                                 <button className='mt-2 bt9_delete' onClick={() => deleteThisProductHandler(mProduct?._id, mProduct?._lid, mProduct?.sellerData?.storeName)}>Delete This Product</button> &nbsp;
+                                 <button className='mt-2 bt9_delete' onClick={() => deleteThisProductHandler(mProduct?._id, mProduct?._lid, mProduct?.supplier?.store_name)}>Delete This Product</button> &nbsp;
                                  {
                                     (Array.isArray(mProduct?.variations) && mProduct?.variations.length >= 1 && mProduct?.save_as === 'draft') ?
                                        <button className='bt9_edit me-2'
@@ -393,7 +393,7 @@ const ManageProductHome = (
                                                          <td>{variation?.sku}</td>
                                                          <td>
                                                             <Link className='bt9_edit' state={{ from: location }} replace
-                                                               href={`/dashboard/manage-product?np=update-variation&store=${mProduct?.sellerData?.storeName}&pid=${mProduct?._id}&vId=${variation?._vrid}`}>
+                                                               href={`/dashboard/manage-product?np=update-variation&store=${mProduct?.supplier?.store_name}&pid=${mProduct?._id}&vId=${variation?._vrid}`}>
                                                                Update Variation
                                                             </Link>
 
@@ -412,7 +412,7 @@ const ManageProductHome = (
                                     <>
                                        <div className="px-1">
                                           <Link className='bt9_create me-2' state={{ from: location }} replace
-                                             href={`/dashboard/manage-product?np=add-new-variation&store=${mProduct?.sellerData?.storeName}&pid=${mProduct?._id}`}>
+                                             href={`/dashboard/manage-product?np=add-new-variation&store=${mProduct?.supplier?.store_name}&pid=${mProduct?._id}`}>
                                              Create Variation
                                           </Link>
                                        </div>
