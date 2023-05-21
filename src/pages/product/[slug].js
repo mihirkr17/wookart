@@ -8,14 +8,20 @@ import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import Head from "next/head";
 import { useRouter } from "next/router"
+import { useEffect } from "react";
 
 
 export function ViewProduct({ data }) {
    const router = useRouter();
    const product = data?.product && data?.product;
-   const { vId } = router.query;
-
+   const { vId, pId } = router.query;
    const { authRefetch, userInfo, setMessage } = useAuthContext();
+
+   useEffect(() => {
+      if (!pId || !vId) {
+       router.push("/");
+      };
+   }, [router, pId, vId])
 
    return (
       <div className='view_product section_default'>

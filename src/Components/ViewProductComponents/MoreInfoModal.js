@@ -12,8 +12,6 @@ export default function MoreInfoModal({ data, closeModal }) {
       for (const item in obj) {
          let temp = obj[item];
 
-         
-
          items.push(
             <li key={item}><span className="qqr">{textToTitleCase(item)}</span>
                <span className="qqs">{temp}</span> <hr /> </li>
@@ -29,9 +27,9 @@ export default function MoreInfoModal({ data, closeModal }) {
             <ul>
                {destructObject({
                   manufacturer_information: `${manufacturer?.details}, Origin of ${manufacturer?.origin}`,
-                  packer_information: supplier?.store_name,
+                  packer_information: textToTitleCase(supplier?.store_name),
                   net_weight: `${weight} (${weightUnit})`,
-                  supplier_information: supplier?.store_name,
+                  supplier_information: `${textToTitleCase(supplier?.store_name)} c/o WooKart`,
                   contact_information: `Contact seller ${supplier?.contact_numbers}, c/o ${policies?.contact_info}`,
                   legal_disclaimer: policies?.legal_disclaimer,
                })}

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { calculateShippingCost, camelToTitleCase, getSpecs, sanitizeHtml, textToTitleCase } from '@/Functions/common';
 import MoreInfoModal from './MoreInfoModal';
+import { useRouter } from 'next/router';
 
 
 const ProductAdditionalDetails = ({ product, userInfo }) => {
    const [openMoreInfo, setOpenMoreInfo] = useState(false);
+   const router = useRouter();
 
    const specs = product?.specification;
    const defShipAddrs = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true);
@@ -92,7 +94,7 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
                   </div>
                   <div className='seller_div_text'>
                      <span>{product?.supplier?.store_name}</span>
-                     <button>View Shop</button>
+                     <button onClick={() => router.push(`/store/${product?.supplier?.store_name}`)}>View Shop</button>
                   </div>
                </div>
             </div>
