@@ -65,7 +65,7 @@ export function sanitizeHtml(html) {
    const allowedAttributes = ['href'];
 
    // Remove any disallowed tags and attributes
-   const sanitized = html?.replace(/<(\/)?([^>]+)>/g, (match, closing, tagName) => {
+   const sanitized = html?.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "").replace(/<(\/)?([^>]+)>/g, (match, closing, tagName) => {
 
       if (allowedTags.includes(tagName.toLowerCase())) {
          return `<${closing ?? ""}${tagName}>`;
