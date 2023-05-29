@@ -19,6 +19,8 @@ export function __dynamicCategory({ products, filterData }) {
    const [priceRanger, setPriceRanger] = useState(0);
    const basePath = ctg?.join("/");
 
+   console.log(ctg);
+
 
    useEffect(() => {
       setFBrand(router?.query?.brand?.replace(/\s/g, "-").split("~") ?? []);

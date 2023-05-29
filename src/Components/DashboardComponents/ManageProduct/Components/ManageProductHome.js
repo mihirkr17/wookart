@@ -31,7 +31,7 @@ const ManageProductHome = (
 ) => {
    const [productDetailModal, setProductDetailModal] = useState(false);
    const [openDropDown, setOpenDropDown] = useState("");
-   const { width } = useWindowDimensions();
+   const { windowWidth } = useWindowDimensions();
    const [updateProductForm, setUpdateProductForm] = useState(false);
    const [openProductVariationModal, setOpenProductVariationModal] = useState(false);
 
@@ -207,7 +207,7 @@ const ManageProductHome = (
 
                            </div>
 
-                           <div className={`dropdown`} style={width <= 567 ? { width: '100%' } : { width: 'unset' }}>
+                           <div className={`dropdown`} style={windowWidth <= 567 ? { width: '100%' } : { width: 'unset' }}>
 
                               <button className='dropdown-toggle' style={{ border: 'none', background: 'transparent' }} type="button" data-bs-toggle="dropdown" aria-expanded="false" onClick={() => openDropDownHandler(mProduct)}>
                                  Option

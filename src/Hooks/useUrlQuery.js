@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export function useUrlQuery() {
    const { query, push } = useRouter();
-   const { filters, slug } = query;
+   const { filters, slug, sorted } = query;
    const [urlQuery, setUrlQuery] = useState([]);
 
    const regex = /[<>{}|\\^%]/g;
@@ -15,7 +15,7 @@ export function useUrlQuery() {
    }, [filters]);
 
    // building dynamic url here 
-   function buildDynamicURL(p, ...rest) {
+   function buildDynamicURL(p, sortVal, ...rest) {
 
       const params = new URLSearchParams();
 
@@ -25,6 +25,10 @@ export function useUrlQuery() {
 
       if (p) {
          params.append("page", p)
+      }
+
+      if (sortVal) {
+         params.append("sorted", sortVal);
       }
 
       if (rest && rest.length >= 1) {
@@ -56,6 +60,10 @@ export function useUrlQuery() {
 
       if (temp) {
          params.append("filters", temp);
+      }
+
+      if (targetValue === sorted) {
+         params.delete("sorted")
       }
 
 
