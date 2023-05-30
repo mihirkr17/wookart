@@ -136,6 +136,21 @@ function __DynamicStore({ data, active }) {
 
                <div className="store_header_bottom">
 
+                  <div className="sorting_div">
+                     <select name="targetPrice"
+                        className="form-select form-select-sm"
+                        id="targetPrice"
+                        onChange={(e) => filterData.includes(e.target.value) ?
+                           removeUrlQuery(page, e.target.value) :
+                           buildDynamicURL(page, e.target.value)
+                        }>
+                        <option value="best-match">Best Match</option>
+                        <option value="popularity">Popularity</option>
+                        <option value="lowest">Lowest</option>
+                        <option value="highest">Highest</option>
+                     </select>
+                  </div>
+
                   <button className="filterBtn" onClick={() => setOpenMenu(e => !e)}>
                      <FontAwesomeIcon icon={faFilter} />
                   </button>
@@ -148,21 +163,6 @@ function __DynamicStore({ data, active }) {
                <div className="row">
                   <div className="col-lg-3 display_side">
                      <div className="store_sidebar" style={(openMenu || windowWidth >= 567) ? { display: "block" } : { display: "none" }}>
-
-                        <div className="mb-4">
-                           <select name="targetPrice"
-                              className="form-select form-select-sm"
-                              id="targetPrice"
-                              onChange={(e) => filterData.includes(e.target.value) ?
-                                 removeUrlQuery(page, e.target.value) :
-                                 buildDynamicURL(page, e.target.value)
-                              }>
-                              <option value="best-match">Best Match</option>
-                              <option value="popularity">Popularity</option>
-                              <option value="lowest">Lowest</option>
-                              <option value="highest">Highest</option>
-                           </select>
-                        </div>
 
                         <div className="store_side_top">
                            <div>

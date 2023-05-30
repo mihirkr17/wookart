@@ -116,6 +116,14 @@
 
   .product_card_img {
     height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0 0 0;
+
+    >img {
+      width: 50%;
+    }
   }
 
   .product_title {
@@ -126,6 +134,12 @@
     h1 {
       color: var(--color-dark);
       font-size: 13px;
+    }
+  }
+
+  .price_model {
+    big {
+      font-size: 1rem;
     }
   }
 }

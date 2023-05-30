@@ -5,14 +5,17 @@ function getWindowDimension() {
       return {};
    }
 
-   return window;
+   return {
+      width: window.innerWidth,
+      height: window.innerHeight
+   };
 }
 
 
 const useWindowDimensions = () => {
 
    const [windowDimension, setWindowDimension] = useState(getWindowDimension() ?? {});
-   const { innerHeight, innerWidth } = windowDimension;
+   const { width, height } = windowDimension;
 
    const [windowWidth, setWindowWidth] = useState(0);
    const [windowHeight, setWindowHeight] = useState(0);
@@ -24,13 +27,11 @@ const useWindowDimensions = () => {
 
       window.addEventListener('resize', handleWindow);
 
-      return () => window.removeEventListener('resize', handleWindow);
-   }, []);
+      setWindowHeight(height);
+      setWindowWidth(width);
 
-   useEffect(() => {
-      setWindowHeight(innerHeight);
-      setWindowWidth(innerWidth);
-   }, [innerHeight, innerWidth]);
+      return () => window.removeEventListener('resize', handleWindow);
+   }, [ width, height]);
 
    return { windowWidth, windowHeight };
 };
