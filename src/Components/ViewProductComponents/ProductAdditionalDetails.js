@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { calculateShippingCost, camelToTitleCase, getSpecs, sanitizeHtml, textToTitleCase } from '@/Functions/common';
 import MoreInfoModal from './MoreInfoModal';
 import { useRouter } from 'next/router';
+import ProductReviews from './ProductReviews';
 
 
 const ProductAdditionalDetails = ({ product, userInfo }) => {
@@ -142,10 +143,17 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
          </div>
 
          <div className="col-12">
-            <div className="p_content_wrapper">
-               <h6 className='dwhYrQ'>Description of {product?.title}</h6>
-               <article dangerouslySetInnerHTML={sanitizeHtml(product?.description)}></article>
+            <div className="row">
+               <div className="p_content_wrapper col-lg-7">
+                  <h6 className='dwhYrQ'>Description of {product?.title}</h6>
+                  <article dangerouslySetInnerHTML={sanitizeHtml(product?.description)}></article>
+               </div>
+
+               <div className="col-lg-5">
+                  <ProductReviews product={product} />
+               </div>
             </div>
+
          </div>
       </div>
    );

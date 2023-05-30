@@ -3376,6 +3376,7 @@ label {
       -ms-flex-direction: column;
           flex-direction: column;
   border-bottom: 10px solid rgba(0, 0, 0, 0.0784313725);
+  position: relative;
 }
 
 .store_header_top {
@@ -3435,28 +3436,29 @@ label {
           flex-direction: row;
 }
 .sht_meta .shtm_average_rating {
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-pack: center;
-  -ms-flex-pack: center;
-      justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-      align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   border-radius: 16px;
-  padding: 4px 8px;
   background: rgb(255, 255, 255);
-  fill: rgb(85, 133, 248);
   -webkit-box-shadow: rgb(231, 238, 255) 0px 0px 0px 1px inset;
           box-shadow: rgb(231, 238, 255) 0px 0px 0px 1px inset;
+  height: 30px;
+  width: 70px;
+  font-size: 1rem;
 }
 .sht_meta .shtm_average_rating svg {
   margin-left: 4px;
   height: 10px;
   width: 10px;
   cursor: inherit;
-  fill: rgb(85, 133, 248) !important;
+  color: rgb(227, 158, 0) !important;
 }
 .sht_meta .shtm_data_count {
   color: rgb(153, 153, 153);
@@ -3552,9 +3554,6 @@ label {
       -ms-flex-pack: end;
           justify-content: flex-end;
 }
-.store_header_bottom .sorting_div {
-  margin: 0 5px 0 0;
-}
 
 @media (max-width: 567px) {
   .store_container {
@@ -3572,11 +3571,11 @@ label {
     height: 132px;
   }
   .store_header_top {
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
     -ms-flex-wrap: nowrap;
         flex-wrap: nowrap;
+  }
+  .store_header_bottom .sorting_div {
+    margin: 0 15px 0 0;
   }
   .filterBtn {
     display: block;
@@ -3602,12 +3601,12 @@ label {
     padding: 5px 0;
   }
   .sh_img {
-    width: 45px;
-    height: 45px;
+    width: 60px;
+    height: 60px;
   }
   .sh_img > img {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
   }
   .sh_title {
     padding: 0 0.8rem;
@@ -3616,11 +3615,8 @@ label {
     font-size: 1rem;
   }
   .sht_meta .shtm_average_rating {
-    font-size: 0.8rem;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    padding: 1px 2px;
+    font-size: 0.7rem;
+    width: 50px;
   }
   .sht_meta .shtm_data_count {
     font-size: 0.8rem;

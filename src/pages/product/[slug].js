@@ -73,11 +73,11 @@ export function ViewProduct({ data }) {
                      userInfo={userInfo}
                   />
                </div>
-               <div className="col-lg-12">
+               {/* <div className="col-lg-12">
                   <ProductReviews
                      product={product}
                   />
-               </div>
+               </div> */}
                <div className="col-lg-12">
                   <RelatedProducts
                      relatedProducts={data?.relatedProducts ? data?.relatedProducts : []}

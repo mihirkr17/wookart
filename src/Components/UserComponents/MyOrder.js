@@ -18,7 +18,6 @@ const MyOrder = () => {
    const { data, refetch, loading } = useFetch(userInfo?.email && `/order/my-order/${userInfo?.email}`);
    const [actLoading, setActLoading] = useState(false);
    const [ratPoint, setRatPoint] = useState("5");
-   const [openReviewForm, setOpenReviewForm] = useState(false);
    const [filterOrder, setFilterOrder] = useState("");
    const [orderItems, setOrderItems] = useState([]);
    const [manageOrderModal, setManageOrderModal] = useState(false);
@@ -30,14 +29,6 @@ const MyOrder = () => {
          setOrderItems(data?.data?.module?.orders && data?.data?.module?.orders.filter(p => p?.orderStatus === filterOrder))
       }
    }, [data, filterOrder]);
-
-   const openReviewFormHandler = (orderID) => {
-      if (orderID === openReviewForm) {
-         setOpenReviewForm(false);
-      } else {
-         setOpenReviewForm(orderID);
-      }
-   }
 
    const ratingHandler = async (e) => {
       try {
@@ -74,6 +65,7 @@ const MyOrder = () => {
          {
             manageOrderModal && <ManageOrderModal
                setMessage={setMessage}
+               userInfo={userInfo}
                refetch={refetch}
                closeModal={() => setManageOrderModal(false)}
                data={manageOrderModal}
@@ -129,10 +121,6 @@ const MyOrder = () => {
                                        <button className='manage_order_button' onClick={() => setManageOrderModal(orderItem)}>
                                           Manage Order
                                        </button>
-
-                                       {
-                                          orderStatus === "completed" && <button onClick={() => openReviewFormHandler(orderID)}>Add Review</button>
-                                       }
                                     </div>
                                  </div>
 

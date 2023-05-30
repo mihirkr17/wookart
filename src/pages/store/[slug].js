@@ -107,6 +107,8 @@ function __DynamicStore({ data, active }) {
          <div className={`container store_container`}>
             <div className="store_header">
 
+               {/* <div className="storeImg" style={{ backgroundImage: `url(${storeInfo?.store?.img})` }}></div> */}
+
                <div className="store_header_top">
                   <div className="sh_img">
                      <Image src="/ecom/store-official-ecommerce-svgrepo-com.svg"
@@ -114,7 +116,7 @@ function __DynamicStore({ data, active }) {
                   </div>
 
                   <div className="sh_title">
-                     <h4>{textToTitleCase(storeInfo?.storeName)?.toUpperCase()}</h4>
+                     <h4>{textToTitleCase(storeInfo?.store?.name ?? "Unknown")?.toUpperCase()}</h4>
                      <div className="sht_meta">
                         <span className="shtm_average_rating">
                            {storeInfo?.averageRating}
