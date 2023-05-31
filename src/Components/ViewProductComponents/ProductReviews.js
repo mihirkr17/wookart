@@ -1,9 +1,9 @@
+import Image from 'next/image';
 import React from 'react';
 
 const ProductReviews = ({ product }) => {
 
    const { rating, reviews, reviewCount, ratingCount } = product ?? {};
-
 
    function outputOfRating(rat) {
       let totalCount = rat.reduce((total, rats) => total + rats?.count, 0);
@@ -77,14 +77,17 @@ const ProductReviews = ({ product }) => {
                </div>
             </div>
             {
-               reviews?.length > 0 ? reviews?.map((rats, index) => {
+               reviews?.length > 0 ? reviews?.map((review, index) => {
+
+                  console.log(review.product_images);
                   return (
                      <div className="col-lg-12 mb-3" key={index}>
                         <div className="card_default">
+                           <img src={review?.product_images[0] ?? ""} width="50" height="50"/>
                            <div className="card_description">
-                              <small className='text-primary'>{rats?.rating_point && rats?.rating_point} Out of 5</small>
-                              <i className='text-muted' style={{fontSize: "0.7rem"}}>{rats?.name}</i>
-                              <small>{rats?.product_review}</small>
+                              <small className='text-primary'>{review?.rating_point && review?.rating_point} Out of 5</small>
+                              <i className='text-muted' style={{fontSize: "0.7rem"}}>{review?.name}</i>
+                              <small>{review?.product_review}</small>
                            </div>
                         </div>
                      </div>

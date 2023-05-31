@@ -96,14 +96,37 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo }) {
    }
 
 
+
    async function handleProductReview(e) {
       try {
          e.preventDefault();
-
+         let formData = new FormData();
          const productReview = e.target.productReview.value;
          const itemID = e.target.itemID.value;
          const productID = e.target.productID.value;
          const ratingWeight = e.target.ratingWeight.value;
+
+
+         for (let i = 0; i < e.target.images.files.length; i++) {
+            formData.append(`images`, e.target.images.files[i]);
+         }
+
+         formData.append("productReview", productReview);
+         formData.append("itemID", itemID);
+         formData.append("productID", productID);
+         formData.append("ratingWeight", ratingWeight);
+         formData.append("orderID", orderID);
+         formData.append("name", userInfo?.fullName);
+         const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/review/add-product-rating`, {
+            method: "POST",
+            body: formData
+         });
+
+         const result = await response.json();
+
+         console.log(result);
+         return;
+
 
          const { success, message } = await apiHandler(`/review/add-product-rating`, "POST", {
             name: userInfo?.fullName, productReview, orderID, productID, itemID, ratingWeight
@@ -188,14 +211,18 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo }) {
 
 
                         {
-                           (orderStatus === "completed") && <div style={{alignSelf: "center"}}>
+                           (orderStatus === "completed") && <div style={{ alignSelf: "center" }}>
                               <button className="status_btn" onClick={() => openReviewFormHandler(itemID)}>
                                  Add Review
                               </button>
 
                               {
-                                 openReviewForm === itemID && <form style={{ backgroundColor: "white", padding: "10px" }} onSubmit={handleProductReview}>
+                                 openReviewForm === itemID && <form
+                                    encType="multipart/form-data"
+                                    style={{ backgroundColor: "white", padding: "10px" }}
+                                    onSubmit={handleProductReview}>
 
+                                    <input type="file" accept="image/*" name="images" id="images" multiple onChange={() => handleFileChange()} />
                                     <div className="input_group">
                                        <input type="range" name="ratingWeight" id="ratingWeight" min="1" max="5" step="1" />
                                     </div>
