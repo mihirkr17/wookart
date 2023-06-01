@@ -9,6 +9,7 @@ export const useFetch = (url) => {
 
 
    useEffect(() => {
+      if (typeof window === "undefined") return;
       if (!url || typeof url === 'undefined' || url === null) return;
 
       const cookie = CookieParser();

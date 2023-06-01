@@ -1,6 +1,6 @@
 // src/Components/UserComponents/ManageOrderModal.js
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ModalWrapper from "../Global/ModalWrapper";
 import FilterOption from "../Shared/FilterOption";
 import { apiHandler } from "@/Functions/common";
@@ -12,11 +12,15 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo }) {
    const [reason, setReason] = useState("");
    const { menuRef, openMenu, setOpenMenu } = useMenu();
    const [openReviewForm, setOpenReviewForm] = useState(false);
+   const [ratingPoints, setRatingPoints] = useState("5");
+   const [reviewLoading, setReviewLoading] = useState(false);
    const { totalAmount, orderStatus, isCanceled, paymentStatus, customerEmail, paymentMode, items, orderID, orderAT, seller, shippingAddress } = data;
 
    const subTotal = items?.reduce((p, c) => p + c?.quantity, 0);
    const baseAmounts = items?.reduce((p, c) => p + (c?.sellingPrice * c?.quantity), 0);
    const shippingFees = items?.reduce((p, c) => p + c?.shippingCharge, 0);
+
+
 
 
    const openReviewFormHandler = (itemID) => {
@@ -100,37 +104,44 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo }) {
    async function handleProductReview(e) {
       try {
          e.preventDefault();
-         let formData = new FormData();
          const productReview = e.target.productReview.value;
          const itemID = e.target.itemID.value;
          const productID = e.target.productID.value;
          const ratingWeight = e.target.ratingWeight.value;
 
 
-         for (let i = 0; i < e.target.images.files.length; i++) {
-            formData.append(`images`, e.target.images.files[i]);
+
+         let lengthOfImg = e.target.images.files.length;
+
+         if (lengthOfImg >= 6) {
+            return setMessage("Maximum 5 image can upload !", "danger");
          }
 
-         formData.append("productReview", productReview);
-         formData.append("itemID", itemID);
-         formData.append("productID", productID);
-         formData.append("ratingWeight", ratingWeight);
-         formData.append("orderID", orderID);
-         formData.append("name", userInfo?.fullName);
-         const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/review/add-product-rating`, {
-            method: "POST",
-            body: formData
-         });
+         setReviewLoading(true);
+         const promises = [];
+         for (let i = 0; i < lengthOfImg; i++) {
+            const formData = new FormData();
+            formData.append('file', e.target.images.files[i]);
+            formData.append('upload_preset', 'review_images');
 
-         const result = await response.json();
+            promises.push(
+               fetch('https://api.cloudinary.com/v1_1/duixvo0uu/image/upload', {
+                  method: 'POST',
+                  body: formData,
+               }).then(response => response.json())
+                  .catch(error => console.error('Error:', error))
+            );
+         }
 
-         console.log(result);
-         return;
+         const responses = await Promise.all(promises);
 
+         let imgUrls = responses?.map(img => img?.secure_url);
 
          const { success, message } = await apiHandler(`/review/add-product-rating`, "POST", {
-            name: userInfo?.fullName, productReview, orderID, productID, itemID, ratingWeight
+            name: userInfo?.fullName, productReview, orderID, productID, itemID, ratingWeight, reviewImage: imgUrls ?? []
          });
+
+         setReviewLoading(false);
 
          if (success) {
             setOpenReviewForm(false);
@@ -161,7 +172,11 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo }) {
 
          <div className="p-1 row">
             <div className="col-lg-6" ref={menuRef} style={{ position: "relative" }}>
-               <small>Sold by <b onClick={() => setOpenMenu(e => !e)} style={{ color: "blue", cursor: "pointer" }}>{seller?.store}</b></small>
+               <small>Sold by
+                  <b onClick={() => setOpenMenu(e => !e)}
+                     style={{ color: "blue", cursor: "pointer" }}>{seller?.store}
+                  </b>
+               </small>
 
                {
                   openMenu && <div className="sellerInfoMenu">
@@ -211,20 +226,28 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo }) {
 
 
                         {
-                           (orderStatus === "completed") && <div style={{ alignSelf: "center" }}>
-                              <button className="status_btn" onClick={() => openReviewFormHandler(itemID)}>
+                           (orderStatus === "completed") && <div className="rv_div" style={{ alignSelf: "center" }}>
+                              <button className="status_btn" onClick={() => setOpenReviewForm(openReviewForm === itemID ? false : itemID)}>
                                  Add Review
                               </button>
 
                               {
                                  openReviewForm === itemID && <form
+                                    className="review_form"
                                     encType="multipart/form-data"
                                     style={{ backgroundColor: "white", padding: "10px" }}
                                     onSubmit={handleProductReview}>
 
-                                    <input type="file" accept="image/*" name="images" id="images" multiple onChange={() => handleFileChange()} />
                                     <div className="input_group">
-                                       <input type="range" name="ratingWeight" id="ratingWeight" min="1" max="5" step="1" />
+                                       <label htmlFor="images">Review images</label> <br />
+                                       <input type="file" accept="image/*" name="images" id="images" multiple />
+                                    </div>
+
+                                    <div className="input_group">
+                                       <label htmlFor="ratingWeight">Select Stars ({ratingPoints})</label> <br />
+                                       <input type="range" name="ratingWeight" id="ratingWeight" min="1"
+                                          max="5" step="1"
+                                          onChange={(e) => setRatingPoints(e.target.value || "5")} />
                                     </div>
 
                                     <div className="input_group">
@@ -235,7 +258,11 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo }) {
                                     <div className="input_group">
                                        <input type="hidden" id="productID" name="productID" value={productID} />
                                        <input type="hidden" id="itemID" name="itemID" value={itemID} />
-                                       <button className="bt9_edit">Submit</button>
+
+                                       {
+                                          reviewLoading ? <p>Loading...</p> : <button className="bt9_edit">Submit</button>
+                                       }
+
                                     </div>
                                  </form>
                               }

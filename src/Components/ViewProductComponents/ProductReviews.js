@@ -1,9 +1,25 @@
-import Image from 'next/image';
-import React from 'react';
+import { useFetch } from '@/Hooks/useFetch';
+import React, { useEffect, useState } from 'react';
+import Pagination2 from '../Global/Pagination2';
+import Spinner from '../Shared/Spinner/Spinner';
 
 const ProductReviews = ({ product }) => {
+   const [dynamicPage, setDynamicPage] = useState(2);
 
-   const { rating, reviews, reviewCount, ratingCount } = product ?? {};
+   const { rating, ratingCount, _id } = product ?? {};
+
+   const [page, setPage] = useState(1);
+
+   const { data, loading } = useFetch(`/review/product-review/${_id}?page=${page ?? 1}`);
+
+   const { reviews, reviewCount } = data ?? {};
+
+   useEffect(() => {
+      if (reviewCount) {
+         setDynamicPage(Math.ceil(reviewCount / 2));
+      }
+   }, [reviewCount]);
+
 
    function outputOfRating(rat) {
       let totalCount = rat.reduce((total, rats) => total + rats?.count, 0);
@@ -60,7 +76,7 @@ const ProductReviews = ({ product }) => {
                         </span>
                         <span className="fs-4 text-muted">/5</span>
                      </p>
-                     <div className='textMute' style={{fontSize: "0.8rem", fontStyle: "italic"}}>
+                     <div className='textMute' style={{ fontSize: "0.8rem", fontStyle: "italic" }}>
                         {reviewCount ?? 0} Reviews, <br />
                         {ratingCount ?? 0} Ratings
                      </div>
@@ -76,26 +92,44 @@ const ProductReviews = ({ product }) => {
 
                </div>
             </div>
-            {
-               reviews?.length > 0 ? reviews?.map((review, index) => {
 
-                  console.log(review.product_images);
-                  return (
-                     <div className="col-lg-12 mb-3" key={index}>
-                        <div className="card_default">
-                           <img src={review?.product_images[0] ?? ""} width="50" height="50"/>
-                           <div className="card_description">
-                              <small className='text-primary'>{review?.rating_point && review?.rating_point} Out of 5</small>
-                              <i className='text-muted' style={{fontSize: "0.7rem"}}>{review?.name}</i>
-                              <small>{review?.product_review}</small>
+            {
+               loading ? <p>Loading reviews...</p> : <div>
+                  {reviews?.length > 0 ? reviews?.map((review, index) => {
+                     return (
+                        <div className="col-lg-12 mb-3" key={index}>
+                           <div className="card_default">
+                              <div className="card_description">
+                                 <small className='text-primary'>{review?.rating_point && review?.rating_point} Out of 5</small>
+                                 <i className='text-muted' style={{ fontSize: "0.7rem" }}>By__{review?.name}</i>
+
+                                 <p style={{ marginTop: "5px" }}>{review?.product_review}</p>
+
+                                 <br />
+                                 <div className="d-flex flex-wrap">
+                                    {
+                                       Array.isArray(review?.product_images) && review?.product_images.map((img, index) => {
+                                          return (
+                                             <img alt={`review_img_${index}`} key={index} src={img ?? ""} width="84" height="84" style={{ margin: "6px" }} />
+                                          )
+                                       })
+                                    }
+                                 </div>
+                              </div>
                            </div>
                         </div>
-                     </div>
-                  )
-               }) : <div className="p-4 d-flex align-items-center justify-content-center">
-                  <p>No Reviews</p>
+                     )
+                  }) : <div className="p-4 d-flex align-items-center justify-content-center">
+                     <p>No Reviews</p>
+                  </div>
+                  }
                </div>
             }
+
+
+            <div className='p-4 d-flex justify-content-center align-items-center'>
+               <Pagination2 dynamicPageNumber={dynamicPage} page={page} setPage={setPage}></Pagination2>
+            </div>
          </div>
       </div>
    );
