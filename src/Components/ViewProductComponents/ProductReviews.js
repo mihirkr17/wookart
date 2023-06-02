@@ -2,8 +2,11 @@ import { useFetch } from '@/Hooks/useFetch';
 import React, { useEffect, useState } from 'react';
 import Pagination2 from '../Global/Pagination2';
 import Spinner from '../Shared/Spinner/Spinner';
+import { apiHandler } from '@/Functions/common';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
-const ProductReviews = ({ product }) => {
+const ProductReviews = ({ product, userInfo }) => {
    const [dynamicPage, setDynamicPage] = useState(2);
 
    const { rating, ratingCount, _id } = product ?? {};
@@ -12,7 +15,7 @@ const ProductReviews = ({ product }) => {
 
    const { data, loading } = useFetch(`/review/product-review/${_id}?page=${page ?? 1}`);
 
-   const { reviews, reviewCount } = data ?? {};
+   let { reviews, reviewCount } = data ?? {};
 
    useEffect(() => {
       if (reviewCount) {
@@ -61,6 +64,22 @@ const ProductReviews = ({ product }) => {
       })
    }
 
+   async function toggleLikeHandler(reviewID) {
+      try {
+         const { success, message, data } = await apiHandler(`/review/toggle-vote-like`, "POST", { reviewID });
+
+         if (success) {
+
+            reviews.forEach(review => {
+               if (review?._id === reviewID) {
+                  review = data;
+               }
+            });
+         }
+      } catch (error) {
+
+      }
+   }
 
    return (
       <div className='p_content_wrapper'>
@@ -96,6 +115,7 @@ const ProductReviews = ({ product }) => {
             {
                loading ? <p>Loading reviews...</p> : <div>
                   {reviews?.length > 0 ? reviews?.map((review, index) => {
+
                      return (
                         <div className="col-lg-12 mb-3" key={index}>
                            <div className="card_default">
@@ -114,6 +134,16 @@ const ProductReviews = ({ product }) => {
                                           )
                                        })
                                     }
+                                 </div>
+                                 <div className='mt-3'>
+                                    <button onClick={() => toggleLikeHandler(review?._id)} style={{
+                                       border: "none",
+                                       display: "inline-block",
+                                       background: "transparent"
+                                    }}>
+                                       <FontAwesomeIcon style={review?.likes?.includes(userInfo?._uuid) ? { color: "red" } : { color: "gray" }} icon={faHeart} />
+                                       &nbsp;{review?.likes?.length ?? 0}
+                                    </button>
                                  </div>
                               </div>
                            </div>

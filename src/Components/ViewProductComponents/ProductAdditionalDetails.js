@@ -150,7 +150,7 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
                </div>
 
                <div className="col-lg-5">
-                  <ProductReviews product={product} />
+                  <ProductReviews product={product} userInfo={userInfo} />
                </div>
             </div>
 
