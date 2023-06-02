@@ -1,6 +1,7 @@
 import MyAddressBook from "@/Components/UserComponents/MyAddressBook";
 import MyOrder from "@/Components/UserComponents/MyOrder";
 import MyPayment from "@/Components/UserComponents/MyPayment";
+import MyReviews from "@/Components/UserComponents/MyReviews";
 import Profile from "@/Components/UserComponents/Profile";
 import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
@@ -44,6 +45,10 @@ export function MyAccount() {
                            <li>
                               <Link style={{ color: slug === "orders-management" ? "black" : "#666666" }} href="orders-management">Orders</Link>
                            </li>
+
+                           <li>
+                              <Link style={{ color: slug === "my-reviews" ? "black" : "#666666" }} href="my-reviews">My Reviews</Link>
+                           </li>
                         </ul>
                      </div>
                   </div>
@@ -60,6 +65,10 @@ export function MyAccount() {
                         }
                         {
                            (slug === "orders-management") && <MyOrder></MyOrder>
+                        }
+
+                        {
+                           (slug === "my-reviews") && <MyReviews />
                         }
 
                      </div>

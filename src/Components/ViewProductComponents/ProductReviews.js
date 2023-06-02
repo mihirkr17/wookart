@@ -4,7 +4,8 @@ import Pagination2 from '../Global/Pagination2';
 import Spinner from '../Shared/Spinner/Spinner';
 import { apiHandler } from '@/Functions/common';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHand, faHeart, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import GenerateStar from '../Shared/GenerateStar';
 
 const ProductReviews = ({ product, userInfo }) => {
    const [dynamicPage, setDynamicPage] = useState(2);
@@ -13,7 +14,7 @@ const ProductReviews = ({ product, userInfo }) => {
 
    const [page, setPage] = useState(1);
 
-   const { data, loading } = useFetch(`/review/product-review/${_id}?page=${page ?? 1}`);
+   const { data, loading, refetch } = useFetch(`/review/product-review/${_id}?page=${page ?? 1}`);
 
    let { reviews, reviewCount } = data ?? {};
 
@@ -22,7 +23,6 @@ const ProductReviews = ({ product, userInfo }) => {
          setDynamicPage(Math.ceil(reviewCount / 2));
       }
    }, [reviewCount]);
-
 
    function outputOfRating(rat) {
       let totalCount = rat.reduce((total, rats) => total + rats?.count, 0);
@@ -64,22 +64,20 @@ const ProductReviews = ({ product, userInfo }) => {
       })
    }
 
-   async function toggleLikeHandler(reviewID) {
+   async function toggleLikeHandler(reviewID, action) {
       try {
-         const { success, message, data } = await apiHandler(`/review/toggle-vote-like`, "POST", { reviewID });
+         const { success, message, data } = await apiHandler(`/review/toggle-vote`, "POST", { reviewID, action });
 
          if (success) {
-
-            reviews.forEach(review => {
-               if (review?._id === reviewID) {
-                  review = data;
-               }
-            });
+            refetch();
          }
       } catch (error) {
 
       }
    }
+
+
+
 
    return (
       <div className='p_content_wrapper'>
@@ -120,7 +118,7 @@ const ProductReviews = ({ product, userInfo }) => {
                         <div className="col-lg-12 mb-3" key={index}>
                            <div className="card_default">
                               <div className="card_description">
-                                 <small className='text-primary'>{review?.rating_point && review?.rating_point} Out of 5</small>
+                                 {<GenerateStar star={review?.rating_point} starSize={"12px"} />}
                                  <i className='text-muted' style={{ fontSize: "0.7rem" }}>By__{review?.name}</i>
 
                                  <p style={{ marginTop: "5px" }}>{review?.product_review}</p>
@@ -136,13 +134,13 @@ const ProductReviews = ({ product, userInfo }) => {
                                     }
                                  </div>
                                  <div className='mt-3'>
-                                    <button onClick={() => toggleLikeHandler(review?._id)} style={{
+                                    <button onClick={() => toggleLikeHandler(review?._id, "like")} style={{
                                        border: "none",
                                        display: "inline-block",
                                        background: "transparent"
                                     }}>
-                                       <FontAwesomeIcon style={review?.likes?.includes(userInfo?._uuid) ? { color: "red" } : { color: "gray" }} icon={faHeart} />
-                                       &nbsp;{review?.likes?.length ?? 0}
+                                       <FontAwesomeIcon style={review?.likes?.includes(userInfo?._uuid) ? { color: "red" } : { color: "gray" }} icon={faThumbsUp} />
+                                       &nbsp;&nbsp;{review?.likes?.length ?? 0}
                                     </button>
                                  </div>
                               </div>
