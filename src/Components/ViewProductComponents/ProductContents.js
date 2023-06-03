@@ -91,6 +91,30 @@ export default function ProductContents({ product, variationID, setMessage, user
       }
    }
 
+
+   const uniqueColors = [...new Set(product?.swatch?.map(variation => variation?.variant.color))];
+
+
+   function getAttrs(specs, _vrid) {
+
+      let str = [];
+      if (specs) {
+
+         for (const spec in specs) {
+            let items = specs[spec];
+
+            if (spec === "color") {
+               items = null;
+            }
+
+            if (typeof items !== "object") {
+               str.push(<span>{items.split(",#")[0]}</span>)
+            }
+         }
+      }
+
+      return str;
+   }
    return (
       <div style={{ width: "100%" }}>
          <div className="container">
@@ -137,50 +161,30 @@ export default function ProductContents({ product, variationID, setMessage, user
 
 
                      <br />
-
                      {
                         product?.swatch && Array.isArray(product?.swatch) &&
-                        <div className="p-3 my-4 d-flex align-items-center justify-content-start flex-column">
-                           {
-                              <div className="d-flex align-items-center justify-content-start w-100">
+                        <div className='swatch_wrapper'>
+                           {uniqueColors?.map(color => {
+                              let hex = color.split(",")[1];
 
-
-                                 <div className="px-3 d-flex flex-row">
-
+                              return (<div key={color} className="swatch">
+                                 <div className='swatch_head' style={{ backgroundColor: hex }}></div>
+                                 <div className="swatch_items">
                                     {
-                                       product?.swatch.map((e, i) => {
-
-                                          let hex = e?.variant?.color.split(",")[1];
-
-                                          return (
-
-                                             <div key={i} className='d-flex align-items-center justify-content-center flex-column'>
-                                                {
-                                                   e?.variant?.color &&
-                                                   <Link className={`swatch_size_btn ${e._vrid === variationID ? 'active' : ''}`}
-                                                      href={`/product/${product?.slug}?pId=${product?._id}&vId=${e._vrid}`}>
-                                                      <div style={{
-                                                         backgroundColor: hex,
-                                                         display: 'block',
-                                                         width: '20px',
-                                                         height: '20px',
-                                                         borderRadius: "100%"
-                                                      }}>
-                                                      </div>
-                                                      {e?.variant?.sizes && <span>{e?.variant?.sizes}</span>}
-                                                      {e?.variant?.ram && <span>{e?.variant?.ram}</span>}
-                                                      {e?.variant?.rom && <span>{e?.variant?.rom}</span>}
-                                                   </Link>
-                                                }
-
-                                             </div>
-                                          )
-                                       })
+                                       product?.swatch?.filter(variation => variation?.variant.color === color)
+                                          .map(variation => {
+                                             return (
+                                                <Link key={variation?._vrid} style={variationID === variation?._vrid ? { color: "#1abc9c", fontWeight: "bold" } : { color: "black" }} href={`/product/${product?.slug}?pId=${product?._id}&vId=${variation?._vrid}`}>
+                                                   {getAttrs(variation?.variant, variation?._vrid)}
+                                                   {variationID === variation?._vrid && <small>(Active)</small>}
+                                                </Link>
+                                             )
+                                          })
                                     }
                                  </div>
-                              </div>
+                              </div>)
 
-                           }
+                           })}
                         </div>
                      }
 
@@ -352,7 +356,54 @@ onClick={() => (product?.inWishlist ? removeToWishlist(product?._id) : addToWish
                </div>
 
             </div>
-         </div>
-      </div>
+         </div >
+      </div >
    );
 };
+
+
+
+
+
+{/* <div className="p-3 my-4 d-flex align-items-center justify-content-start flex-column">
+{
+   <div className="d-flex align-items-center justify-content-start w-100">
+
+
+      <div className="px-3 d-flex flex-row">
+
+         {
+            product?.swatch.map((e, i) => {
+
+               let hex = e?.variant?.color.split(",")[1];
+
+               return (
+
+                  <div key={i} className='d-flex align-items-center justify-content-center flex-column'>
+                     {
+                        e?.variant?.color &&
+                        <Link className={`swatch_size_btn ${e._vrid === variationID ? 'active' : ''}`}
+                           href={`/product/${product?.slug}?pId=${product?._id}&vId=${e._vrid}`}>
+                           <div style={{
+                              backgroundColor: hex,
+                              display: 'block',
+                              width: '20px',
+                              height: '20px',
+                              borderRadius: "100%"
+                           }}>
+                           </div>
+                           {e?.variant?.sizes && <span>{e?.variant?.sizes}</span>}
+                           {e?.variant?.ram && <span>{e?.variant?.ram}</span>}
+                           {e?.variant?.rom && <span>{e?.variant?.rom}</span>}
+                        </Link>
+                     }
+
+                  </div>
+               )
+            })
+         }
+      </div>
+   </div>
+
+}
+</div> */}

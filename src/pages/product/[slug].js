@@ -17,6 +17,7 @@ export function ViewProduct({ data }) {
    const { vId, pId } = router.query;
    const { authRefetch, userInfo, setMessage } = useAuthContext();
 
+
    useEffect(() => {
       if (!pId || !vId) {
          router.push("/");

@@ -20,8 +20,6 @@ const ProductReviews = ({ product, userInfo }) => {
 
    let { reviews, reviewCount } = data ?? {};
 
-   console.log(Math.ceil(reviewCount / 2));
-
    useEffect(() => {
       setDynamicPage(Math.ceil(reviewCount / 2));
 

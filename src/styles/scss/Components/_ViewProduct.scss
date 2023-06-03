@@ -1,3 +1,42 @@
+.swatch_wrapper {
+  display: flex;
+  margin: 20px 0;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e5e5e5;
+  height: max-content;
+  margin: 2px;
+}
+
+.swatch_head {
+  display: block;
+  height: 20px;
+  width: 100%;
+}
+
+.swatch_items {
+  display: flex;
+  flex-direction: column;
+
+  > a {
+    border: 1px solid #e5e5e5;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    > span {
+      font-size: 0.6rem;
+    }
+
+    > small {
+      font-size: 0.5rem;
+    }
+  }
+}
 
 .swatch_size_btn {
   border: 1px solid var(--color-mute);
