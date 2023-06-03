@@ -17,7 +17,7 @@ const GenerateStar = ({ star, starSize }) => {
             <span key={i}>
                <FontAwesomeIcon icon={faStar}
                   style={{
-                     color: s.includes(i) ? "#f3cd4e" : "gray",
+                     color: s.includes(i) ? "rgb(251 193 0)" : "gray",
                      fontSize: starSize ?? "1.2rem", marginRight: "6px"
                   }} />
             </span>

@@ -19,7 +19,7 @@ export function ViewProduct({ data }) {
 
    useEffect(() => {
       if (!pId || !vId) {
-       router.push("/");
+         router.push("/");
       };
    }, [router, pId, vId])
 
@@ -32,7 +32,7 @@ export function ViewProduct({ data }) {
             <link rel="icon" href="/favicon.ico" />
          </Head>
 
-         <div className="container">
+         <div className="container product_detail_container">
             <div className="row">
                {/* breadcrumbs  */}
                <div className="p_content_wrapper col-12">
@@ -45,7 +45,7 @@ export function ViewProduct({ data }) {
             {/* first content  */}
             <div className=" mb-5 row product_top">
 
-               <div className="pb-3 col-lg-5">
+               <div className="pb-3 col-lg-4">
                   <ProductImages
                      product={product}
                      userInfo={userInfo}
@@ -55,7 +55,7 @@ export function ViewProduct({ data }) {
                </div>
 
 
-               <div className="pb-3 product_description col-lg-7">
+               <div className="pb-3 product_description col-lg-8">
                   <ProductContents
                      product={product}
                      variationID={vId && vId}
@@ -67,18 +67,14 @@ export function ViewProduct({ data }) {
             </div>
 
             <div className="row product_bottom_row">
-               <div className="col-lg-12">
+               <div className="col-lg-9">
                   <ProductAdditionalDetails
                      product={product}
                      userInfo={userInfo}
                   />
                </div>
-               {/* <div className="col-lg-12">
-                  <ProductReviews
-                     product={product}
-                  />
-               </div> */}
-               <div className="col-lg-12">
+
+               <div className="col-lg-3">
                   <RelatedProducts
                      relatedProducts={data?.relatedProducts ? data?.relatedProducts : []}
                   />

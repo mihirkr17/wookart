@@ -21,7 +21,7 @@ const MyReviews = () => {
          <div className="row">
             {
                Array.isArray(reviews) && reviews.map((review) => {
-                  const { _id, orderAT, item, seller, rating_point, likes, product_review, product_images } = review;
+                  const { _id, orderAT, item, seller, rating_point, likes, comments, product_images } = review;
 
                   return (
                      <div key={_id} className="col-12 mb-2">
@@ -60,7 +60,7 @@ const MyReviews = () => {
                                              background: "#eff0f5",
                                              margin: "12px 0"
                                           }}>
-                                             {product_review}
+                                             {comments}
                                           </div>
 
                                        </li>

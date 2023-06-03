@@ -4,7 +4,7 @@ import Pagination2 from '../Global/Pagination2';
 import Spinner from '../Shared/Spinner/Spinner';
 import { apiHandler } from '@/Functions/common';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHand, faHeart, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faShield, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import GenerateStar from '../Shared/GenerateStar';
 
 const ProductReviews = ({ product, userInfo }) => {
@@ -14,14 +14,17 @@ const ProductReviews = ({ product, userInfo }) => {
 
    const [page, setPage] = useState(1);
 
-   const { data, loading, refetch } = useFetch(`/review/product-review/${_id}?page=${page ?? 1}`);
+   const [sorting, setSorting] = useState("");
+
+   const { data, loading, refetch } = useFetch(`/review/product-review/${_id}?page=${page ?? 1}&sort=${sorting ?? ""}`);
 
    let { reviews, reviewCount } = data ?? {};
 
+   console.log(Math.ceil(reviewCount / 2));
+
    useEffect(() => {
-      if (reviewCount) {
-         setDynamicPage(Math.ceil(reviewCount / 2));
-      }
+      setDynamicPage(Math.ceil(reviewCount / 2));
+
    }, [reviewCount]);
 
    function outputOfRating(rat) {
@@ -41,7 +44,12 @@ const ProductReviews = ({ product, userInfo }) => {
                alignItems: "center",
                justifyContent: "space-between"
             }}>
-               <p style={{ width: "62px", fontSize: "0.8rem", textAlign: "right" }}>
+               <p style={{
+                  width: "62px",
+                  fontSize: "0.8rem",
+                  textAlign: "right",
+                  marginBottom: "unset"
+               }}>
                   {payload[weight][0]}
                </p>
 
@@ -52,7 +60,8 @@ const ProductReviews = ({ product, userInfo }) => {
                   marginLeft: "1rem",
                   marginRight: "1rem",
                   borderRadius: "10px",
-                  overflow: "hidden"
+                  overflow: "hidden",
+                  marginBottom: "unset"
                }}>
                   <span style={{
                      width: `${percentage}%`, display: "block", height: "10px",
@@ -81,12 +90,21 @@ const ProductReviews = ({ product, userInfo }) => {
 
    return (
       <div className='p_content_wrapper'>
-         <h6 className='dwhYrQ'>Rating & Review Of {product?.title}</h6>
-         <div className="row mt-5 border w-100">
-            <div className="py-1 my-4 border-bottom">
-               <div className="row">
+         <h6 className='h6_title'>Rating & Review Of {product?.title}</h6>
 
-                  <div className="col-lg-4 p-4">
+         <div className="py-3">
+            Sort By&nbsp;
+            <select name="sorting" id="sorting" onChange={(e) => setSorting(e.target.value)}>
+               <option value="relevant">Relevant</option>
+               <option value="asc">Low To High</option>
+               <option value="dsc">High To Low</option>
+            </select>
+         </div>
+         <div className="row my-2">
+            <div className="py-1 mb-4 border col-12">
+               <div className="row align-items-center py-3">
+
+                  <div className="col-lg-4">
                      <p className='text-warning'>
                         <span className="fs-1">
                            {(product?.ratingAverage) || 0}
@@ -100,7 +118,7 @@ const ProductReviews = ({ product, userInfo }) => {
                   </div>
 
                   <div className='col-lg-8'>
-                     <ul>
+                     <ul style={{ marginBottom: "unset" }}>
                         {
                            outputOfRating(rating)
                         }
@@ -114,19 +132,31 @@ const ProductReviews = ({ product, userInfo }) => {
                loading ? <p>Loading reviews...</p> : <div>
                   {reviews?.length > 0 ? reviews?.map((review, index) => {
 
+                     const { _id, verified_purchase, rating_point, likes, product_images, comments, name } = review ?? {};
+
                      return (
                         <div className="col-lg-12 mb-3" key={index}>
-                           <div className="card_default">
+                           <div style={{ borderBottom: "1px solid #dbdbdb" }}>
                               <div className="card_description">
-                                 {<GenerateStar star={review?.rating_point} starSize={"12px"} />}
-                                 <i className='text-muted' style={{ fontSize: "0.7rem" }}>By__{review?.name}</i>
+                                 {<GenerateStar star={rating_point} starSize={"12px"} />}
 
-                                 <p style={{ marginTop: "5px" }}>{review?.product_review}</p>
+                                 <div className="py-1 d-flex">
+                                    <i className='text-muted' style={{ fontSize: "0.7rem" }}>By__{name}</i>
+                                    {
+                                       verified_purchase &&
+                                       <span style={{ fontSize: "0.7rem", marginLeft: "20px", color: "#009d00" }}>
+                                          <FontAwesomeIcon style={{ color: "#009d00" }} icon={faShield} /> Verified Purchase
+                                       </span>
+                                    }
+
+                                 </div>
+
+                                 <p style={{ marginTop: "5px" }}>{comments}</p>
 
                                  <br />
                                  <div className="d-flex flex-wrap">
                                     {
-                                       Array.isArray(review?.product_images) && review?.product_images.map((img, index) => {
+                                       Array.isArray(product_images) && product_images.map((img, index) => {
                                           return (
                                              <img alt={`review_img_${index}`} key={index} src={img ?? ""} width="84" height="84" style={{ margin: "6px" }} />
                                           )
@@ -134,13 +164,13 @@ const ProductReviews = ({ product, userInfo }) => {
                                     }
                                  </div>
                                  <div className='mt-3'>
-                                    <button onClick={() => toggleLikeHandler(review?._id, "like")} style={{
+                                    <button onClick={() => toggleLikeHandler(_id, "like")} style={{
                                        border: "none",
                                        display: "inline-block",
                                        background: "transparent"
                                     }}>
-                                       <FontAwesomeIcon style={review?.likes?.includes(userInfo?._uuid) ? { color: "red" } : { color: "gray" }} icon={faThumbsUp} />
-                                       &nbsp;&nbsp;{review?.likes?.length ?? 0}
+                                       <FontAwesomeIcon style={likes?.includes(userInfo?._uuid) ? { color: "red" } : { color: "gray" }} icon={faThumbsUp} />
+                                       &nbsp;&nbsp;{likes?.length ?? 0}
                                     </button>
                                  </div>
                               </div>
