@@ -154,7 +154,8 @@ export default function ProductContents({ product, variationID, setMessage, user
                      <small className='text-muted'>
                         <i>
                            {product?.variations?.stock === "out" ? <span className='badge_failed'>Out of Stock</span> :
-                              "Hurry, Only " + product?.variations?.available + " Left !"}
+                              product?.variations?.available <= 10 ?
+                                 "Hurry, Only " + product?.variations?.available + " Left !" : ""}
                         </i>
                      </small>
 
