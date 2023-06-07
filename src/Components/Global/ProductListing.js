@@ -12,7 +12,6 @@ import { newCategory } from '@/CustomData/categories';
 const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessage, super_category }) => {
    const specs = data?.specification && data?.specification;
 
-
    // Price and discount states
    const [inputPriceDiscount, setInputPriceDiscount] = useState({ price: (data?.pricing?.price && data?.pricing?.price) || "", sellingPrice: (data?.pricing?.sellingPrice && data?.pricing?.sellingPrice) || "" });
    const { discount } = usePrice(inputPriceDiscount.price, inputPriceDiscount.sellingPrice);
@@ -31,7 +30,7 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
    const [warrantyPeriod, setWarrantyPeriod] = useState(data?.warranty?.wTime || "");
 
    const [description, setDescription] = useState((data?.description && data?.description) || "CKEditor v5");
-   const [images, setImages] = useState((data?.images && data?.images.length >= 1 ? data?.images : [""]));
+   const [image, setImage] = useState(data?.image ?? "");
 
 
    // search keywords
@@ -42,20 +41,7 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
    const post_category = sub_category?.sub_category_items && sub_category?.sub_category_items.find(e => e.name === subCategory);
    const superCategory = post_category?.post_category_items && post_category?.post_category_items.find(e => e.name === postCategory);
 
-
-   // images upload handlers 
-   const imageInputHandler = (e, index) => {
-      const { value } = e.target;
-      let list = [...images];
-      list[index] = value;
-      setImages(list);
-   }
-
-   const removeImageInputFieldHandler = (index) => {
-      let listArr = [...images];
-      listArr.splice(index, 1);
-      setImages(listArr);
-   }
+   const [highlight, setHighlight] = useState((data?.highlights && data?.highlights) || [""]);
 
 
    // keyword action
@@ -79,10 +65,31 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
    }
 
 
+   // handle key features
+   const handleHighlightInput = (e, index) => {
+      const { value } = e.target;
+
+      let list = [...highlight];
+      list[index] = value;
+
+      setHighlight(list);
+   }
+
+   const removeHighlightInputHandler = (index) => {
+      let list = [...highlight]
+      list.splice(index, 1);
+
+      setHighlight(list);
+   }
+
    async function productIntroHandler(e) {
       try {
          e.preventDefault();
          let metaDescription = e.target.metaDescription.value;
+
+         if (highlight?.length >= 4 || highlight?.length < 1) {
+            return setMessage("Maximum 3 highlights allowed !");
+         }
 
          let warranty = {
             term: warrantyTerm,
@@ -107,7 +114,8 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
          formData["description"] = description;
          formData["discount"] = discount;
          formData["isFree"] = e.target.isFree.checked;
-         formData["images"] = images;
+         formData["image"] = image;
+         formData["highlights"] = highlight;
 
 
          const notEmpty = Object.values(formData).every(x => x !== null && x !== '');
@@ -253,39 +261,11 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
                   }
 
                   <div className="col-lg-12 py-2">
-                     <label htmlFor='image'>{required} Image(<small>Product Image</small>)&nbsp;</label>
-                     {
-                        Array.isArray(images) && images.map((img, index) => {
-                           return (
-                              <div className="py-2 d-flex align-items-end justify-content-start" key={index}>
-                                 <input className="form-control form-control-sm" name="images" id='images' type="text"
-                                    placeholder='Image url' value={img} onChange={(e) => imageInputHandler(e, index)}></input>
-
-                                 {
-                                    images.length !== 1 && <span
-                                       style={btnStyle}
-                                       onClick={() => removeImageInputFieldHandler(index)}>
-                                       <FontAwesomeIcon icon={faMinusSquare} />
-                                    </span>
-                                 } {
-                                    images.length - 1 === index && <span style={btnStyle}
-                                       onClick={() => setImages([...images, ''])}>
-                                       <FontAwesomeIcon icon={faPlusSquare} />
-                                    </span>
-                                 }
-
-                              </div>
-                           )
-                        })
-                     }
+                     <label htmlFor='image'>{required} Image(<small>Product Image (Main)</small>)&nbsp;</label>
+                     <input className="form-control form-control-sm" name="image" id='image' type="text"
+                        placeholder='Image url' value={image ?? ""} onChange={(e) => setImage(e)} />
                      <div className="py-2">
-                        {
-                           images && images.map((img, index) => {
-                              return (
-                                 <img style={{ width: "180px", height: "auto" }} key={index} srcSet={img} alt="" />
-                              )
-                           })
-                        }
+                        <img style={{ width: "180px", height: "auto" }} src={image} alt="" />
                      </div>
                   </div>
 
@@ -513,6 +493,38 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
                                              <FontAwesomeIcon icon={faPlusSquare} />
                                           </span>
 
+                                       }
+                                    </div>
+                                 )
+                              })
+                           }
+                        </div>
+
+                        <div className="col-lg-12 my-2">
+                           <label htmlFor='highlight'>{required} Product Highlight&nbsp;</label>
+                           {
+                              highlight && highlight.map((keys, i) => {
+                                 return (
+                                    <div className='py-2 d-flex align-items-end justify-content-start' key={i}>
+                                       <input
+                                          className='form-control form-control-sm'
+                                          name="highlight" id='highlight'
+                                          value={keys} type="text"
+                                          placeholder="Key Features"
+                                          onChange={(e) => handleHighlightInput(e, i)}
+                                       />
+
+                                       {
+                                          highlight.length !== 1 && <span style={btnStyle}
+                                             onClick={() => removeHighlightInputHandler(i)}>
+                                             <FontAwesomeIcon icon={faMinusSquare} />
+                                          </span>
+                                       }
+                                       {
+                                          highlight.length - 1 === i && <span style={btnStyle}
+                                             onClick={() => setHighlight([...highlight, ''])}>
+                                             <FontAwesomeIcon icon={faPlusSquare} />
+                                          </span>
                                        }
                                     </div>
                                  )

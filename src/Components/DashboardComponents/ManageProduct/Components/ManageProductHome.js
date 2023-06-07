@@ -181,7 +181,7 @@ const ManageProductHome = (
                            <div className="p-1" style={{
                               display: "flex"
                            }}>
-                              <img src={mProduct?.images && mProduct?.images[0]} alt="" style={{ width: "60px", height: "60px" }} />
+                              <img src={mProduct?.image ?? ""} alt="" style={{ width: "60px", height: "60px", objectFit: "contain" }} />
 
                               <div style={{paddingLeft: "10px"}}>
                                  <small>
@@ -233,8 +233,7 @@ const ManageProductHome = (
                                  <tr>
                                     <th>Variation ID</th>
                                     <th>sku</th>
-                                    <th>Status</th>
-                                    <th>Price Modifier ($)</th>
+                                    <th>Price Modifier (TK)</th>
                                     <th>Availability (Pcs)</th>
                                     <th>Stock</th>
                                     <th>Action</th>
@@ -248,7 +247,6 @@ const ManageProductHome = (
                                           <tr key={variation?._vrid}>
                                              <td>{variation?._vrid}</td>
                                              <td>{variation?.sku}</td>
-                                             <td>{variation?.status.toUpperCase()}</td>
                                              <td>{variation?.priceModifier}</td>
                                              <td>
                                                 {

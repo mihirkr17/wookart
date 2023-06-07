@@ -14,7 +14,7 @@ import { useEffect } from "react";
 export function ViewProduct({ data }) {
    const router = useRouter();
    const product = data?.product && data?.product;
-   const { vId, pId } = router.query;
+   const { vId, pId, variant } = router.query;
    const { authRefetch, userInfo, setMessage } = useAuthContext();
 
 
@@ -63,6 +63,7 @@ export function ViewProduct({ data }) {
                      authRefetch={authRefetch}
                      setMessage={setMessage}
                      userInfo={userInfo}
+                     variantID={variant}
                   />
                </div>
             </div>

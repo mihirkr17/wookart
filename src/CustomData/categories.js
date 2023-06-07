@@ -1,3 +1,18 @@
+const color = [
+   "No Color,#",
+   "black,#000000",
+   "white,#FFFFFF",
+   "red,#FF0000",
+   "green,#00FF00",
+   "blue,#0000FF",
+   "yellow,#FFFF00",
+   "purple,#800080",
+   "orange,#FFA500",
+   "pink,#FFC0CB",
+   "gray,#808080"
+]
+const clothingSizes = ['S', 'M', 'L', 'XXL', 'XS'];
+
 
 export const newCategory = [
    {
@@ -19,7 +34,7 @@ export const newCategory = [
                   variant: {
                      ram: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB'],
                      rom: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB', '32GB', '64GB', "128GB"],
-                     color: ['red,#ff0000', 'orange,#ffa500', 'green,#008000', 'blue,#0000ff', 'white,#ffffff', 'black,#000000', 'not here'],
+                     color
                   },
                   specification: {
                      browse_type: ["Smartphones", "Cell Phone"],
@@ -57,17 +72,17 @@ export const newCategory = [
                {
                   name: "cases-and-covers",
                   variant: {
-                     color: ['red,#ff0000', 'orange,#ffa500', 'green,#008000', 'blue,#0000ff', 'white,#ffffff', 'black,#000000', 'not here'],
+                     color
+                  },
+                  attrs: {
+                     model_number: "",
                   },
                   specification: {
                      sales_package: "",
-                     model_number: "",
                      design_for: "",
                      pack_of: "",
                      other_features: "",
-                  },
-                  highlight: {
-                     suitable_for: 'suitable_for',
+                     suite_for: ['men', "women"],
                      material: ['Iron', 'Steel', 'Rubber', 'Leather', 'Metal', "Plastic", "Silicon", "Wood"],
                      theme: ['3D/Hologram', "Animal/Bird/Nature", "Automobiles", "Comics/Cartoon/Superheros", "Famous Personalities", "No Theme", "Marble", "Patterns"],
                      type: ""
@@ -94,8 +109,8 @@ export const newCategory = [
                      model: "",
                   },
                   variant: {
-                     color: ['red,#ff0000', 'orange,#ffa500', 'green,#008000', 'blue,#0000ff', 'white,#ffffff', 'black,#000000', 'not here'],
-                     sizes: ['S', 'M', 'L', 'XXL', 'XS'],
+                     color,
+                     sizes: clothingSizes,
                   },
                   specification: {
                      fabric: ['lace', 'net', 'denim', 'nylon', 'pure-cotton', 'muslin', 'latex'],
@@ -119,11 +134,11 @@ export const newCategory = [
                {
                   name: 'pants',
                   attrs: {
-                     model: "",
+                     model_name: "",
                   },
                   variant: {
-                     color: ['red,#ff0000', 'orange,#ffa500', 'green,#008000', 'blue,#0000ff', 'white,#ffffff', 'black,#000000', 'not here'],
-                     sizes: ['S', 'M', 'L', 'XXL', 'XS'],
+                     color,
+                     sizes: clothingSizes,
                   },
                   specification: {
                      fabric: ['lace', 'net', 'denim', 'nylon', 'pure-cotton', 'muslin', 'latex'],

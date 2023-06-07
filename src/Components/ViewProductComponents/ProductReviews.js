@@ -26,7 +26,7 @@ const ProductReviews = ({ product, userInfo }) => {
    }, [reviewCount]);
 
    function outputOfRating(rat) {
-      let totalCount = rat.reduce((total, rats) => total + rats?.count, 0);
+      let totalCount = rat?.reduce((total, rats) => total + rats?.count, 0);
 
       return rat?.map((rat, index) => {
          const { weight, count } = rat;

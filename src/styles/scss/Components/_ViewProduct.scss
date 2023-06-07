@@ -15,8 +15,8 @@
 
 .swatch_head {
   display: block;
-  height: 20px;
-  width: 100%;
+  // height: 20px;
+  // width: 100%;
 }
 
 .swatch_items {
@@ -217,11 +217,12 @@
   align-items: center;
   justify-content: center;
   img {
-    width: auto;
+    width: 100%;
     height: 90%;
     vertical-align: top;
     position: inherit;
     margin: auto;
+    object-fit: contain;
   }
 }
 
@@ -350,11 +351,7 @@
     margin: auto;
 
     img {
-      width: auto;
       height: 300px;
-      vertical-align: top;
-      position: inherit;
-      margin: auto;
     }
   }
 }

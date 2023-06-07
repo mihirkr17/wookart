@@ -16,7 +16,42 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
 
    const [attrs, setAttrs] = useState(variation?.attrs || {});
 
-   const [highlight, setHighlight] = useState((variation?.highlights && variation?.highlights) || [""]);
+   const [images, setImages] = useState((variation?.images && variation?.images.length >= 1 ? variation?.images : [""]));
+
+   const [previewImages, setPreviewImages] = useState([]);
+
+
+   // preview images
+   function handleImagesPreview(e) {
+      const files = Array.from(e.target.files);
+      const readers = [];
+
+      files.forEach((file) => {
+         const reader = new FileReader();
+
+         reader.onload = function (e) {
+            setPreviewImages((prevImages) => [...prevImages, e.target.result]);
+         };
+
+         reader.readAsDataURL(file);
+         readers.push(reader);
+      });
+   }
+
+
+   // images upload handlers 
+   const imageInputHandler = (e, index) => {
+      const { value } = e.target;
+      let list = [...images];
+      list[index] = value;
+      setImages(list);
+   }
+
+   const removeImageInputFieldHandler = (index) => {
+      let listArr = [...images];
+      listArr.splice(index, 1);
+      setImages(listArr);
+   }
 
 
    const btnStyle = {
@@ -26,53 +61,33 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
       marginLeft: "0.5rem"
    }
 
-   // handle key features
-   const handleHighlightInput = (e, index) => {
-      const { value } = e.target;
-
-      let list = [...highlight];
-      list[index] = value;
-
-      setHighlight(list);
-   }
-
-   const removeHighlightInputHandler = (index) => {
-      let list = [...highlight]
-      list.splice(index, 1);
-
-      setHighlight(list);
-   }
-
-
    async function handleVariationOne(e) {
       try {
          e.preventDefault();
          // setActionLoading(true);
 
          let sku = e.target.sku.value;
-         let status = e.target.status.value;
          let available = e.target.available.value;
          let priceModifier = e.target.priceModifier.value;
          let variationID = variation?._vrid ? variation?._vrid : "";
-         let vTitle = data?.title && data?.title;
+         let vTitle = data?.title ?? "";
 
-         vTitle = vTitle + (variant?.ram ? (" " + (variant?.ram)) : "") +
-            (variant?.rom ? (" " + (variant?.rom)) : "") +
-            (variant?.color ? (" " + variant?.color.split(",")[0]) : "");
-         vTitle = vTitle.trim();
+         for (const i in variant) {
+            if (variant.hasOwnProperty(i)) {
+               vTitle += " " + variant[i]?.split(",#")[0];
+            }
+         }
 
          let model = {
-            pageURL: '/dashboard/manage-product?np=update-variation&store=' + userInfo?.store?.name + "&pid=" + data?._id && data?._id,
             productID: data?._id && data?._id,
             variationID,
             variations: {
-               vTitle,
+               vTitle: vTitle.trim(),
+               images,
                sku,
                variant,
                attrs,
-               status,
                available,
-               highlight,
                priceModifier
             }
          }
@@ -92,6 +107,42 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
       }
    }
 
+   async function uploadImageHandler(e) {
+      try {
+         e.preventDefault();
+
+         const promises = [];
+         let lengthOfImg = e.target.images.files.length;
+
+         for (let i = 0; i < lengthOfImg; i++) {
+
+            const formData = new FormData();
+            formData.append('file', e.target.images.files[i]);
+            formData.append('upload_preset', 'review_images');
+
+            promises.push(
+               fetch('https://api.cloudinary.com/v1_1/duixvo0uu/image/upload', {
+                  method: 'POST',
+                  body: formData,
+               }).then(response => response.json())
+                  .catch(error => console.error('Error:', error))
+            );
+         }
+
+         const responses = await Promise.all(promises);
+
+         let urls = responses?.map(img => img?.secure_url);
+
+         setImages(prevUrls => [...prevUrls, ...urls]);
+
+         return urls ? setMessage("Image uploaded.", "success") :
+            setMessage("Failed to upload !", "danger");
+      } catch (error) {
+         setMessage("Failed to upload !", "danger");
+      }
+   }
+
+
    function cSl(obj = {}, existObj = {}, params) {
 
       let attObject = Object.entries(obj);
@@ -110,16 +161,17 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
                   className='form-select form-select-sm'
                   onChange={(e) => (params === "variant" ? setVariant({ ...variant, [e.target.name]: e.target.value }) : setAttrs({ ...attrs, [e.target.name]: e.target.value }))}>
                   {
-                     Object.keys(existObj).includes(key) && <option value={existObj[key]}>{existObj[key]}</option>
+                     Object.keys(existObj).includes(key) && <option value={existObj[key]}>{existObj[key]?.split(",")[0]}</option>
                   }
 
                   <option value="">Select {key.replace("_", " ")}</option>
                   {
                      value && value.map((val, i) => {
-                        return (<option key={i.toString() + key + params} value={val}>{val}</option>)
+                        return (<option key={i.toString() + key + params} value={val}>{val?.split(",")[0]}</option>)
                      })
                   }
                </select>
+
             </div>
 
             ), typeof value !== 'object' && <div className="col-lg-3 mb-3">
@@ -142,6 +194,8 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
    }
 
 
+
+
    return (
 
       <div className="p-3">
@@ -156,9 +210,64 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
                <b>Variation ID: {variation?._vrid}</b>
             }
          </small>
+
+         <form encType='multipart/form-data' onSubmit={uploadImageHandler}>
+            <div className="py-2">
+               <input type="file" accept='image/*' name='images' id="images" multiple onChange={handleImagesPreview} />
+               <br />
+               {
+                  previewImages?.map((imgs, i) => {
+                     return (
+                        <img width="80" height="80" style={{ objectFit: "contain", margin: "4px" }} key={i} srcSet={imgs} alt="" />
+                     )
+                  })
+               }
+            </div>
+
+            <div className="input_group">
+               <button className='bt9_primary'>Upload Product Images</button>
+            </div>
+         </form>
          <form onSubmit={handleVariationOne}>
             {/* Price Stock And Shipping Information */}
             <div className="row my-4">
+
+               <div className="col-lg-12 py-2">
+                  <label htmlFor='image'>{required} Image(<small>Product Image</small>)&nbsp;</label>
+                  {
+                     Array.isArray(images) && images?.map((img, index) => {
+                        return (
+                           <div className="py-2 d-flex align-items-end justify-content-start" key={index}>
+                              <input className="form-control form-control-sm" name="images" id='images' type="text"
+                                 placeholder='Image url' value={img} onChange={(e) => imageInputHandler(e, index)}></input>
+
+                              {
+                                 images.length !== 1 && <span
+                                    style={btnStyle}
+                                    onClick={() => removeImageInputFieldHandler(index)}>
+                                    <FontAwesomeIcon icon={faMinusSquare} />
+                                 </span>
+                              } {
+                                 images.length - 1 === index && <span style={btnStyle}
+                                    onClick={() => setImages([...images, ''])}>
+                                    <FontAwesomeIcon icon={faPlusSquare} />
+                                 </span>
+                              }
+
+                           </div>
+                        )
+                     })
+                  }
+                  <div className="py-2" style={{ display: "flex", alignItems: "center" }}>
+                     {
+                        images && images.map((img, index) => {
+                           return (
+                              <img width="80" height="80" style={{ objectFit: "contain", margin: "4px" }} key={index} srcSet={img} alt="" />
+                           )
+                        })
+                     }
+                  </div>
+               </div>
 
                {/* SKU */}
                <div className='col-lg-3 mb-3'>
@@ -199,37 +308,7 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
 
             </div>
 
-            <div className="col-lg-12 my-2">
-               <label htmlFor='highlight'>{required} Product Highlight&nbsp;</label>
-               {
-                  highlight && highlight.map((keys, i) => {
-                     return (
-                        <div className='py-2 d-flex align-items-end justify-content-start' key={i}>
-                           <input
-                              className='form-control form-control-sm'
-                              name="highlight" id='highlight'
-                              value={keys} type="text"
-                              placeholder="Key Features"
-                              onChange={(e) => handleHighlightInput(e, i)}
-                           />
 
-                           {
-                              highlight.length !== 1 && <span style={btnStyle}
-                                 onClick={() => removeHighlightInputHandler(i)}>
-                                 <FontAwesomeIcon icon={faMinusSquare} />
-                              </span>
-                           }
-                           {
-                              highlight.length - 1 === i && <span style={btnStyle}
-                                 onClick={() => setHighlight([...highlight, ''])}>
-                                 <FontAwesomeIcon icon={faPlusSquare} />
-                              </span>
-                           }
-                        </div>
-                     )
-                  })
-               }
-            </div>
 
             <div className="col-lg-12 my-2 pt-4">
 

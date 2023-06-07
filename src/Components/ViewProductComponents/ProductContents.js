@@ -19,9 +19,7 @@ export default function ProductContents({ product, variationID, setMessage, user
 
    const defShipAddrs = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true);
 
-
    let inCart = Array.isArray(cartData?.products) && cartData?.products.find(e => e?.variationID === variationID);
-
 
    // add to cart handler
    const addToCartHandler = async (pId, _lid, vId, params) => {
@@ -92,7 +90,8 @@ export default function ProductContents({ product, variationID, setMessage, user
    }
 
 
-   const uniqueColors = [...new Set(product?.swatch?.map(variation => variation?.variant.color))];
+   const uniqueSwatch = [...new Set(product?.swatch?.map(variation => `${variation?.variant?.color} ++ ${variation?.image}`))];
+
 
 
    function getAttrs(specs, _vrid) {
@@ -115,6 +114,11 @@ export default function ProductContents({ product, variationID, setMessage, user
 
       return str;
    }
+
+
+
+
+
    return (
       <div style={{ width: "100%" }}>
          <div className="container">
@@ -163,19 +167,26 @@ export default function ProductContents({ product, variationID, setMessage, user
 
                      <br />
                      {
-                        product?.swatch && Array.isArray(product?.swatch) &&
+                        Array.isArray(product?.swatch) &&
                         <div className='swatch_wrapper'>
-                           {uniqueColors?.map(color => {
-                              let hex = color.split(",")[1];
 
-                              return (<div key={color} className="swatch">
-                                 <div className='swatch_head' style={{ backgroundColor: hex }}></div>
+                           {uniqueSwatch?.map(uSwatch => {
+
+                              let uSwatchItems = uSwatch?.split(" ++ ") ?? [];
+
+                              const hex = uSwatchItems[0]?.split(",")[1];
+
+                              return (<div key={uSwatch} className="swatch">
+                                 <div className='swatch_head' style={{ backgroundColor: hex, colorScheme: hex }}>
+                                    <img src={uSwatchItems[1] ?? ""} width="38" height="38" alt="" />
+                                 </div>
                                  <div className="swatch_items">
                                     {
-                                       product?.swatch?.filter(variation => variation?.variant.color === color)
+                                       product?.swatch?.filter(variation => variation?.variant.color === uSwatchItems[0])
                                           .map(variation => {
                                              return (
-                                                <Link key={variation?._vrid} style={variationID === variation?._vrid ? { color: "#1abc9c", fontWeight: "bold" } : { color: "black" }} href={`/product/${product?.slug}?pId=${product?._id}&vId=${variation?._vrid}`}>
+                                                <Link key={variation?._vrid} style={variationID === variation?._vrid ? { color: "#1abc9c", fontWeight: "bold" } : { color: "black" }}
+                                                   href={`/product/${product?.slug}?pId=${product?._id}&vId=${variation?._vrid}`}>
                                                    {getAttrs(variation?.variant, variation?._vrid)}
                                                    {variationID === variation?._vrid && <small>(Active)</small>}
                                                 </Link>
@@ -192,9 +203,9 @@ export default function ProductContents({ product, variationID, setMessage, user
                      <br />
 
                      {
-                        product?.variations?.highlights && <ul>
+                        product?.highlights && <ul>
                            {
-                              product?.variations?.highlights?.map((item, index) => {
+                              product?.highlights?.map((item, index) => {
                                  return (
                                     <li style={{ color: "green" }} key={index}>* {item}</li>
                                  )
