@@ -64,7 +64,7 @@ export function sanitizeHtml(html) {
       'video'
    ];
 
-   const allowedAttributes = ['href'];
+   const allowedAttributes = ['href', 'src'];
 
    // Remove any disallowed tags and attributes
    const sanitized = html?.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "").replace(/<(\/)?([^>]+)>/g, (match, closing, tagName) => {

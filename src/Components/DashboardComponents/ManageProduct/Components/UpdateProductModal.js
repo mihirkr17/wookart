@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useBaseContext } from '../../../../lib/BaseProvider';
 import ModalWrapper from '@/Components/Global/ModalWrapper';
 import { CookieParser } from '@/Functions/common';
+import dynamic from 'next/dynamic';
+
+const Ckeditor = dynamic(() => import('../../../Shared/Ckeditor'), { ssr: false });
 
 
 const UpdateProductModal = ({ data, closeModal, refetch }) => {
    const { setMessage } = useBaseContext();
+
+   const [description, setDescription] = useState(data?.description ?? "Edit description");
 
    const required = <span style={{ color: "red" }}>*</span>;
 
@@ -132,6 +137,23 @@ const UpdateProductModal = ({ data, closeModal, refetch }) => {
 
          const { error } = await handleAPI("/manufacturer-information", "MANUFACTURER-INFORMATION", {
             manufacturer: formData
+         });
+
+         if (error) {
+            setMessage(error?.message, "danger");
+         }
+      } catch (error) {
+         setMessage(error?.message, "danger");
+      }
+   }
+
+
+   async function handleDescription(e) {
+      try {
+         e.preventDefault();
+
+         const { error } = await handleAPI("/description", "DESCRIPTION-INFORMATION", {
+            description
          });
 
          if (error) {
@@ -282,6 +304,23 @@ const UpdateProductModal = ({ data, closeModal, refetch }) => {
                </div>
 
                <button className='bt9_edit' type='submit'>Update Manufacture Information</button>
+            </form>
+         </div>
+
+         <hr />
+
+         <div className="p-3 handle_description">
+            <b>Manufacturer Information</b> <br />
+
+            <form onSubmit={handleDescription}>
+               <div className="input_group">
+                  <label htmlFor=""></label>
+                  <Ckeditor description={description} setDescription={setDescription} />
+               </div>
+
+               <div className="input_gro">
+                  <button className='bt9_edit'>Update Description</button>
+               </div>
             </form>
          </div>
 

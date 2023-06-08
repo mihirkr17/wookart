@@ -208,11 +208,15 @@ export default function CartCheckoutComponent() {
             <div className="row">
                <div className="col-lg-8 mb-3">
                   <div className="cart_card">
-                     <CartAddress
-                        setMessage={setMessage}
-                        authRefetch={authRefetch}
-                        addr={userInfo?.buyer?.shippingAddress ? userInfo?.buyer?.shippingAddress : []}
-                     />
+                     {
+                        userInfo?.buyer?.shippingAddress?.length >= 1 ?
+
+                           <CartAddress
+                              setMessage={setMessage}
+                              authRefetch={authRefetch}
+                              addr={userInfo?.buyer?.shippingAddress ? userInfo?.buyer?.shippingAddress : []}
+                           /> : <Link className="bt9_primary my-3" href={`/user/address-book`}>Select Shipping Address</Link>
+                     }
                      <br />
 
                      <h6>Order Summary</h6>

@@ -1,20 +1,15 @@
 import React, { useState } from 'react';
-// import { CKEditor } from '@ckeditor/ckeditor5-react';
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-
 import BtnSpinner from '../Shared/BtnSpinner/BtnSpinner';
 import { apiHandler, slugMaker } from '@/Functions/common';
-import { usePrice } from '@/Hooks/usePrice';
 import { newCategory } from '@/CustomData/categories';
+import dynamic from 'next/dynamic';
+
+const Ckeditor = dynamic(() => import('../Shared/Ckeditor'), { ssr: false });
 
 const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessage, super_category }) => {
    const specs = data?.specification && data?.specification;
-
-   // Price and discount states
-   const [inputPriceDiscount, setInputPriceDiscount] = useState({ price: (data?.pricing?.price && data?.pricing?.price) || "", sellingPrice: (data?.pricing?.sellingPrice && data?.pricing?.sellingPrice) || "" });
-   const { discount } = usePrice(inputPriceDiscount.price, inputPriceDiscount.sellingPrice);
 
    const [specification, setSpecification] = useState(specs || {});
    const [slug, setSlug] = useState(data?.slug || "");
@@ -29,7 +24,7 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
    const [warrantyTerm, setWarrantyTerm] = useState(data?.warranty?.wType || "");
    const [warrantyPeriod, setWarrantyPeriod] = useState(data?.warranty?.wTime || "");
 
-   const [description, setDescription] = useState((data?.description && data?.description) || "CKEditor v5");
+   const [description, setDescription] = useState(data?.description ?? "CKEditor v5");
    const [image, setImage] = useState(data?.image ?? "");
 
 
@@ -266,24 +261,6 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
                         placeholder='Image url' value={image ?? ""} onChange={(e) => setImage(e)} />
                      <div className="py-2">
                         <img style={{ width: "180px", height: "auto" }} src={image} alt="" />
-                     </div>
-                  </div>
-
-                  {/* Price information  */}
-                  <div className="col-lg-12 my-2">
-                     <h6>Price Details</h6>
-                     <div className="row">
-                        {/* Price */}
-                        <div className='col-lg-3 mb-3'>
-                           <label htmlFor='price'>{required} Price (BDT)</label>
-                           <input name='price' id='price' type='number' className="form-control form-control-sm" value={inputPriceDiscount.price || ""} onChange={e => setInputPriceDiscount({ ...inputPriceDiscount, [e.target.name]: e.target.value })} />
-                        </div>
-
-                        {/* Selling Price */}
-                        <div className='col-lg-3 mb-3'>
-                           <label htmlFor='sellingPrice'>Selling Price<small>(Discount : {discount || 0}%)</small></label>
-                           <input name='sellingPrice' id='sellingPrice' type='number' className="form-control form-control-sm" value={inputPriceDiscount.sellingPrice} onChange={e => setInputPriceDiscount({ ...inputPriceDiscount, [e.target.name]: e.target.value })} />
-                        </div>
                      </div>
                   </div>
 
@@ -544,13 +521,7 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
 
                         <div className="col-lg-12 my-2">
                            <label htmlFor='description'>Description</label>
-                           {/* <CKEditor editor={ClassicEditor}
-                              data={description}
-                              onChange={(event, editor) => {
-                                 const data = editor.getData();
-                                 return setDescription(data);
-                              }}
-                           /> */}
+                           <Ckeditor description={description} setDescription={setDescription} />
                         </div>
 
                      </div>

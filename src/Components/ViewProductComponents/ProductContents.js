@@ -90,9 +90,7 @@ export default function ProductContents({ product, variationID, setMessage, user
    }
 
 
-   const uniqueSwatch = [...new Set(product?.swatch?.map(variation => `${variation?.variant?.color} ++ ${variation?.image}`))];
-
-
+   const uniqueSwatch = [...new Set(product?.swatch?.map(variation => variation?.variant?.color))];
 
    function getAttrs(specs, _vrid) {
 
@@ -172,18 +170,14 @@ export default function ProductContents({ product, variationID, setMessage, user
 
                            {uniqueSwatch?.map(uSwatch => {
 
-                              let uSwatchItems = uSwatch?.split(" ++ ") ?? [];
-
-                              const hex = uSwatchItems[0]?.split(",")[1];
+                              let uSwatchItems = uSwatch?.split(",") ?? [];
 
                               return (<div key={uSwatch} className="swatch">
-                                 <div className='swatch_head' style={{ backgroundColor: hex, colorScheme: hex }}>
-                                    <img src={uSwatchItems[1] ?? ""} width="38" height="38" alt="" />
-                                 </div>
+                                 <div className='swatch_head' style={{ backgroundColor: uSwatchItems[1] }}></div>
                                  <div className="swatch_items">
                                     {
-                                       product?.swatch?.filter(variation => variation?.variant.color === uSwatchItems[0])
-                                          .map(variation => {
+                                       product?.swatch?.filter(variation => variation?.variant.color?.split(",")[0] === uSwatchItems[0])
+                                          ?.map(variation => {
                                              return (
                                                 <Link key={variation?._vrid} style={variationID === variation?._vrid ? { color: "#1abc9c", fontWeight: "bold" } : { color: "black" }}
                                                    href={`/product/${product?.slug}?pId=${product?._id}&vId=${variation?._vrid}`}>

@@ -29,7 +29,6 @@ export default function SingleCheckoutComponent() {
 
    const selectedAddress = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true);
 
-
    useEffect(() => {
 
       const cookie = CookieParser();

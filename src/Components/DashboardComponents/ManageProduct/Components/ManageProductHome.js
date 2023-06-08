@@ -128,6 +128,24 @@ const ManageProductHome = (
 
    }
 
+
+   function extractVariant(variants) {
+
+      let items = [];
+
+      for (const variant in variants) {
+         if (variants.hasOwnProperty(variant)) {
+            items.push(<span>
+               <b>{variant}:&nbsp;</b>{variants[variant]?.split(",#")[0]} <br />
+            </span>)
+         }
+      }
+
+      return items
+   }
+
+
+
    return (
       <>
          {
@@ -183,7 +201,7 @@ const ManageProductHome = (
                            }}>
                               <img src={mProduct?.image ?? ""} alt="" style={{ width: "60px", height: "60px", objectFit: "contain" }} />
 
-                              <div style={{paddingLeft: "10px"}}>
+                              <div style={{ paddingLeft: "10px" }}>
                                  <small>
                                     <pre style={{ whiteSpace: 'break-spaces' }}>
                                        TITLE           : {mProduct?.title} <br />
@@ -231,9 +249,11 @@ const ManageProductHome = (
                            <table className='table'>
                               <thead>
                                  <tr>
-                                    <th>Variation ID</th>
-                                    <th>sku</th>
-                                    <th>Price Modifier (TK)</th>
+                                    <th>Product</th>
+                                    <th>Meta Info</th>
+                                    <th>Title</th>
+                                    <th>Variant</th>
+                                    <th>Pricing</th>
                                     <th>Availability (Pcs)</th>
                                     <th>Stock</th>
                                     <th>Action</th>
@@ -245,9 +265,25 @@ const ManageProductHome = (
 
                                        return (
                                           <tr key={variation?._vrid}>
-                                             <td>{variation?._vrid}</td>
-                                             <td>{variation?.sku}</td>
-                                             <td>{variation?.priceModifier}</td>
+                                             <td>
+                                                <img src={variation?.images[0] ?? ""} style={{ objectFit: "contain" }} width="40" height="40" alt="" />
+                                             </td>
+                                             <td>
+                                                <small><b>VID:</b>&nbsp;{variation?._vrid}</small> <br />
+                                                <small><b>SKU:</b>&nbsp;{variation?.sku}</small>
+                                             </td>
+                                             <td>
+                                                <small style={{ wordBreak: "break-all" }}>{variation?.vTitle}</small>
+                                             </td>
+                                             <td>
+                                                <small>{
+                                                   extractVariant(variation?.variant)
+                                                }</small>
+                                             </td>
+                                             <td>
+                                                <small><b>Base:</b>&nbsp;{variation?.pricing?.price} Tk</small> <br />
+                                                <small><b>Selling:</b>&nbsp;{variation.pricing.sellingPrice} Tk</small>
+                                             </td>
                                              <td>
                                                 {
                                                    role === 'SELLER' ?
@@ -264,6 +300,7 @@ const ManageProductHome = (
 
                                                 <button className='bt9_edit' onClick={() => setOpenProductVariationModal(
                                                    {
+                                                      allVariants: mProduct?.variations ?? [],
                                                       variations: variation,
                                                       categories: mProduct?.categories,
                                                       listingID: mProduct?._lid,

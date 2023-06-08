@@ -1,8 +1,9 @@
 import { apiHandler } from '@/Functions/common';
+import { usePrice } from '@/Hooks/usePrice';
 import { useBaseContext } from '@/lib/BaseProvider';
 import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 
 
@@ -19,6 +20,13 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
    const [images, setImages] = useState((variation?.images && variation?.images.length >= 1 ? variation?.images : [""]));
 
    const [previewImages, setPreviewImages] = useState([]);
+
+   const [inputPriceDiscount, setInputPriceDiscount] = useState({
+      price: (variation?.pricing?.price ?? ""),
+      sellingPrice: (variation?.pricing?.sellingPrice ?? "")
+   });
+
+   const { discount } = usePrice(inputPriceDiscount.price, inputPriceDiscount.sellingPrice);
 
 
    // preview images
@@ -68,9 +76,10 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
 
          let sku = e.target.sku.value;
          let available = e.target.available.value;
-         let priceModifier = e.target.priceModifier.value;
          let variationID = variation?._vrid ? variation?._vrid : "";
          let vTitle = data?.title ?? "";
+         let price = e.target.price.value;
+         let sellingPrice = e.target.sellingPrice.value;
 
          for (const i in variant) {
             if (variant.hasOwnProperty(i)) {
@@ -88,7 +97,8 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
                variant,
                attrs,
                available,
-               priceModifier
+               price,
+               sellingPrice
             }
          }
 
@@ -211,6 +221,7 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
             }
          </small>
 
+
          <form encType='multipart/form-data' onSubmit={uploadImageHandler}>
             <div className="py-2">
                <input type="file" accept='image/*' name='images' id="images" multiple onChange={handleImagesPreview} />
@@ -228,10 +239,10 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
                <button className='bt9_primary'>Upload Product Images</button>
             </div>
          </form>
+
          <form onSubmit={handleVariationOne}>
             {/* Price Stock And Shipping Information */}
             <div className="row my-4">
-
                <div className="col-lg-12 py-2">
                   <label htmlFor='image'>{required} Image(<small>Product Image</small>)&nbsp;</label>
                   {
@@ -269,28 +280,42 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
                   </div>
                </div>
 
-               {/* SKU */}
-               <div className='col-lg-3 mb-3'>
-                  <label htmlFor='sku'>{required} SKU <small>(Stock Keeping Unit)</small></label>
-                  <input className='form-control form-control-sm' name='sku' id='sku' type='text' defaultValue={variation?.sku || ""} />
+               {/* Price information  */}
+               <div className="col-lg-12 my-2">
+                  <h6>Price Details</h6>
+                  <div className="row">
+                     {/* Price */}
+                     <div className='col-lg-3 mb-3'>
+                        <label htmlFor='price'>{required} Price (BDT)</label>
+                        <input name='price' id='price' type='number' className="form-control form-control-sm" value={inputPriceDiscount.price || ""} onChange={e => setInputPriceDiscount({ ...inputPriceDiscount, [e.target.name]: e.target.value })} />
+                     </div>
+
+                     {/* Selling Price */}
+                     <div className='col-lg-3 mb-3'>
+                        <label htmlFor='sellingPrice'>Selling Price<small>(Discount : {discount || 0}%)</small></label>
+                        <input name='sellingPrice' id='sellingPrice' type='number' className="form-control form-control-sm" value={inputPriceDiscount.sellingPrice} onChange={e => setInputPriceDiscount({ ...inputPriceDiscount, [e.target.name]: e.target.value })} />
+                     </div>
+                  </div>
                </div>
+
+
 
                {/* Price Details */}
                <div className="col-lg-12 my-2">
                   <b>Stock Details</b>
                   <div className="row">
 
-                     <div className='col-lg-3 mb-3'>
-                        <label htmlFor='priceModifier'>{required} Price Modifier</label>
-                        <input className='form-control form-control-sm' name='priceModifier' id='priceModifier' type='number'
-                           defaultValue={variation?.priceModifier} />
-                     </div>
-
                      {/* Stock */}
                      <div className='col-lg-3 mb-3'>
                         <label htmlFor='available'>{required} Stock</label>
                         <input className='form-control form-control-sm' name='available' id='available' type='number'
                            defaultValue={variation?.available} />
+                     </div>
+
+                     {/* SKU */}
+                     <div className='col-lg-3 mb-3'>
+                        <label htmlFor='sku'>{required} SKU <small>(Stock Keeping Unit)</small></label>
+                        <input className='form-control form-control-sm' name='sku' id='sku' type='text' defaultValue={variation?.sku || ""} />
                      </div>
                   </div>
                </div>
