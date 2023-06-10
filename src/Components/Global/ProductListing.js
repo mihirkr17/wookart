@@ -29,7 +29,7 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
 
 
    // search keywords
-   const [searchKeywords, setSearchKeywords] = useState((data?.bodyInfo?.searchKeywords && data?.bodyInfo?.searchKeywords) || ['']);
+   const [searchKeywords, setSearchKeywords] = useState(data?.keywords ?? [""]);
 
    // this is global variable of categories states
    const sub_category = newCategory && newCategory.find(e => e.category === category);
@@ -91,11 +91,6 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
             period: warrantyPeriod || null
          }
 
-         let bodyInfo = {
-            searchKeywords,
-            metaDescription,
-         }
-
          let formData = new FormData(e.currentTarget);
          formData.append('slug', slug);
          formData.append('category', category);
@@ -104,13 +99,14 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
 
          formData = Object.fromEntries(formData.entries());
          formData['warranty'] = warranty;
-         formData['bodyInfo'] = bodyInfo;
          formData['specification'] = specification;
          formData["description"] = description;
          formData["discount"] = discount;
          formData["isFree"] = e.target.isFree.checked;
          formData["image"] = image;
          formData["highlights"] = highlight;
+         formData["keywords"] = searchKeywords;
+         formData["meta_description"] = metaDescription;
 
 
          const notEmpty = Object.values(formData).every(x => x !== null && x !== '');
@@ -515,7 +511,7 @@ const ProductListing = ({ required, userInfo, formTypes, data, refetch, setMessa
                            <textarea className='form-control'
                               name="metaDescription"
                               id='metaDescription'
-                              defaultValue={data?.bodyInfo?.metaDescription || ""} type="text"
+                              defaultValue={data?.meta_description || ""} type="text"
                               placeholder="Meta description"></textarea>
                         </div>
 

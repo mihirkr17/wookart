@@ -43,7 +43,6 @@ export default Breadcrumbs;
 //    const path = location.pathname.split("/").filter(x => x);
 //    // let tyt = location.href.split("=").filter(e => e);
 //    // tyt.shift();
-//    // console.log(tyt);
 //    return (
 //       <Breadcrumb>
 //          <Link to={"/"}> <FontAwesomeIcon icon={faHome} /> Home</Link>

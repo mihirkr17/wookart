@@ -2,7 +2,7 @@ import ModalWrapper from '@/Components/Global/ModalWrapper';
 import React from 'react';
 
 const OrderDetailsModal = ({ data, closeModal }) => {
-   const { orderID, title, customerEmail, paymentMode, image, trackingID, sku, variationID, paymentStatus, shippingCharge, orderStatus, quantity, orderAT, shippingAddress, packaged, sellingPrice, baseAmount } = data && data;
+   const { orderID, title, customerEmail, paymentMode, assets, trackingID, sku, variationID, paymentStatus, shippingCharge, orderStatus, quantity, orderAT, shippingAddress, packaged, sellingPrice, baseAmount } = data && data;
 
 
    function getAttrs(obj = {}, optStr = "") {
@@ -37,7 +37,7 @@ const OrderDetailsModal = ({ data, closeModal }) => {
                   <tr>
                      <th>Product</th>
                      <td>
-                        <img src={image} alt="" style={{ width: "55px", height: "55px" }} />&nbsp;&nbsp;
+                        <img src={assets?.images[0] ?? ""} alt="" style={{ width: "55px", height: "55px" }} />&nbsp;&nbsp;
                         <span>{title}</span>
                      </td>
                   </tr>

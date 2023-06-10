@@ -139,10 +139,10 @@ const MyOrder = () => {
                                     <tbody>
                                        {
                                           Array.isArray(items) && items.map((nItem, i) => {
-                                             const { title, baseAmount, quantity, sellingPrice, shippingCharge, image, productID, slug, variationID } = nItem;
+                                             const { title, baseAmount, quantity, sellingPrice, shippingCharge, assets, productID, slug, variationID } = nItem;
                                              return (
                                                 <tr key={i}>
-                                                   <td><img src={image} alt="product-image" srcSet="" width={30} height={30} /></td>
+                                                   <td><img src={assets?.images[0] ?? ""} alt="product-image" srcSet="" width={30} height={30} /></td>
                                                    <td>{title}</td>
                                                    <td className='currency_sign'>{sellingPrice + shippingCharge}</td>
                                                    <td>{quantity} Pcs</td>

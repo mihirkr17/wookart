@@ -10,7 +10,7 @@ const Product = ({ product }) => {
          <Link href={`/product/${product?.slug}?pId=${product?._id}&vId=${product?._vrid}&oTracker=${product?._vrid}`}>
 
             <div className="product_card_img">
-               <img src={product?.image && product?.image} alt='' />
+               <img src={product?.assets?.images[0]} alt='' />
             </div>
             <article className='product_card_description'>
                <div className="product_title">

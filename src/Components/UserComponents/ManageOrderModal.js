@@ -201,7 +201,7 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo }) {
          <div className="p-3">
             {
                Array.isArray(items) && items?.map((item, index) => {
-                  const { image, title, itemID, quantity, sellingPrice, productID, isRated } = item;
+                  const { assets, title, itemID, quantity, sellingPrice, productID, isRated } = item;
 
                   return (
                      <div key={itemID} style={{
@@ -214,7 +214,7 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo }) {
                         marginBottom: "18px"
                      }}>
                         <div style={{ marginRight: "14px" }}>
-                           <img src={image} width={55} height={55} alt="" />
+                           <img src={assets?.images[0] ?? ""} width={55} height={55} alt="" />
                         </div>
                         <div>
                            <b>{title}</b> <br />

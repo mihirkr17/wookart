@@ -28,7 +28,7 @@ export function ViewProduct({ data }) {
       <div className='view_product section_default'>
          <Head>
             <title>{product?.title}</title>
-            <meta name="description" content={product?.bodyInfo?.metaDescription} />
+            <meta name="description" content={product?.meta_description} />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" href="/favicon.ico" />
          </Head>

@@ -15,6 +15,8 @@ export default function ProductContents({ product, variationID, setMessage, user
    const router = useRouter();
    const { asPath } = router;
 
+   console.log(product);
+
    const { cartRefetch, cartData } = useCartContext();
 
    const defShipAddrs = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true);
@@ -88,9 +90,6 @@ export default function ProductContents({ product, variationID, setMessage, user
          setMessage(<p className='py-2 text-success'><small><strong>{message}</strong></small></p>);
       }
    }
-
-
-   const uniqueSwatch = [...new Set(product?.swatch?.map(variation => variation?.variant?.color))];
 
    function getAttrs(specs, _vrid) {
 
@@ -168,12 +167,14 @@ export default function ProductContents({ product, variationID, setMessage, user
                         Array.isArray(product?.swatch) &&
                         <div className='swatch_wrapper'>
 
-                           {uniqueSwatch?.map(uSwatch => {
+                           {product?.options?.map(uSwatch => {
 
-                              let uSwatchItems = uSwatch?.split(",") ?? [];
+                              let uSwatchItems = uSwatch?.color?.split(",") ?? [];
 
-                              return (<div key={uSwatch} className="swatch">
-                                 <div className='swatch_head' style={{ backgroundColor: uSwatchItems[1] }}></div>
+                              return (<div key={uSwatch?.color} className="swatch">
+                                 <div className='swatch_head'>
+                                    <img src={uSwatch?.images[0]} width="35" height="35" alt="" />
+                                 </div>
                                  <div className="swatch_items">
                                     {
                                        product?.swatch?.filter(variation => variation?.variant.color?.split(",")[0] === uSwatchItems[0])
@@ -182,7 +183,7 @@ export default function ProductContents({ product, variationID, setMessage, user
                                                 <Link key={variation?._vrid} style={variationID === variation?._vrid ? { color: "#1abc9c", fontWeight: "bold" } : { color: "black" }}
                                                    href={`/product/${product?.slug}?pId=${product?._id}&vId=${variation?._vrid}`}>
                                                    {getAttrs(variation?.variant, variation?._vrid)}
-                                                   {variationID === variation?._vrid && <small>(Active)</small>}
+                                                   {variationID === variation?._vrid && <small>Active</small>}
                                                 </Link>
                                              )
                                           })

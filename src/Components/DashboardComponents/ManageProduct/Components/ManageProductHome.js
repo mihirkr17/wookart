@@ -199,7 +199,6 @@ const ManageProductHome = (
                            <div className="p-1" style={{
                               display: "flex"
                            }}>
-                              <img src={mProduct?.image ?? ""} alt="" style={{ width: "60px", height: "60px", objectFit: "contain" }} />
 
                               <div style={{ paddingLeft: "10px" }}>
                                  <small>
@@ -207,7 +206,6 @@ const ManageProductHome = (
                                        TITLE           : {mProduct?.title} <br />
                                        Product ID      : {mProduct?._id} <br />
                                        BRAND           : {mProduct?.brand} <br />
-                                       SELLING PRICE   : {mProduct?.pricing?.sellingPrice} <br />
                                        CATEGORIES      : {mProduct?.categories && mProduct?.categories.join(" >> ")} <br />
                                        Total Variation : {(mProduct?.totalVariation && mProduct?.totalVariation) || 0} <br />
                                     </pre>
@@ -262,11 +260,13 @@ const ManageProductHome = (
                               <tbody>
                                  {
                                     mProduct?.variations ? mProduct?.variations.map(variation => {
+                                       let assets = mProduct?.options?.find(e => e?.color === variation?.variant?.color);
+                                       variation["assets"] = assets;
 
                                        return (
                                           <tr key={variation?._vrid}>
                                              <td>
-                                                <img src={variation?.images[0] ?? ""} style={{ objectFit: "contain" }} width="40" height="40" alt="" />
+                                                <img src={assets?.images[0] ?? ""} style={{ objectFit: "contain" }} width="40" height="40" alt="" />
                                              </td>
                                              <td>
                                                 <small><b>VID:</b>&nbsp;{variation?._vrid}</small> <br />
@@ -297,8 +297,8 @@ const ManageProductHome = (
                                              </td>
                                              <td>{variation?.stock}</td>
                                              <td>
-
-                                                <button className='bt9_edit' onClick={() => setOpenProductVariationModal(
+                                                
+                                                <button className='btn btn-sm m-1' onClick={() => setOpenProductVariationModal(
                                                    {
                                                       allVariants: mProduct?.variations ?? [],
                                                       variations: variation,
@@ -309,7 +309,8 @@ const ManageProductHome = (
                                                       formType: "update-variation"
                                                    }
                                                 )}>
-                                                   Update Variation
+                                                   {/* Update Variation */}
+                                                   <FontAwesomeIcon icon={faPenToSquare} />
                                                 </button>
 
                                                 {

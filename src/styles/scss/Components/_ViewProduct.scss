@@ -15,8 +15,11 @@
 
 .swatch_head {
   display: block;
-  height: 20px;
-  width: 100%;
+  padding: 1px;
+
+  >img {
+    object-fit: contain;
+  }
 }
 
 .swatch_items {

@@ -93,7 +93,7 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
          <div className="mb-2 cart_wrapper">
             <div className="c_list1">
                <div className="c_img">
-                  {qtyLoading ? "Loading" : <img src={cartProduct?.image && cartProduct?.image} alt="" />}
+                  {qtyLoading ? "Loading" : <img src={cartProduct?.assets?.images[0] ?? ""} alt="" />}
                </div>
 
                {

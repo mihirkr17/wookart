@@ -101,15 +101,11 @@ const ProductTemplateForm = ({ formTypes, userInfo, setMessage }) => {
                   {
                      data?.specification ? getAttrs(data?.specification) : <p>No attributes present here</p>
                   }
-                  <div className="col-lg-6"><small>Meta Information: {data?.bodyInfo?.metaDescription.slice(0, 20) + "..."}</small></div>
+                  <div className="col-lg-6"><small>Meta Information: {data?.meta_description.slice(0, 20) + "..."}</small></div>
 
                   {
-                     data?.bodyInfo?.searchKeywords &&
-                     <div className="col-lg-6"><small>Search Keywords : {data?.bodyInfo?.searchKeywords.join(", ")}</small></div>
-                  }
-                  {
-                     data?.bodyInfo?.keyFeatures &&
-                     <div className="col-lg-6"><small>Key Features : {data?.bodyInfo?.keyFeatures.join(", ")}</small></div>
+                     data?.keywords &&
+                     <div className="col-lg-6"><small>Search Keywords : {data?.keywords.join(", ")}</small></div>
                   }
                </div>
             }

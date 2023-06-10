@@ -17,7 +17,7 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
 
    const [attrs, setAttrs] = useState(variation?.attrs || {});
 
-   const [images, setImages] = useState((variation?.images && variation?.images.length >= 1 ? variation?.images : [""]));
+   const [images, setImages] = useState((variation?.assets?.images && variation?.assets?.images.length >= 1 ? variation?.assets?.images : [""]));
 
    const [previewImages, setPreviewImages] = useState([]);
 
@@ -25,9 +25,8 @@ const ProductVariations = ({ required, data, formTypes, super_category, userInfo
       price: (variation?.pricing?.price ?? ""),
       sellingPrice: (variation?.pricing?.sellingPrice ?? "")
    });
-
+   
    const { discount } = usePrice(inputPriceDiscount.price, inputPriceDiscount.sellingPrice);
-
 
    // preview images
    function handleImagesPreview(e) {
