@@ -96,7 +96,7 @@ export default function SingleCheckoutComponent() {
 
          if (data?.container_p?.finalAmounts && paymentMethod) {
 
-            const { success, message, clientSecret, productInfos, orderPaymentID, totalAmount } = await apiHandler(`/order/single-purchase`, "POST", {
+            const { success, message, clientSecret, productInfos, orderIDs, orderPaymentID, totalAmount } = await apiHandler(`/order/single-purchase`, "POST", {
                productID: product?.productID,
                listingID: product?.listingID,
                variationID: product?.variationID,
@@ -161,6 +161,8 @@ export default function SingleCheckoutComponent() {
                   paymentIntentID: paymentIntent?.id,
                   paymentMethodID: paymentIntent?.payment_method,
                   productInfos,
+                  orderIDs,
+                  clientSecret,
                   orderState: "byPurchase"
                });
 

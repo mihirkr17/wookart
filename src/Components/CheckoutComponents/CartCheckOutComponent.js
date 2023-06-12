@@ -60,16 +60,50 @@ export default function CartCheckoutComponent() {
 
          setOrderLoading(true);
 
-         const { clientSecret, orderPaymentID, totalAmount, productInfos, message, success } = await apiHandler(`/order/cart-purchase/`, "POST", { state: "byCart", paymentMethod, customerEmail: userInfo?.email });
+         const { clientSecret, orderPaymentID, paymentIntentID, orderIDs, totalAmount, productInfos, message, success } = await apiHandler(`/order/cart-purchase/`, "POST", { state: "byCart", paymentMethod, customerEmail: userInfo?.email });
 
          setOrderLoading(false);
 
+
          if (!success || !clientSecret || !orderPaymentID) {
-            setOrderLoading(false);
             return setMessage(message, "danger");
          }
 
          setMessage(message, "success");
+
+         // const resutl = await Promise.all(paymentData?.map(async (pData) => {
+         //    const {clientSecret, orderPaymentID} = pData;
+
+         //    const { paymentIntent, error: intErr } = await stripe.confirmCardPayment(
+         //       clientSecret,
+         //       {
+         //          payment_method: {
+         //             card: card,
+         //             billing_details: {
+         //                name: selectedAddress?.name,
+         //                email: userInfo?.email,
+         //                phone: selectedAddress?.phone_number,
+         //                address: {
+         //                   city: selectedAddress?.city,
+         //                   state: selectedAddress?.division,
+         //                   line1: selectedAddress?.area,
+         //                   line2: selectedAddress?.landmark,
+         //                   country: "BD"
+         //                }
+         //             },
+         //             metadata: {
+         //                order_id: orderPaymentID
+         //             },
+         //          },
+         //       },
+         //    );
+
+         //    if (intErr) {
+         //       setOrderLoading(false);
+         //       return setMessage(intErr?.message, "danger");
+         //    }
+
+         // }));
 
          const { paymentIntent, error: intErr } = await stripe.confirmCardPayment(
             clientSecret,
@@ -109,6 +143,8 @@ export default function CartCheckoutComponent() {
                orderPaymentID: orderPaymentID,
                paymentIntentID: paymentIntent?.id,
                paymentMethodID: paymentIntent?.payment_method,
+               orderIDs,
+               clientSecret,
                productInfos,
                orderState: "byCart"
             });

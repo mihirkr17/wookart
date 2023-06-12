@@ -60,6 +60,8 @@ const MyOrder = () => {
 
    if (loading) return <Spinner></Spinner>;
 
+   console.log(orderItems);
+
    return (
       <div className="container">
          {
@@ -91,7 +93,8 @@ const MyOrder = () => {
                   <div className="col-12">
                      {
                         Array.isArray(orderItems) && orderItems.map((orderItem, index) => {
-                           const { totalAmount, _id, orderStatus, isCanceled, paymentStatus, customerEmail, items, orderID, orderAT, sellerStore } = orderItem;
+                           const { final_amount, order_status, payment, customer, shipping_charge, product, quantity, order_id, order_placed_at } = orderItem;
+
                            return (
                               <div className="my_order_items" key={index}>
                                  <div className="ssg">
@@ -105,11 +108,11 @@ const MyOrder = () => {
                                           fontSize: "0.8rem"
                                        }}>
 
-                                          <span style={{ color: "#d33900" }}><strong>{orderID}</strong></span>
-                                          <i className='textMute'>Placed on {orderAT?.date + ", " + orderAT?.time}</i>
+                                          <span style={{ color: "#d33900" }}><strong>{order_id}</strong></span>
+                                          <i className='textMute'>Placed on {order_placed_at?.date + ", " + order_placed_at?.time}</i>
                                           <small>
-                                             Status: <i style={orderStatus === "canceled" ? { color: "red" } : { color: "green" }}>
-                                                {orderStatus}
+                                             Status: <i style={order_status === "canceled" ? { color: "red" } : { color: "green" }}>
+                                                {order_status}
                                              </i>
                                           </small>
 
@@ -117,7 +120,7 @@ const MyOrder = () => {
                                     </div>
 
                                     <div>
-                                       <small>Total: <strong className='currency_sign'>{totalAmount}</strong></small> <br />
+                                       <small>Total: <strong className='currency_sign'>{final_amount}</strong></small> <br />
                                        <button className='manage_order_button' onClick={() => setManageOrderModal(orderItem)}>
                                           Manage Order
                                        </button>
@@ -131,26 +134,24 @@ const MyOrder = () => {
                                        <tr>
                                           <th>Image</th>
                                           <th>Title</th>
-                                          <th>Amount (+ charge)</th>
+                                          <th>Amount</th>
+                                          <th>Shipping Cost</th>
                                           <th>Qty</th>
                                        </tr>
                                     </thead>
 
                                     <tbody>
-                                       {
-                                          Array.isArray(items) && items.map((nItem, i) => {
-                                             const { title, baseAmount, quantity, sellingPrice, shippingCharge, assets, productID, slug, variationID } = nItem;
-                                             return (
-                                                <tr key={i}>
-                                                   <td><img src={assets?.images[0] ?? ""} alt="product-image" srcSet="" width={30} height={30} /></td>
-                                                   <td>{title}</td>
-                                                   <td className='currency_sign'>{sellingPrice + shippingCharge}</td>
-                                                   <td>{quantity} Pcs</td>
-                                                </tr>
-
-                                             )
-                                          })
-                                       }
+                                       <tr>
+                                          <td><img src={product?.assets?.images[0] ?? ""}
+                                             alt="product-image" srcSet="" width={30} height={30}
+                                             style={{ objectFit: "contain" }}
+                                          />
+                                          </td>
+                                          <td>{product?.title}</td>
+                                          <td className='currency_sign'>{product?.selling_price}</td>
+                                          <td className='currency_sign'>{shipping_charge}</td>
+                                          <td>{quantity} Pcs</td>
+                                       </tr>
                                     </tbody>
                                  </table>
                               </div>

@@ -30,6 +30,10 @@ svg {
   color: var(--color-text-primary);
 }
 
+img {
+  object-fit: contain;
+}
+
 .table {
   color: var(--color-text);
 }
