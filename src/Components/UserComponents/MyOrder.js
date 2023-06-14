@@ -11,6 +11,7 @@ import { apiHandler, calcTime } from '@/Functions/common';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import ManageOrderModal from './ManageOrderModal';
+import { useRouter } from 'next/router';
 
 
 const MyOrder = () => {
@@ -21,6 +22,7 @@ const MyOrder = () => {
    const [filterOrder, setFilterOrder] = useState("");
    const [orderItems, setOrderItems] = useState([]);
    const [manageOrderModal, setManageOrderModal] = useState(false);
+   const router = useRouter();
 
    useEffect(() => {
       if (filterOrder === "" || filterOrder === "all") {
@@ -71,6 +73,7 @@ const MyOrder = () => {
                refetch={refetch}
                closeModal={() => setManageOrderModal(false)}
                data={manageOrderModal}
+               router={router}
             />
 
          }
@@ -123,34 +126,30 @@ const MyOrder = () => {
                                        <small>Total: <strong className='currency_sign'>{final_amount}</strong></small> <br />
                                        <button className='manage_order_button' onClick={() => setManageOrderModal(orderItem)}>
                                           Manage Order
-                                       </button>
+                                       </button> <br />
+                                       {
+                                           <button className="bt9_trans text_primary mt-2" onClick={() => router.push(`/rating-review?oid=${order_id}&pid=${product?.product_id}&vid=${product?.variation_id}`)}
+                                          >
+                                             Rate & Review Product
+                                          </button>
+                                       }
                                     </div>
                                  </div>
 
 
                                  <table style={{ marginTop: "5px", overflowX: "auto" }}>
-
-                                    <thead>
-                                       <tr>
-                                          <th>Image</th>
-                                          <th>Title</th>
-                                          <th>Amount</th>
-                                          <th>Shipping Cost</th>
-                                          <th>Qty</th>
-                                       </tr>
-                                    </thead>
-
                                     <tbody>
                                        <tr>
                                           <td><img src={product?.assets?.images[0] ?? ""}
-                                             alt="product-image" srcSet="" width={30} height={30}
+                                             alt="product-image" srcSet="" width="35" height="35"
                                              style={{ objectFit: "contain" }}
                                           />
                                           </td>
-                                          <td>{product?.title}</td>
-                                          <td className='currency_sign'>{product?.selling_price}</td>
-                                          <td className='currency_sign'>{shipping_charge}</td>
-                                          <td>{quantity} Pcs</td>
+                                          <td><b>{product?.title}</b></td>
+                                          <td>
+                                             <b className='currency_sign'>{product?.selling_price}</b>
+                                          </td>
+                                          <td><b>{quantity}</b></td>
                                        </tr>
                                     </tbody>
                                  </table>

@@ -188,9 +188,9 @@ const NavigationBar = () => {
 
                   {!role && (!pathname.startsWith("/login") && !pathname.startsWith("/register")) && <Link className='nv_items nav_link' href={{
                      pathname: `/login`,
-                     query: {
-                        from: asPath
-                     }
+                     // query: {
+                     //    from: asPath
+                     // }
                   }}>Login</Link>}
 
                </div>

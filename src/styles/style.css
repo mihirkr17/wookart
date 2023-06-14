@@ -146,6 +146,11 @@ img {
   background-color: var(--color-light) !important;
 }
 
+textarea {
+  border: unset;
+  outline: unset;
+}
+
 .card_default {
   background: var(--color-trans-one);
   border-radius: 4px;
@@ -303,6 +308,22 @@ img {
 }
 .bt9_delete:hover {
   background-color: var(--color-danger-alt);
+}
+
+.bt9_trans {
+  padding: 0.2rem 0;
+  border: unset;
+  background-color: var(--color-trans-one);
+  color: var(--color-dark);
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  -webkit-transition: all 0.4s linear;
+  transition: all 0.4s linear;
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+  margin: 1px;
 }
 
 .bt9_warning {
@@ -1026,6 +1047,58 @@ label {
   top: 25px;
   left: 0;
   z-index: 2;
+}
+
+#images {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.review_images {
+  display: block;
+  width: 55px;
+  height: 55px;
+  background: #eee url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMSIgaGVpZ2h0PSIxOSI+PHBhdGggZmlsbD0iIzg3ODc4NyIgZD0iTTIuNzQgMi43MTRWMGgxLjgyNXYyLjcxNGgyLjc0djEuODFoLTIuNzR2Mi43MTRIMi43NFY0LjUyNEgwdi0xLjgxaDIuNzR6bTIuNzM4IDUuNDI5VjUuNDI5aDIuNzRWMi43MTRoNi4zOWwxLjY3MiAxLjgxaDIuODk0YzEuMDA0IDAgMS44MjYuODE0IDEuODI2IDEuODFWMTcuMTljMCAuOTk2LS44MjIgMS44MS0xLjgyNiAxLjgxSDQuNTY1YTEuODIzIDEuODIzIDAgMDEtMS44MjYtMS44MVY4LjE0M2gyLjc0em02LjM5MiA4LjE0M2MyLjUyIDAgNC41NjUtMi4wMjcgNC41NjUtNC41MjRTMTQuMzkgNy4yMzggMTEuODcgNy4yMzhjLTIuNTIgMC00LjU2NiAyLjAyNy00LjU2NiA0LjUyNHMyLjA0NiA0LjUyNCA0LjU2NiA0LjUyNHptLTIuOTIyLTQuNTI0YzAgMS42MDEgMS4zMDUgMi44OTUgMi45MjIgMi44OTUgMS42MTYgMCAyLjkyMS0xLjI5NCAyLjkyMS0yLjg5NSAwLTEuNjAyLTEuMzA1LTIuODk1LTIuOTIxLTIuODk1LTEuNjE3IDAtMi45MjIgMS4yOTMtMi45MjIgMi44OTV6Ii8+PC9zdmc+) no-repeat;
+  background-position: 50%;
+  background-size: 20px;
+  cursor: pointer;
+}
+
+.textarea_group {
+  border: 1px solid gray;
+  padding: 10px 15px;
+}
+
+.preview_images {
+  padding: 5px;
+}
+.preview_images .image_wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+.preview_images .image_wrapper .images {
+  border: 1px solid rgb(151, 151, 151);
+  padding: 2px;
+  margin: 2px;
+}
+
+.text_primary {
+  color: var(--color-primary);
 }
 
 .main_spinner {

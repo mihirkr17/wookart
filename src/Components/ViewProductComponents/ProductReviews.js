@@ -152,15 +152,21 @@ const ProductReviews = ({ product, userInfo }) => {
                                  <p style={{ marginTop: "5px" }}>{comments}</p>
 
                                  <br />
-                                 <div className="d-flex flex-wrap">
-                                    {
-                                       Array.isArray(product_images) && product_images.map((img, index) => {
-                                          return (
-                                             <img alt={`review_img_${index}`} key={index} src={img ?? ""} width="84" height="84" style={{ margin: "6px" }} />
-                                          )
-                                       })
-                                    }
+
+                                 <div className="preview_images">
+                                    <div className="image_wrapper">
+                                       {
+                                          Array.isArray(product_images) && product_images.map((img, index) => {
+                                             return (
+                                                <div className="images" key={index}>
+                                                   <img alt={`review_img_${index}`} src={img ?? ""} width="64" height="64" />
+                                                </div>
+                                             )
+                                          })
+                                       }
+                                    </div>
                                  </div>
+
                                  <div className='mt-3'>
                                     <button onClick={() => toggleLikeHandler(_id, "like")} style={{
                                        border: "none",

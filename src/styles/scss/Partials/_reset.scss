@@ -41,3 +41,8 @@ img {
 .ck.ck-editor__main > .ck-editor__editable {
   background-color: var(--color-light) !important;
 }
+
+textarea {
+  border: unset;
+  outline: unset;
+}
