@@ -40,7 +40,7 @@ const MyReviews = () => {
 
                                     <ul>
                                        <li>
-                                          <Link href={`/product/${item?.slug}?pId=${item?.productID}&vId=${item?.variationID}`}>
+                                          <Link href={`/product/${item?.slug}?pId=${item?.productID}&sku=${item?.sku}`}>
                                              {item?.title}
                                           </Link>
                                        </li>

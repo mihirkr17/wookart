@@ -14,21 +14,21 @@ import { useEffect } from "react";
 export function ViewProduct({ data }) {
    const router = useRouter();
    const product = data?.product && data?.product;
-   const { vId, pId, variant } = router.query;
+   const { sku, pId, variant } = router.query;
    const { authRefetch, userInfo, setMessage } = useAuthContext();
 
 
    useEffect(() => {
-      if (!pId || !vId) {
+      if (!pId || !sku) {
          router.push("/");
       };
-   }, [router, pId, vId])
+   }, [router, pId, sku])
 
    return (
       <div className='view_product section_default'>
          <Head>
             <title>{product?.title}</title>
-            <meta name="description" content={product?.meta_description} />
+            <meta name="description" content={product?.metaDescription} />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" href="/favicon.ico" />
          </Head>
@@ -59,7 +59,7 @@ export function ViewProduct({ data }) {
                <div className="pb-3 product_description col-lg-8">
                   <ProductContents
                      product={product}
-                     variationID={vId && vId}
+                     sku={sku}
                      authRefetch={authRefetch}
                      setMessage={setMessage}
                      userInfo={userInfo}
@@ -88,11 +88,11 @@ export function ViewProduct({ data }) {
 }
 
 export async function getServerSideProps({ query, params, req }) {
-   const { pId, vId, oTracker } = query;
+   const { pId, sku, oTracker } = query;
    const { slug } = params;
    const { cookie } = req.headers;
 
-   const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/fetch-single-product/${slug}?pId=${pId}&vId=${vId}&oTracker=${oTracker}`, {
+   const response = await fetch(`${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/product/fetch-single-product/${slug}?pId=${pId}&sku=${sku}&oTracker=${oTracker}`, {
       method: "GET",
       withCredentials: true,
       credentials: "include",

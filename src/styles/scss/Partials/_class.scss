@@ -3,7 +3,7 @@
   background: var(--color-trans-one);
   border-radius: 4px;
   box-shadow: 0 4px 30px var(--color-trans-two);
-  backdrop-filter: blur(18px);
+  // backdrop-filter: blur(18px);
   border: 1px solid var(--color-trans-three);
 }
 
@@ -96,6 +96,13 @@
     background-color: gray;
     cursor: not-allowed;
   }
+}
+
+.dynamic_bt9 {
+  cursor: pointer;
+  display: block;
+  padding: 0.2rem;
+  margin-left: 0.5rem;
 }
 
 .bt9_edit {
@@ -883,7 +890,7 @@ label {
   opacity: 0;
 }
 
-.review_images {
+.imagesLabel {
   display: block;
   width: 55px;
   height: 55px;
@@ -899,7 +906,6 @@ label {
   border: 1px solid gray;
   padding: 10px 15px;
 }
-
 
 .preview_images {
   padding: 5px;

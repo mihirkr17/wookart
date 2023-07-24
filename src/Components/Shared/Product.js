@@ -7,10 +7,10 @@ const Product = ({ product }) => {
    return (
       <div className='product_card my-2'>
 
-         <Link href={`/product/${product?.slug}?pId=${product?._id}&vId=${product?._vrid}&oTracker=${product?._vrid}`}>
+         <Link href={`/product/${product?.slug}?pId=${product?._id}&sku=${product?.sku}&oTracker=${product?.sku}`}>
 
             <div className="product_card_img">
-               <img src={product?.assets?.images[0]} alt='' />
+               <img src={product?.imageUrl && product?.imageUrl} alt='' />
             </div>
             <article className='product_card_description'>
                <div className="product_title">

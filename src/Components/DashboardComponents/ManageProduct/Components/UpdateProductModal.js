@@ -14,6 +14,8 @@ const UpdateProductModal = ({ data, closeModal, refetch }) => {
 
    const required = <span style={{ color: "red" }}>*</span>;
 
+
+
    async function handleAPI(uri = "", action = "", body = {}) {
       try {
          const { appSession } = CookieParser();
@@ -323,6 +325,7 @@ const UpdateProductModal = ({ data, closeModal, refetch }) => {
                </div>
             </form>
          </div>
+
 
       </ModalWrapper >
    );

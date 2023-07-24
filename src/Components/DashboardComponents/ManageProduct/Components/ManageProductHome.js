@@ -8,6 +8,7 @@ import ProductVariationModal from './ProductVariationModal';
 import Link from 'next/link';
 import useWindowDimensions from '@/Hooks/useWindowDimensions';
 import { apiHandler } from '@/Functions/common';
+import { useRouter } from 'next/router';
 
 const ManageProductHome = (
    {
@@ -29,15 +30,16 @@ const ManageProductHome = (
       userInfo
    }
 ) => {
+   const router = useRouter();
    const [productDetailModal, setProductDetailModal] = useState(false);
    const [openDropDown, setOpenDropDown] = useState("");
    const { windowWidth } = useWindowDimensions();
    const [updateProductForm, setUpdateProductForm] = useState(false);
    const [openProductVariationModal, setOpenProductVariationModal] = useState(false);
 
-   const deleteProductVariationHandler = async (vid, pid) => {
+   const deleteProductVariationHandler = async (sku, pid) => {
       try {
-         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.store?.name}/product/delete-product-variation/${pid}/${vid}`,
+         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.store?.name}/product/delete-product-variation/${pid}/${sku}`,
             "DELETE");
 
          if (success) {
@@ -68,17 +70,17 @@ const ManageProductHome = (
    }
 
 
-   const stockHandler = async (e, productID, _vrid) => {
+   const stockHandler = async (e, productID, sku) => {
       const { value } = e.target;
 
       let available = parseInt(value);
 
       try {
-         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.store?.name}/product/update-stock`, "PUT", { productID, variations: { available, _vrid }, MARKET_PLACE: 'WooKart' });
+         const { success, message } = await apiHandler(`/dashboard/seller/${userInfo?.store?.name}/product/update-stock`, "PUT", { productID, variations: { available, sku }, MARKET_PLACE: 'WooKart' });
 
          if (success) {
-            setMessage(message, 'success');
             refetch();
+            setMessage(message, 'success');
             return
          } else {
             return setMessage(message, 'danger');
@@ -168,7 +170,11 @@ const ManageProductHome = (
          <div className="product_header">
 
             <div className="d-flex justify-content-between align-items-center flex-wrap">
-               <h5 className='py-3'>{role === 'SELLER' ? "Active Products (" + counter + ")" : "All Products (" + counter + ")"}</h5>
+               <h5 className='py-3'>
+                  {role === 'SELLER' ? "Active Products (" + manageProducts?.data?.products?.length + ")" :
+                     "All Products (" + manageProducts?.data?.products?.length + ")"}
+               </h5>
+
                <div className='py-3'>
 
                   <select name="filter_product" style={{ textTransform: "capitalize" }} className='form-select form-select-sm' onChange={e => setFilterCategory(e.target.value)}>
@@ -237,6 +243,7 @@ const ManageProductHome = (
                                     location={location} productControlHandler={productControlHandler}
                                     setUpdateProductForm={setUpdateProductForm}
                                     setOpenProductVariationModal={setOpenProductVariationModal}
+                                    router={router}
                                  ></DropDown>
                               }
                            </div>
@@ -249,7 +256,7 @@ const ManageProductHome = (
                                  <tr>
                                     <th>Product</th>
                                     <th>Meta Info</th>
-                                    <th>Title</th>
+                                    <th>Brand Color</th>
                                     <th>Variant</th>
                                     <th>Pricing</th>
                                     <th>Availability (Pcs)</th>
@@ -260,20 +267,17 @@ const ManageProductHome = (
                               <tbody>
                                  {
                                     mProduct?.variations ? mProduct?.variations.map(variation => {
-                                       let assets = mProduct?.options?.find(e => e?.color === variation?.variant?.color);
-                                       variation["assets"] = assets;
-
+                             
                                        return (
-                                          <tr key={variation?._vrid}>
+                                          <tr key={variation?.sku}>
                                              <td>
-                                                <img src={assets?.images[0] ?? ""} style={{ objectFit: "contain" }} width="40" height="40" alt="" />
+                                                <img src={(variation?.images && variation?.images[0]) || ""} style={{ objectFit: "contain" }} width="40" height="40" alt="" />
                                              </td>
                                              <td>
-                                                <small><b>VID:</b>&nbsp;{variation?._vrid}</small> <br />
                                                 <small><b>SKU:</b>&nbsp;{variation?.sku}</small>
                                              </td>
                                              <td>
-                                                <small style={{ wordBreak: "break-all" }}>{variation?.vTitle}</small>
+                                                <small style={{ wordBreak: "break-all" }}>{variation?.brandColor}</small>
                                              </td>
                                              <td>
                                                 <small>{
@@ -288,7 +292,7 @@ const ManageProductHome = (
                                                 {
                                                    role === 'SELLER' ?
                                                       <input type="text" style={{ width: "50px", border: "1px solid black", padding: "0 2px", backgroundColor: "inherit" }}
-                                                         onBlur={(e) => stockHandler(e, mProduct?._id, variation?._vrid)}
+                                                         onBlur={(e) => stockHandler(e, mProduct?._id, variation?.sku)}
                                                          defaultValue={variation?.available}
                                                          readOnly onDoubleClick={e => e.target.readOnly = false} /> :
                                                       variation?.available
@@ -297,10 +301,9 @@ const ManageProductHome = (
                                              </td>
                                              <td>{variation?.stock}</td>
                                              <td>
-                                                
+
                                                 <button className='btn btn-sm m-1' onClick={() => setOpenProductVariationModal(
                                                    {
-                                                      allVariants: mProduct?.variations ?? [],
                                                       variations: variation,
                                                       categories: mProduct?.categories,
                                                       listingID: mProduct?._lid,
@@ -315,7 +318,7 @@ const ManageProductHome = (
 
                                                 {
                                                    mProduct?.variations && mProduct?.variations.length >= 2 && <button className='btn btn-sm m-1' title={`Delete ${mProduct?.title}`}
-                                                      onClick={() => deleteProductVariationHandler(variation?._vrid, mProduct?._id)}>
+                                                      onClick={() => deleteProductVariationHandler(variation?.sku, mProduct?._id)}>
                                                       <FontAwesomeIcon icon={faTrashAlt} />
                                                    </button>
                                                 }
@@ -411,7 +414,6 @@ const ManageProductHome = (
                                           <thead>
                                              <tr>
                                                 <th>Image</th>
-                                                <th>_vrid</th>
                                                 <th>sku</th>
                                                 <th>Action</th>
                                              </tr>
@@ -421,20 +423,20 @@ const ManageProductHome = (
                                                 mProduct?.variations ? mProduct?.variations.map(variation => {
 
                                                    return (
-                                                      <tr key={variation?._vrid}>
+                                                      <tr key={variation?.sku}>
                                                          <td>
                                                             <img src={mProduct?.images && mProduct?.images[0]} alt="" style={{ width: "60px", height: "60px" }} />
                                                          </td>
-                                                         <td>{variation?._vrid}</td>
+
                                                          <td>{variation?.sku}</td>
                                                          <td>
                                                             <Link className='bt9_edit' state={{ from: location }} replace
-                                                               href={`/dashboard/manage-product?np=update-variation&store=${mProduct?.supplier?.store_name}&pid=${mProduct?._id}&vId=${variation?._vrid}`}>
+                                                               href={`/dashboard/manage-product?np=update-variation&store=${mProduct?.supplier?.store_name}&pid=${mProduct?._id}&sku=${variation?.sku}`}>
                                                                Update Variation
                                                             </Link>
 
                                                             <button className='bt9_delete m-1' title={`Delete ${mProduct?.title}`}
-                                                               onClick={() => deleteProductVariationHandler(variation?._vrid, mProduct?._id)}>
+                                                               onClick={() => deleteProductVariationHandler(variation?.sku, mProduct?._id)}>
                                                                Delete this variation
                                                             </button>
                                                          </td>

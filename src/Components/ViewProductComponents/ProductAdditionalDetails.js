@@ -20,10 +20,10 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
             <div className="product-details__items">
                <ul>
                   {
-                     getSpecs(product?.variations?.attrs)
+                     getSpecs(product?.variation?.attrs)
                   }
                   {
-                     getSpecs(product?.variations?.variant)
+                     getSpecs(product?.variation?.variant)
                   }
                   {
                      getSpecs(specs)

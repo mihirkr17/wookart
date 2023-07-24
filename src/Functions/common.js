@@ -252,3 +252,19 @@ export function getSpecs(specs = {}) {
 
    return str;
 }
+
+
+
+export function inputHandler(state = "", setState = () => { }, e = null, index) {
+   const ev = e !== null && e.target;
+
+   let list = [...state];
+
+   if (ev?.value && typeof ev?.value !== "undefined") {
+      list[index] = ev?.value;
+   } else {
+      list.splice(index, 1);
+   }
+
+   return setState(list);
+}

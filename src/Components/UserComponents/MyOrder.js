@@ -128,7 +128,7 @@ const MyOrder = () => {
                                           Manage Order
                                        </button> <br />
                                        {
-                                           <button className="bt9_trans text_primary mt-2" onClick={() => router.push(`/rating-review?oid=${order_id}&pid=${product?.product_id}&vid=${product?.variation_id}`)}
+                                           <button className="bt9_trans text_primary mt-2" onClick={() => router.push(`/rating-review?oid=${order_id}&pid=${product?.product_id}&sku=${product?.sku}`)}
                                           >
                                              Rate & Review Product
                                           </button>
@@ -147,7 +147,7 @@ const MyOrder = () => {
                                           </td>
                                           <td><b>{product?.title}</b></td>
                                           <td>
-                                             <b className='currency_sign'>{product?.selling_price}</b>
+                                             <b className='currency_sign'>{product?.sellingPrice}</b>
                                           </td>
                                           <td><b>{quantity}</b></td>
                                        </tr>

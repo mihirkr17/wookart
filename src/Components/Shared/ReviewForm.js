@@ -24,7 +24,7 @@ const ReviewForm = () => {
          for (let i = 0; i < lengthOfImg; i++) {
             const formData = new FormData();
             formData.append('file', e.target.images.files[i]);
-            formData.append('upload_preset', 'review_images');
+            formData.append('upload_preset', 'imagesLabel');
 
             promises.push(
                fetch('https://api.cloudinary.com/v1_1/duixvo0uu/image/upload', {

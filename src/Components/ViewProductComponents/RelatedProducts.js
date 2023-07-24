@@ -11,13 +11,15 @@ export default function RelatedProducts({ relatedProducts }) {
             <div className="row product_wrapper w-100">
                {
                   relatedProducts && relatedProducts.map((product, i) => {
+
+                     console.log(product);
                      return (
                         <div key={i} className='product_card product_card_rel my-2'>
 
-                           <Link href={`/product/${product?.slug}?pId=${product?._id}&vId=${product?._vrid}&oTracker=${product?._vrid}`}>
+                           <Link href={`/product/${product?.slug}?pId=${product?._id}&sku=${product?.sku}&oTracker=${product?.sku}`}>
 
                               <div className="product_card_img product_card_img_rel ">
-                                 <img src={product?.image && product?.image} alt='' />
+                                 <img src={product?.imageUrl && product?.imageUrl} alt='' />
                               </div>
                               <article className='product_card_description'>
                                  <div className="product_title product_title_rel">

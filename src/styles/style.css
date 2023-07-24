@@ -156,8 +156,6 @@ textarea {
   border-radius: 4px;
   -webkit-box-shadow: 0 4px 30px var(--color-trans-two);
           box-shadow: 0 4px 30px var(--color-trans-two);
-  -webkit-backdrop-filter: blur(18px);
-          backdrop-filter: blur(18px);
   border: 1px solid var(--color-trans-three);
 }
 
@@ -263,6 +261,13 @@ textarea {
 .bt9_checkout:disabled {
   background-color: gray;
   cursor: not-allowed;
+}
+
+.dynamic_bt9 {
+  cursor: pointer;
+  display: block;
+  padding: 0.2rem;
+  margin-left: 0.5rem;
 }
 
 .bt9_edit {
@@ -1056,7 +1061,7 @@ label {
   opacity: 0;
 }
 
-.review_images {
+.imagesLabel {
   display: block;
   width: 55px;
   height: 55px;
@@ -1977,6 +1982,7 @@ label {
 }
 .c_img img {
   width: 50px;
+  height: 65px;
 }
 
 .c_meta {
@@ -2882,10 +2888,10 @@ label {
   display: -ms-flexbox;
   display: flex;
   margin: 20px 0;
-  -webkit-box-orient: horizontal;
+  -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+      -ms-flex-direction: column;
+          flex-direction: column;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
 }

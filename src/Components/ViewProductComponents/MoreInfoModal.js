@@ -27,10 +27,10 @@ export default function MoreInfoModal({ data, closeModal }) {
             <ul>
                {destructObject({
                   manufacturer_information: `${manufacturer?.details}, Origin of ${manufacturer?.origin}`,
-                  packer_information: textToTitleCase(supplier?.store_name),
+                  packer_information: textToTitleCase(supplier?.storeName),
                   net_weight: `${weight} (${weightUnit})`,
-                  supplier_information: `${textToTitleCase(supplier?.store_name)} c/o WooKart`,
-                  contact_information: `Contact seller ${supplier?.contact_numbers}, c/o ${policies?.contact_info}`,
+                  supplier_information: `${textToTitleCase(supplier?.storeName)} c/o WooKart`,
+                  contact_information: `Contact seller ${supplier?.phones}, c/o ${policies?.contact_info}`,
                   legal_disclaimer: policies?.legal_disclaimer,
                })}
             </ul>

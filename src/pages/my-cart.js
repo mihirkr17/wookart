@@ -27,7 +27,7 @@ export default withOutDashboard(function MyCart() {
                            Array.isArray(cartData?.products) && cartData?.numberOfProducts > 0 ? cartData?.products.map(product => {
                               return (
                                  <CartItem
-                                    key={product?.variationID}
+                                    key={product?.sku}
                                     cartRefetch={cartRefetch}
                                     product={product}
                                     cartType={"toCart"}

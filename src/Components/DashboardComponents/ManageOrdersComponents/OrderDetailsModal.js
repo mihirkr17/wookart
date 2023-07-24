@@ -2,7 +2,7 @@ import ModalWrapper from '@/Components/Global/ModalWrapper';
 import React from 'react';
 
 const OrderDetailsModal = ({ data, closeModal }) => {
-   const { orderID, title, customerEmail, paymentMode, assets, trackingID, sku, variationID, paymentStatus, shippingCharge, orderStatus, quantity, orderAT, shippingAddress, packaged, sellingPrice, baseAmount } = data && data;
+   const { order_id, product, customer, trackingID, payment, shipping_charge, order_status, quantity, order_placed_at, packaged } = data && data;
 
 
    function getAttrs(obj = {}, optStr = "") {
@@ -37,21 +37,21 @@ const OrderDetailsModal = ({ data, closeModal }) => {
                   <tr>
                      <th>Product</th>
                      <td>
-                        <img src={assets?.images[0] ?? ""} alt="" style={{ width: "55px", height: "55px" }} />&nbsp;&nbsp;
-                        <span>{title}</span>
+                        <img src={product?.image ?? ""} alt="" style={{ width: "55px", height: "55px" }} />&nbsp;&nbsp;
+                        <span>{product?.title}</span>
                      </td>
                   </tr>
                   <tr>
-                     <th>OrderID</th>
-                     <td>{orderID}</td>
+                     <th>order_id</th>
+                     <td>{order_id}</td>
                   </tr>
                   <tr>
                      <th>SKU</th>
-                     <td>{sku}</td>
+                     <td>{product?.sku}</td>
                   </tr>
                   <tr>
                      <th>Variation ID</th>
-                     <td>{variationID}</td>
+                     <td>{product?.variation_id}</td>
                   </tr>
                   {
                      trackingID &&
@@ -62,11 +62,11 @@ const OrderDetailsModal = ({ data, closeModal }) => {
                   }
                   <tr>
                      <th>Customer Email</th>
-                     <td>{customerEmail}</td>
+                     <td>{customer?.email}</td>
                   </tr>
                   <tr>
                      <th>Price</th>
-                     <td>{sellingPrice} Tk</td>
+                     <td>{product?.selling_price} Tk</td>
                   </tr>
                   <tr>
                      <th>Quantity</th>
@@ -74,27 +74,27 @@ const OrderDetailsModal = ({ data, closeModal }) => {
                   </tr>
                   <tr>
                      <th>Shipping Charge</th>
-                     <td>{shippingCharge} Tk</td>
+                     <td>{shipping_charge} Tk</td>
                   </tr>
                   <tr>
                      <th>Base Total</th>
-                     <td>{baseAmount} Tk</td>
+                     <td>{product?.base_amount} Tk</td>
                   </tr>
                   <tr>
                      <th>Payment Mode</th>
-                     <td>{paymentMode}</td>
+                     <td>{payment?.mode}</td>
                   </tr>
                   <tr>
                      <th>Payment Status</th>
-                     <td>{paymentStatus}</td>
+                     <td>{payment?.status}</td>
                   </tr>
                   <tr>
                      <th>Order Status</th>
-                     <td>{orderStatus}</td>
+                     <td>{order_status}</td>
                   </tr>
                   <tr>
                      <th>Order Start Time</th>
-                     <td>{orderAT?.time} / Date: {orderAT?.date}</td>
+                     <td>{order_placed_at?.time} / Date: {order_placed_at?.date}</td>
                   </tr>
                   {
                      data?.time_placed ?
@@ -115,7 +115,7 @@ const OrderDetailsModal = ({ data, closeModal }) => {
                      <td>
                         <ul>
                            {
-                              getAttrs(shippingAddress)
+                              getAttrs(customer?.shipping_address)
                            }
                         </ul>
                      </td>

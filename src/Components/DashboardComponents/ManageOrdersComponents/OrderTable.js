@@ -198,7 +198,7 @@ const OrderTable = ({ setOpenModal, setLabelModal, orders, orderRefetch, setMess
                      <tbody>
                         {
                            Array.isArray(items) && items.map((nItem, i) => {
-                              const { title, baseAmount, quantity, sellingPrice, shippingCharge, image, productID, sku, variationID } = nItem;
+                              const { title, baseAmount, quantity, sellingPrice, shippingCharge, image, productID, sku } = nItem;
                               nItem["orderID"] = orderID;
                               nItem["orderStatus"] = orderStatus;
                               nItem["shippingAddress"] = shippingAddress;

@@ -99,7 +99,7 @@ export default function SingleCheckoutComponent() {
             const { success, message, clientSecret, productInfos, orderIDs, orderPaymentID, totalAmount } = await apiHandler(`/order/single-purchase`, "POST", {
                productID: product?.productID,
                listingID: product?.listingID,
-               variationID: product?.variationID,
+               sku: product?.sku,
                quantity: product?.quantity,
                customerEmail: product?.customerEmail,
                state: "byPurchase"

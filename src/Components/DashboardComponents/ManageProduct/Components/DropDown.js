@@ -1,18 +1,11 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 
-const DropDown = ({ mProduct, location, productControlHandler, openDropDown, setUpdateProductForm, setOpenProductVariationModal }) => {
-
+const DropDown = ({ mProduct, location, productControlHandler, openDropDown, setUpdateProductForm, setOpenProductVariationModal, router }) => {
 
    return (
 
       <ul className="dropdown-menu" style={openDropDown?._lid === mProduct?._lid ? { display: 'block', right: 0 } : { display: 'none' }}>
-         {/* <li>
-            <Link className='dropdown-item' state={{ from: location }} replace
-               href={`/dashboard/manage-product?np=edit_product&store=${mProduct?.supplier?.store_name}&pid=${mProduct?._id}`}>
-               Edit Product
-            </Link>
-         </li> */}
          <li>
             <button className="dropdown-item" onClick={() => setUpdateProductForm(mProduct && mProduct)}>
                Edit Product
@@ -26,8 +19,13 @@ const DropDown = ({ mProduct, location, productControlHandler, openDropDown, set
                categories: mProduct?.categories,
                listingID: mProduct?._lid,
             })}>
-               Add New Variation
+               Add a new variation
             </button>
+         </li>
+         <li>
+            <Link href={`/`} className='dropdown-item'>
+               Attributes
+            </Link>
          </li>
          <li>
             {

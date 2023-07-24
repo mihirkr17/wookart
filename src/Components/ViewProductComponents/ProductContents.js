@@ -9,22 +9,19 @@ import { useCartContext } from '@/lib/CartProvider';
 import MoreInfoModal from './MoreInfoModal';
 
 
-export default function ProductContents({ product, variationID, setMessage, userInfo }) {
+export default function ProductContents({ product, sku, setMessage, userInfo }) {
    const [addCartLoading, setAddCartLoading] = useState(false);
    const [openMoreInfo, setOpenMoreInfo] = useState(false);
    const router = useRouter();
    const { asPath } = router;
-
-   console.log(product);
-
    const { cartRefetch, cartData } = useCartContext();
 
    const defShipAddrs = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true);
 
-   let inCart = Array.isArray(cartData?.products) && cartData?.products.find(e => e?.variationID === variationID);
+   let inCart = Array.isArray(cartData?.products) && cartData?.products.find(e => e?.sku === sku);
 
    // add to cart handler
-   const addToCartHandler = async (pId, _lid, vId, params) => {
+   const addToCartHandler = async (pId, _lid, sku, params) => {
       try {
          if (!userInfo?.email) {
             router.push(`/login?from=${asPath}`);
@@ -33,13 +30,13 @@ export default function ProductContents({ product, variationID, setMessage, user
 
          setAddCartLoading(true);
 
-         if (product?.variations?.stock === "in") {
+         if (product?.variation?.stock === "in") {
 
             const { success, message } = await apiHandler(`/cart/add-to-cart`, "POST", {
                quantity: 1,
                productID: pId,
                listingID: _lid,
-               variationID: vId,
+               sku,
                action: params
             });
 
@@ -91,30 +88,35 @@ export default function ProductContents({ product, variationID, setMessage, user
       }
    }
 
-   function getAttrs(specs, _vrid) {
 
-      let str = [];
-      if (specs) {
+   const groupByColor = product?.swatch?.reduce((arr, item) => {
+      const color = item?.brandColor;
+      const existingItem = arr.find(obj => obj[color]);
 
-         for (const spec in specs) {
-            let items = specs[spec];
-
-            if (spec === "color") {
-               items = null;
-            }
-
-            if (typeof items !== "object") {
-               str.push(<span>{items.split(",#")[0]}</span>)
-            }
-         }
+      if (!existingItem) {
+         arr.push({ [color]: [item] });
+      } else {
+         existingItem[color].push(item);
       }
 
-      return str;
+      return arr;
+   }, []);
+
+
+   function variantLooping(obj) {
+      let str = "";
+
+      for (const key in obj) {
+         str += `${key}: ${obj[key]}, `;
+      }
+
+      return str.slice(0, -2);
    }
 
 
-
-
+   function handleVariation(sku) {
+      return router.push(`/product/${product?.slug}?pId=${product?._id}&sku=${sku}`);
+   }
 
    return (
       <div style={{ width: "100%" }}>
@@ -154,9 +156,9 @@ export default function ProductContents({ product, variationID, setMessage, user
 
                      <small className='text-muted'>
                         <i>
-                           {product?.variations?.stock === "out" ? <span className='badge_failed'>Out of Stock</span> :
-                              product?.variations?.available <= 10 ?
-                                 "Hurry, Only " + product?.variations?.available + " Left !" : ""}
+                           {product?.variation?.stock === "out" ? <span className='badge_failed'>Out of Stock</span> :
+                              product?.variation?.available <= 10 ?
+                                 "Hurry, Only " + product?.variation?.available + " Left !" : ""}
                         </i>
                      </small>
 
@@ -166,32 +168,26 @@ export default function ProductContents({ product, variationID, setMessage, user
                      {
                         Array.isArray(product?.swatch) &&
                         <div className='swatch_wrapper'>
+                           <label htmlFor="swatch">Variation :</label>
+                           <select name="swatch" id="swatch" className='form-select form-select-sm' onChange={e => handleVariation(e.target.value)}>
 
-                           {product?.options?.map(uSwatch => {
+                              {
+                                 product?.swatch?.map((swatch, index) => {
 
-                              let uSwatchItems = uSwatch?.color?.split(",") ?? [];
+                                    let variant = swatch?.variant;
 
-                              return (<div key={uSwatch?.color} className="swatch">
-                                 <div className='swatch_head'>
-                                    <img src={uSwatch?.images[0]} width="35" height="35" alt="" />
-                                 </div>
-                                 <div className="swatch_items">
-                                    {
-                                       product?.swatch?.filter(variation => variation?.variant.color?.split(",")[0] === uSwatchItems[0])
-                                          ?.map(variation => {
-                                             return (
-                                                <Link key={variation?._vrid} style={variationID === variation?._vrid ? { color: "#1abc9c", fontWeight: "bold" } : { color: "black" }}
-                                                   href={`/product/${product?.slug}?pId=${product?._id}&vId=${variation?._vrid}`}>
-                                                   {getAttrs(variation?.variant, variation?._vrid)}
-                                                   {variationID === variation?._vrid && <small>Active</small>}
-                                                </Link>
-                                             )
-                                          })
-                                    }
-                                 </div>
-                              </div>)
+                                    variant["color"] = swatch?.brandColor;
 
-                           })}
+                                    return (
+                                       <option key={index} selected={swatch?.sku === sku} disabled={product?.variation?.stock === "out" ? true : false} value={swatch?.sku}>
+                                          {variantLooping(variant)}
+                                       </option>
+                                    )
+                                 })
+                              }
+                           </select>
+
+                 
                         </div>
                      }
 
@@ -215,20 +211,20 @@ export default function ProductContents({ product, variationID, setMessage, user
 
                      <button className='ph_btn addToCartBtn'
                         onClick={() => (inCart ? router.push('/my-cart') :
-                           addToCartHandler(product?._id, product?._lid, product?.variations?._vrid, "toCart"))}>
+                           addToCartHandler(product?._id, product?._lid, product?.variation?.sku, "toCart"))}>
                         <FontAwesomeIcon icon={faCartShopping} />&nbsp;
                         {inCart ? "Go To Cart" : addCartLoading ? <BtnSpinner text={"Adding..."} /> : "Add To Cart"}
                      </button>
 
                      {
-                        product?.variations?.stock === "in" &&
+                        product?.variation?.stock === "in" &&
                         <Link href={{
                            pathname: `/single-checkout`,
                            query: {
                               data: JSON.stringify({
                                  listingID: product?._lid,
                                  productID: product?._id,
-                                 variationID: product?.variations?._vrid,
+                                 sku: product?.variation?.sku,
                                  quantity: 1,
                                  customerEmail: userInfo?.email
                               }),
@@ -334,8 +330,8 @@ onClick={() => (product?.inWishlist ? removeToWishlist(product?._id) : addToWish
                            <img src="/ecom/store-official-ecommerce-svgrepo-com.svg" width="28" height="28" alt="" />
                         </div>
                         <div className='seller_div_text'>
-                           <span>{product?.supplier?.store_name}</span>
-                           <button onClick={() => router.push(`/store/${product?.supplier?.store_name}`)}>View Shop</button>
+                           <span>{product?.supplier?.storeName}</span>
+                           <button onClick={() => router.push(`/store/${product?.supplier?.storeName}`)}>View Shop</button>
                         </div>
                      </div>
                   </div>
@@ -367,50 +363,3 @@ onClick={() => (product?.inWishlist ? removeToWishlist(product?._id) : addToWish
       </div >
    );
 };
-
-
-
-
-
-{/* <div className="p-3 my-4 d-flex align-items-center justify-content-start flex-column">
-{
-   <div className="d-flex align-items-center justify-content-start w-100">
-
-
-      <div className="px-3 d-flex flex-row">
-
-         {
-            product?.swatch.map((e, i) => {
-
-               let hex = e?.variant?.color.split(",")[1];
-
-               return (
-
-                  <div key={i} className='d-flex align-items-center justify-content-center flex-column'>
-                     {
-                        e?.variant?.color &&
-                        <Link className={`swatch_size_btn ${e._vrid === variationID ? 'active' : ''}`}
-                           href={`/product/${product?.slug}?pId=${product?._id}&vId=${e._vrid}`}>
-                           <div style={{
-                              backgroundColor: hex,
-                              display: 'block',
-                              width: '20px',
-                              height: '20px',
-                              borderRadius: "100%"
-                           }}>
-                           </div>
-                           {e?.variant?.sizes && <span>{e?.variant?.sizes}</span>}
-                           {e?.variant?.ram && <span>{e?.variant?.ram}</span>}
-                           {e?.variant?.rom && <span>{e?.variant?.rom}</span>}
-                        </Link>
-                     }
-
-                  </div>
-               )
-            })
-         }
-      </div>
-   </div>
-
-}
-</div> */}

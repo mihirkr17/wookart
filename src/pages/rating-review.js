@@ -1,3 +1,4 @@
+import ImagePreviewer from '@/Components/Shared/ImagePreviewer';
 import Spinner from '@/Components/Shared/Spinner/Spinner';
 import { apiHandler } from '@/Functions/common';
 import { useFetch } from '@/Hooks/useFetch';
@@ -5,7 +6,7 @@ import { useAuthContext } from '@/lib/AuthProvider';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const RatingReview = () => {
    const { setMessage, userInfo } = useAuthContext();
@@ -21,14 +22,15 @@ const RatingReview = () => {
    const router = useRouter();
    const { query } = router;
 
-   const { pid, oid, vid } = query;
-   const { data, loading } = useFetch((pid && vid && oid) && `/review/product-details?pid=${pid}&vid=${vid}&oid=${oid}`);
+   const { pid, oid, sku } = query;
+
+   const { data, loading } = useFetch((pid && sku && oid) && `/review/product-details?pid=${pid}&sku=${sku}&oid=${oid}`);
 
    const { assets, title, ratingAverage, ratingCount, _id } = data?.response ?? {};
 
    const maxSize = 500 * 1024; // 500 KB
 
-   const payload = {
+   const ratingStatus = {
       1: ["Poor", "red"], 2: ["Average", "rgb(236, 128, 61)"],
       3: ["Good", "rgb(244, 183, 67)"], 4: ["Very Good", "green"], 5: ["Excellent", "rgb(6, 167, 89)"]
    };
@@ -48,6 +50,7 @@ const RatingReview = () => {
          setReviewLoading(true);
 
          const promises = [];
+
          for (let i = 0; i < lengthOfImg; i++) {
             const formData = new FormData();
             let file = reviewImages[i];
@@ -228,10 +231,10 @@ const RatingReview = () => {
                                        </div>
 
                                        <span style={{
-                                          color: payload[star][1],
+                                          color: ratingStatus[star][1],
                                           fontWeight: "bolder",
                                           marginLeft: "10px"
-                                       }}>{payload[star][0]}</span>
+                                       }}>{ratingStatus[star][0]}</span>
                                     </div>
                                  </div>
 
@@ -252,28 +255,12 @@ const RatingReview = () => {
 
                                        <div className="d-flex align-items-center justify-content-between">
                                           <div className="input_group" style={{ position: "relative" }}>
-                                             <label htmlFor="images" className='review_images'></label>
+                                             <label htmlFor="images" className='imagesLabel'></label>
                                              <input type="file" accept="image/*" name="images" id="images" multiple onChange={(e) => handleImagesPreview(e)} />
 
                                           </div>
 
-                                          <div className="preview_images">
-                                             <div className="image_wrapper">
-                                                {
-                                                   previewImages?.map((image, index) => {
-                                                      return (
-                                                         <div className='images' key={index}>
-                                                            <img srcSet={image} alt="review-preview-image" width="60" height="60" />
-                                                         </div>
-                                                      )
-                                                   })
-                                                }
-                                             </div>
-
-                                             {
-                                                previewImages?.length >= 1 && <button className='status_btn' onClick={() => setPreviewImages([])}>Clear</button>
-                                             }
-                                          </div>
+                                          <ImagePreviewer previewImages={previewImages} setPreviewImages={setPreviewImages} />
 
                                           {
                                              reviewLoading ? <p>Loading...</p> : <button className="bt9_primary">Submit</button>
@@ -297,7 +284,7 @@ const RatingReview = () => {
 
                      </div>
 
-                  
+
                   </div>
                </div> : <div className='container'>
                   <h2>Something Wrong</h2>

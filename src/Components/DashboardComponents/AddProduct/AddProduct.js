@@ -1,19 +1,20 @@
 import React from 'react';
-
 import { useAuthContext } from '@/lib/AuthProvider';
 import Link from 'next/link';
-import ProductTemplateForm from '@/Components/Global/ProductTemplateForm';
+import ProductListing from '@/Components/DashboardComponents/AddProduct/Components/ProductListing';
+import { useRouter } from 'next/router';
 
 const AddProduct = () => {
    const { userInfo, setMessage } = useAuthContext();
-   const queryParams = new URLSearchParams(window && window.location.search).get("np");
+   const { query } = useRouter();
+   const { s, np } = query;
 
 
    return (
       <div className='section_default'>
          <div className="container">
             {
-               queryParams === 'add_product' ? <ProductTemplateForm
+               np === 'add_product' ? <ProductListing
                   userInfo={userInfo}
                   setMessage={setMessage}
                   formTypes={"create"}
@@ -27,6 +28,10 @@ const AddProduct = () => {
                               <Link href={`/dashboard/add-product?np=add_product&s=${userInfo?.store?.name}`}>Add Single Product</Link>
                            </div>
                         </div>
+
+                        {/* <div className="col-lg-12">
+                           <ProductListing
+                        </div> */}
                      </div>
                   </>
             }

@@ -147,7 +147,7 @@ const NavigationBar = () => {
                                           return (
                                              <div className="d-flex flex-row align-items-center justify-content-start mb-3" key={index}>
                                                 <img src={product?.image && product?.image} style={{ width: "25px", height: "25px", marginRight: "0.8rem", marginBottom: "0.4rem" }} alt="" />
-                                                <Link href={`/product/${product?.slug}?pId=${product._id}&vId=${product?._vrid}`} style={{ fontSize: "0.7rem" }}>{product?.title}</Link>
+                                                <Link href={`/product/${product?.slug}?pId=${product._id}&sku=${product?.sku}`} style={{ fontSize: "0.7rem" }}>{product?.title}</Link>
                                              </div>
                                           )
                                        }) : <b>No Product Found...</b>

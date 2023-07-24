@@ -1,29 +1,28 @@
 const color = [
-   "No Color,#",
-   "black,#000000",
-   "white,#FFFFFF",
-   "red,#FF0000",
-   "green,#00FF00",
-   "blue,#0000FF",
-   "yellow,#FFFF00",
-   "purple,#800080",
-   "orange,#FFA500",
-   "pink,#FFC0CB",
-   "gray,#808080"
+   "Multicolor",
+   "black",
+   "white",
+   "red",
+   "green",
+   "blue",
+   "yellow",
+   "purple",
+   "orange",
+   "pink",
+   "gray"
 ]
 const clothingSizes = ['S', 'M', 'L', 'XXL', 'XS'];
 
-
-export const newCategory = [
+export const productCategories = [
    {
       id: 1,
-      category: "electronics",
+      name: "electronics",
       img: "",
-      sub_category_items: [
+      subCategories: [
          {
             id: 1,
             name: "mobile",
-            post_category_items: [
+            postCategories: [
                {
                   name: 'smartphone',
                   attrs: {
@@ -31,10 +30,10 @@ export const newCategory = [
                      model_name: "",
                      expandable_storage: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB', '32GB', '64GB', "128GB"],
                   },
+                  color,
                   variant: {
                      ram: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB'],
-                     rom: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB', '32GB', '64GB', "128GB"],
-                     color
+                     rom: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB', '32GB', '64GB', "128GB"]
                   },
                   specification: {
                      browse_type: ["Smartphones", "Cell Phone"],
@@ -65,15 +64,13 @@ export const newCategory = [
          {
             id: 2,
             name: "mobile-accessories",
-            post_category_items: [
+            postCategories: [
                {
                   name: 'headphone',
                },
                {
                   name: "cases-and-covers",
-                  variant: {
-                     color
-                  },
+                  color,
                   attrs: {
                      model_number: "",
                   },
@@ -96,20 +93,20 @@ export const newCategory = [
 
    {
       id: 2,
-      category: "men-clothing",
+      name: "men-clothing",
       img: "",
-      sub_category_items: [
+      subCategories: [
          {
             id: 1,
             name: "top-wear",
-            post_category_items: [
+            postCategories: [
                {
                   name: 't-shirt',
                   attrs: {
                      model: "",
                   },
+                  color,
                   variant: {
-                     color,
                      sizes: clothingSizes,
                   },
                   specification: {
@@ -130,14 +127,14 @@ export const newCategory = [
          {
             id: 2,
             name: "bottom-wear",
-            post_category_items: [
+            postCategories: [
                {
                   name: 'pants',
                   attrs: {
                      model_name: "",
                   },
+                  color,
                   variant: {
-                     color,
                      sizes: clothingSizes,
                   },
                   specification: {

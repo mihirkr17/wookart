@@ -16,8 +16,8 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
       try {
          setLoading(true);
 
-         const { productID, title, variationID } = cp;
-         const { success, message } = await apiHandler(`/cart/delete-cart-item/${productID}/${variationID}/${cartType && cartType}`, "DELETE", {});
+         const { productID, title, sku } = cp;
+         const { success, message } = await apiHandler(`/cart/delete-cart-item/${productID}/${sku}/${cartType && cartType}`, "DELETE", {});
 
          setLoading(false);
 
@@ -35,7 +35,7 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
    }
 
 
-   const itemQuantityHandler = async (value, productID, variationID, cartID) => {
+   const itemQuantityHandler = async (value, productID, sku, cartID) => {
       try {
          setQtyLoading(true);
          let quantity = parseInt(value);
@@ -56,7 +56,7 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
             },
             upsertRequest: {
                cartContext: {
-                  productID, variationID, quantity: quantity, cartID
+                  productID, sku, quantity: quantity, cartID
                }
             }
          });
@@ -93,7 +93,7 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
          <div className="mb-2 cart_wrapper">
             <div className="c_list1">
                <div className="c_img">
-                  {qtyLoading ? "Loading" : <img src={cartProduct?.assets?.images[0] ?? ""} alt="" />}
+                  {qtyLoading ? "Loading" : <img src={cartProduct?.imageUrl ?? ""} alt="" />}
                </div>
 
                {
@@ -103,14 +103,14 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
                      <button
                         className='badge bg-primary my-1'
                         disabled={cartProduct && cartProduct?.quantity <= 1 ? true : false}
-                        onClick={() => itemQuantityHandler(parseInt(cartProduct?.quantity) - 1, cartProduct?.productID, cartProduct?.variationID, cartProduct?.cartID)}>
+                        onClick={() => itemQuantityHandler(parseInt(cartProduct?.quantity) - 1, cartProduct?.productID, cartProduct?.sku, cartProduct?.cartID)}>
                         -
                      </button>
 
                      <input
                         className='border px-2' type="number"
                         value={cartProduct?.quantity || 0}
-                        onChange={(e) => itemQuantityHandler(e.target.value, cartProduct?.productID, cartProduct?.variationID, cartProduct?.cartID)}
+                        onChange={(e) => itemQuantityHandler(e.target.value, cartProduct?.productID, cartProduct?.sku, cartProduct?.cartID)}
                         maxLength='5'
                         style={{ width: '50px' }}
                      />
@@ -118,7 +118,7 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
                      <button
                         className='badge bg-primary my-1'
                         disabled={cartProduct && cartProduct?.quantity >= cartProduct?.available ? true : false}
-                        onClick={() => itemQuantityHandler(parseInt(cartProduct?.quantity) + 1, cartProduct?.productID, cartProduct?.variationID, cartProduct?.cartID)}>
+                        onClick={() => itemQuantityHandler(parseInt(cartProduct?.quantity) + 1, cartProduct?.productID, cartProduct?.sku, cartProduct?.cartID)}>
                         +
                      </button>
                   </div>
@@ -129,7 +129,7 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
                <div className='c_meta_info'>
 
                   <b className="c_title">
-                     <Link href={`/product/${cartProduct?.slug}?pId=${cartProduct?.productID}&vId=${cartProduct?.variationID}`}>
+                     <Link href={`/product/${cartProduct?.slug}?pId=${cartProduct?.productID}&sku=${cartProduct?.sku}`}>
                         {cartProduct && cartProduct?.title}
                      </Link>
                   </b>

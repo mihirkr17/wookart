@@ -138,7 +138,7 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo, rou
                      cancelTemplate(order_id, customer?.email, {
                         productID: product?.product_id,
                         listingID: product?.listing_id,
-                        variationID: product?.variation_id,
+                        sku: product?.sku,
                         quantity,
                         title: product?.title,
                         finalAmount: final_amount,
@@ -167,7 +167,7 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo, rou
                <div>
                   <b>{product?.title}</b> <br />
                   <small>
-                     Selling Price: {product?.selling_price} <br />
+                     Selling Price: {product?.sellingPrice} <br />
                      Quantity: {quantity}
                   </small>
                </div>
@@ -175,7 +175,7 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo, rou
 
                {
                   <div className="rv_div" style={{ alignSelf: "center" }}>
-                     <button className="status_btn" onClick={() => router.push(`/rating-review?oid=${order_id}&pid=${product?.product_id}&vid=${product?.variation_id}`)}
+                     <button className="status_btn" onClick={() => router.push(`/rating-review?oid=${order_id}&pid=${product?.product_id}&sku=${product?.sku}`)}
                      >
                         Add Review
                      </button>

@@ -265,7 +265,7 @@ export default function CartCheckoutComponent() {
                                     cartType={"toCart"}
                                     checkOut={true}
                                     product={product}
-                                    key={product?.variationID}
+                                    key={product?.sku}
                                  />
                               )
                            })

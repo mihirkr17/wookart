@@ -238,7 +238,7 @@ export function __dynamicCategory({ products, filterData }) {
                         {
                            Array.isArray(products) && products.map((product) => {
                               return (
-                                 <Product key={product?._vrid} product={product}></Product>
+                                 <Product key={product?.sku} product={product}></Product>
                               )
                            })
                         }
