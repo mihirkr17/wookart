@@ -1,4 +1,4 @@
-import { CookieParser } from "@/Functions/common";
+import { CookieParser, deleteAuth } from "@/Functions/common";
 import { useEffect, useState } from "react";
 
 export const useFetch = (url) => {

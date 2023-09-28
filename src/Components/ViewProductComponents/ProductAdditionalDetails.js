@@ -19,12 +19,7 @@ const ProductAdditionalDetails = ({ product, userInfo }) => {
             <h6 className='h6_title'>Specification of {product?.title}</h6>
             <div className="product-details__items">
                <ul>
-                  {
-                     getSpecs(product?.variation?.attrs)
-                  }
-                  {
-                     getSpecs(product?.variation?.variant)
-                  }
+                  
                   {
                      getSpecs(specs)
                   }

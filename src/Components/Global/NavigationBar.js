@@ -163,7 +163,7 @@ const NavigationBar = () => {
 
                <div className="nav_right_items">
                   <div className="nv_items">
-                     <Link className="nav_link cart_link" href='/my-cart'>
+                     <Link className="nav_link cart_link" href='/cart'>
                         <FontAwesomeIcon icon={faCartShopping}></FontAwesomeIcon>
                         {<div className="bg-info cart_badge">{cartQuantity || 0}</div>}
                      </Link>
@@ -186,12 +186,11 @@ const NavigationBar = () => {
                      </div>
                   }
 
-                  {!role && (!pathname.startsWith("/login") && !pathname.startsWith("/register")) && <Link className='nv_items nav_link' href={{
-                     pathname: `/login`,
-                     // query: {
-                     //    from: asPath
-                     // }
-                  }}>Login</Link>}
+                  {
+                     !role && (!pathname.startsWith("/login") && !pathname.startsWith("/register")) && <Link className='nv_items nav_link' href={{
+                        pathname: `/login`
+                     }}>Login</Link>
+                  }
 
                </div>
 

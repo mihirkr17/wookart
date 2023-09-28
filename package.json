@@ -30,6 +30,7 @@
     "react-bootstrap": "^2.7.2",
     "react-dom": "18.2.0",
     "react-to-pdf": "^0.0.14",
-    "stripe": "^11.14.0"
+    "stripe": "^11.14.0",
+    "uuid": "^9.0.1"
   }
 }

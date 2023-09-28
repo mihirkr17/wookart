@@ -26,7 +26,7 @@ const RatingReview = () => {
 
    const { data, loading } = useFetch((pid && sku && oid) && `/review/product-details?pid=${pid}&sku=${sku}&oid=${oid}`);
 
-   const { assets, title, ratingAverage, ratingCount, _id } = data?.response ?? {};
+   const { imageUrl, title, ratingAverage, ratingCount, _id } = data?.response ?? {};
 
    const maxSize = 500 * 1024; // 500 KB
 
@@ -79,8 +79,8 @@ const RatingReview = () => {
          const { success, message } = await apiHandler(`/review/add-product-rating`, "POST", {
             name: userInfo?.fullName,
             description,
-            orderID: oid,
-            productID: _id,
+            orderId: oid,
+            productId: _id,
             ratingWeight: star,
             reviewImage: imgUrls ?? []
          });
@@ -192,7 +192,7 @@ const RatingReview = () => {
                                     </div>
                                  </div>
                                  <div className="p-1">
-                                    <img src={assets?.images[0] ?? ""} width="50" height="50" alt="" />
+                                    <img src={imageUrl ?? ""} width="50" height="50" alt="" />
                                  </div>
                               </div>
                            </div>

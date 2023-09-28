@@ -28,7 +28,7 @@ const MyOrder = () => {
       if (filterOrder === "" || filterOrder === "all") {
          setOrderItems(data?.data?.module?.orders && data?.data?.module?.orders)
       } else {
-         setOrderItems(data?.data?.module?.orders && data?.data?.module?.orders.filter(p => p?.orderStatus === filterOrder))
+         setOrderItems(data?.data?.module?.orders && data?.data?.module?.orders.filter(p => p?.itemStatus === filterOrder))
       }
    }, [data, filterOrder]);
 
@@ -62,7 +62,22 @@ const MyOrder = () => {
 
    if (loading) return <Spinner></Spinner>;
 
-   console.log(orderItems);
+
+   function printAttributes(obj = {}) {
+      const newObj = Object.entries(obj);
+      let str = "";
+
+      for (let [key, value] of newObj) {
+         str += `${key}: ${value.split(",")[0]}, `;
+      }
+
+      return str.slice(0, str.lastIndexOf(',')) + str.slice(str.lastIndexOf(',') + 1);
+   }
+
+
+   function orderDetailHandler(orderId, itemId) {
+      router.push(`/order-details?order_id=${orderId}&item_id=${itemId}`);
+   }
 
    return (
       <div className="container">
@@ -96,63 +111,71 @@ const MyOrder = () => {
                   <div className="col-12">
                      {
                         Array.isArray(orderItems) && orderItems.map((orderItem, index) => {
-                           const { final_amount, order_status, payment, customer, shipping_charge, product, quantity, order_id, order_placed_at } = orderItem;
+                           const { amount, itemStatus, title, itemId, sellingPrice, attributes, imageUrl, productId, sku, quantity, _id, orderPlacedAt } = orderItem;
 
                            return (
-                              <div className="my_order_items" key={index}>
-                                 <div className="ssg">
+                              <div className="my_order_items" key={itemId}>
+                                 <div className="ssg" onClick={() => orderDetailHandler(_id, itemId)}>
+
                                     <div>
-                                       <small style={{
-                                          display: "flex",
-                                          flexDirection: "column",
-                                          width: "100%",
-                                          flexWrap: "wrap",
-                                          justifyContent: "space-between",
-                                          fontSize: "0.8rem"
-                                       }}>
+                                       <img src={imageUrl ?? ""}
+                                          alt="product-image" srcSet="" width="40" height="40"
+                                          style={{ objectFit: "contain" }}
+                                       />
+                                    </div>
 
-                                          <span style={{ color: "#d33900" }}><strong>{order_id}</strong></span>
-                                          <i className='textMute'>Placed on {order_placed_at?.date + ", " + order_placed_at?.time}</i>
-                                          <small>
-                                             Status: <i style={order_status === "canceled" ? { color: "red" } : { color: "green" }}>
-                                                {order_status}
-                                             </i>
-                                          </small>
-
+                                    <div className='d-flex flex-column'>
+                                       <small>
+                                          <span style={{ color: "#d33900" }}><strong>{title}</strong></span>
+                                       </small>
+                                       <small className='text-muted'>
+                                          {
+                                             printAttributes(attributes)
+                                          }
                                        </small>
                                     </div>
 
+                                    <strong className='currency_sign'>{amount}</strong>
+
                                     <div>
-                                       <small>Total: <strong className='currency_sign'>{final_amount}</strong></small> <br />
-                                       <button className='manage_order_button' onClick={() => setManageOrderModal(orderItem)}>
+                                       <small>
+                                          Status: <i style={itemStatus === "canceled" ? { color: "red" } : { color: "green" }}>
+                                             {itemStatus}
+                                          </i>
+                                       </small> <br />
+                                       <i className='textMute'>
+                                          Placed on {new Date(orderPlacedAt).toLocaleDateString() + ", " + new Date(orderPlacedAt).toLocaleTimeString()}
+                                       </i>
+
+                                       {/* <button className='manage_order_button' onClick={() => setManageOrderModal(orderItem)}>
                                           Manage Order
                                        </button> <br />
                                        {
-                                           <button className="bt9_trans text_primary mt-2" onClick={() => router.push(`/rating-review?oid=${order_id}&pid=${product?.product_id}&sku=${product?.sku}`)}
+                                          <button className="bt9_trans text_primary mt-2" onClick={() => router.push(`/rating-review?oid=${_id}&pid=${productId}&sku=${sku}`)}
                                           >
                                              Rate & Review Product
                                           </button>
-                                       }
+                                       } */}
                                     </div>
                                  </div>
 
 
-                                 <table style={{ marginTop: "5px", overflowX: "auto" }}>
+                                 {/* <table style={{ marginTop: "5px", overflowX: "auto" }}>
                                     <tbody>
                                        <tr>
-                                          <td><img src={product?.assets?.images[0] ?? ""}
+                                          <td><img src={imageUrl ?? ""}
                                              alt="product-image" srcSet="" width="35" height="35"
                                              style={{ objectFit: "contain" }}
                                           />
                                           </td>
-                                          <td><b>{product?.title}</b></td>
+                                          <td><b>{title}</b></td>
                                           <td>
-                                             <b className='currency_sign'>{product?.sellingPrice}</b>
+                                             <b className='currency_sign'>{sellingPrice}</b>
                                           </td>
                                           <td><b>{quantity}</b></td>
                                        </tr>
                                     </tbody>
-                                 </table>
+                                 </table> */}
                               </div>
                            )
                         })

@@ -4,6 +4,7 @@
 import VerifyEmailByOtp from "@/Components/AuthComponents/VerifyEmailByOtp";
 import { addCookie, apiHandler, validPassword } from "@/Functions/common";
 import { useAuthContext } from "@/lib/AuthProvider";
+import { useCartContext } from "@/lib/CartProvider";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -18,14 +19,15 @@ export default function Login() {
    const [verifyReturnEmail, setVerifyReturnEmail] = useState("");
    const [verifyCodeTime, setVerifyCodeTime] = useState(0);
    const router = useRouter();
-   const { email } = router.query;
+   const { email, redirect_to } = router.query;
+   const {cartRefetch} = useCartContext();
 
 
    useEffect(() => {
       if (role) {
-         router.push("/");
+         router.push(redirect_to ? decodeURIComponent(redirect_to) : "/");
       }
-   }, [role, router, email]);
+   }, [role, router, redirect_to]);
 
    // handle login
    async function handleLogin(e) {
@@ -52,9 +54,7 @@ export default function Login() {
             message,
             token,
             success,
-            verificationExpiredAt,
-            returnEmail,
-            role
+            returnEmail
          } = await apiHandler(`/auth/login`, "POST", { emailOrPhone, cPwd });
 
          setLoading(false);
@@ -63,8 +63,7 @@ export default function Login() {
             return setMessage(message, 'danger');
          }
 
-         if (returnEmail && verificationExpiredAt) {
-            setVerifyCodeTime(verificationExpiredAt);
+         if (returnEmail) {
             return setVerifyReturnEmail(returnEmail);
          }
 
@@ -78,8 +77,9 @@ export default function Login() {
 
             localStorage.setItem("client_data", u_data);
 
-            initialLoader() && router.push(["SELLER", "ADMIN", "OWNER"].includes(role) ? "/dashboard/" : "/");
-            return;
+            initialLoader();
+            cartRefetch();
+            router.push(redirect_to ? decodeURIComponent(redirect_to) : "/");
          }
 
       } catch (error) {

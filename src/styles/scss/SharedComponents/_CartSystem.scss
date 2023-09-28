@@ -1,7 +1,7 @@
 .cart_wrapper {
   display: flex;
   flex-wrap: wrap;
-  border: 1px solid #ededed;
+  // border: 1px solid #ededed;
   background: ghostwhite;
   border-radius: 4px;
   flex-direction: row;
@@ -22,7 +22,7 @@
     .c_meta_info {
       .c_title {
         a {
-          font-size: 0.9rem;
+          font-size: 0.8rem;
         }
       }
     }

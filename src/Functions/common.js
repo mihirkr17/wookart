@@ -121,7 +121,8 @@ export function deleteAuth() {
    localStorage.removeItem("client_data");
 
    if (window) {
-      return window.location.replace(window.location.origin);
+      const currentURL = window.location.pathname + window.location.search;
+      return window.location.replace("/login?redirect_to=" + encodeURIComponent(currentURL));
    }
 }
 
@@ -174,7 +175,7 @@ export const calcTime = (iso, offset) => {
 }
 
 // global api handler
-export async function apiHandler(url = "", method = "GET", body = {}, cb) {
+export async function apiHandler(url = "", method = "GET", body = {}) {
 
    const cookie = window && CookieParser();
 

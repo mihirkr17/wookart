@@ -894,6 +894,8 @@ label {
           justify-content: space-between;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
+  gap: 4px;
+  cursor: pointer;
 }
 .my_order_items .ssg > div {
   -webkit-box-flex: 0;
@@ -1925,7 +1927,6 @@ label {
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  border: 1px solid #ededed;
   background: ghostwhite;
   border-radius: 4px;
   -webkit-box-orient: horizontal;
@@ -1961,7 +1962,7 @@ label {
           align-items: center;
 }
 .cart_wrapper .c_list2 .c_meta_info .c_title a {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 .cart_wrapper .c_list2 .remove_btn {
   -ms-flex-item-align: start;
@@ -3824,4 +3825,91 @@ label {
   .sht_meta .shtm_data_count {
     font-size: 0.8rem;
   }
+}
+.status_wrapper {
+  min-width: 320px;
+  max-width: 1024px;
+  margin: 8px auto;
+}
+
+ul.progress_bar {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 0;
+  list-style: none;
+}
+
+li.section {
+  display: inline-block;
+  padding-top: 45px;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 16px;
+  color: gray;
+  vertical-align: top;
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+li.section:before {
+  content: "x";
+  position: absolute;
+  top: 2px;
+  left: calc(50% - 15px);
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  color: white;
+  border: 2px solid white;
+  border-radius: 17px;
+  line-height: 30px;
+  background: gray;
+}
+
+.status-bar {
+  height: 2px;
+  background: gray;
+  position: relative;
+  top: 20px;
+  margin: 0 auto;
+}
+
+.current-status {
+  height: 2px;
+  width: 0;
+  border-radius: 1px;
+  background: mediumseagreen;
+}
+
+@-webkit-keyframes changeBackground {
+  from {
+    background: gray;
+  }
+  to {
+    background: mediumseagreen;
+  }
+}
+
+@keyframes changeBackground {
+  from {
+    background: gray;
+  }
+  to {
+    background: mediumseagreen;
+  }
+}
+li.section.visited:before {
+  content: "✔";
+  -webkit-animation: changeBackground 0.5s linear;
+          animation: changeBackground 0.5s linear;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+li.section.visited.current:before {
+  -webkit-box-shadow: 0 0 0 2px mediumseagreen;
+          box-shadow: 0 0 0 2px mediumseagreen;
 }

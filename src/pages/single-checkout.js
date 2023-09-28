@@ -3,16 +3,14 @@
 
 import SingleCheckoutComponent from "@/Components/CheckoutComponents/SingleCheckoutComponent";
 import StripePromises from "@/Components/StripeComponents/StripePromises";
-import { withOutDashboard } from "@/Functions/withOutDashboard";
-import RequiredAuth from "@/Middlewares/RequiredAuth";
+import { ProtectedHOC } from "./_ProtectedHOC";
 
 
-export default withOutDashboard(function SingleCheckout() {
+export default ProtectedHOC(function SingleCheckout() {
    return (
-      <RequiredAuth>
-         <StripePromises>
-            <SingleCheckoutComponent></SingleCheckoutComponent>
-         </StripePromises>
-      </RequiredAuth>
+      <StripePromises>
+         <SingleCheckoutComponent></SingleCheckoutComponent>
+      </StripePromises>
+
    )
-}, []);
+});

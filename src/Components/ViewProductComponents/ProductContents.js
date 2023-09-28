@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { faCartShopping, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BtnSpinner from '../Shared/BtnSpinner/BtnSpinner';
@@ -12,21 +12,20 @@ import MoreInfoModal from './MoreInfoModal';
 export default function ProductContents({ product, sku, setMessage, userInfo }) {
    const [addCartLoading, setAddCartLoading] = useState(false);
    const [openMoreInfo, setOpenMoreInfo] = useState(false);
+   const pinRef = useRef(null);
    const router = useRouter();
    const { asPath } = router;
    const { cartRefetch, cartData } = useCartContext();
+   const [address, setAddress] = useState([]);
 
    const defShipAddrs = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true);
 
    let inCart = Array.isArray(cartData?.products) && cartData?.products.find(e => e?.sku === sku);
 
    // add to cart handler
-   const addToCartHandler = async (pId, _lid, sku, params) => {
+   const addToCartHandler = async (pId, sku, params) => {
       try {
-         if (!userInfo?.email) {
-            router.push(`/login?from=${asPath}`);
-            return;
-         }
+
 
          setAddCartLoading(true);
 
@@ -34,18 +33,17 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
 
             const { success, message } = await apiHandler(`/cart/add-to-cart`, "POST", {
                quantity: 1,
-               productID: pId,
-               listingID: _lid,
+               productId: pId,
                sku,
                action: params
-            });
+            }, () => router.push(`/login?redirect_to=${encodeURIComponent(asPath)}`));
 
             setAddCartLoading(false);
 
             if (success) {
                cartRefetch();
                setMessage(message, "success");
-               router.push('/my-cart');
+               router.push('/cart');
                return;
             }
 
@@ -88,21 +86,6 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
       }
    }
 
-
-   const groupByColor = product?.swatch?.reduce((arr, item) => {
-      const color = item?.brandColor;
-      const existingItem = arr.find(obj => obj[color]);
-
-      if (!existingItem) {
-         arr.push({ [color]: [item] });
-      } else {
-         existingItem[color].push(item);
-      }
-
-      return arr;
-   }, []);
-
-
    function variantLooping(obj) {
       let str = "";
 
@@ -116,6 +99,22 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
 
    function handleVariation(sku) {
       return router.push(`/product/${product?.slug}?pId=${product?._id}&sku=${sku}`);
+   }
+
+   async function handleLocation() {
+
+      if (pinRef.current === null) return;
+
+      const pinCode = pinRef.current?.value;
+      const url = `https://nominatim.openstreetmap.org/search.php?q=${pinCode}&polygon_geojson=1&countrycodes=bd&format=jsonv2`;
+      const fullUrl = `https://nominatim.openstreetmap.org/search?postalcode=${pinCode}&format=json`
+      const response = await fetch(url, {
+         method: "GET"
+      });
+
+      const result = await response.json();
+
+      setAddress(result);
    }
 
    return (
@@ -169,25 +168,23 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
                         Array.isArray(product?.swatch) &&
                         <div className='swatch_wrapper'>
                            <label htmlFor="swatch">Variation :</label>
-                           <select name="swatch" id="swatch" className='form-select form-select-sm' onChange={e => handleVariation(e.target.value)}>
+                           <select name="swatch" id="swatch" className='form-select form-select-sm' defaultValue={sku || ""} onChange={e => handleVariation(e.target.value)}>
 
                               {
                                  product?.swatch?.map((swatch, index) => {
 
-                                    let variant = swatch?.variant;
-
-                                    variant["color"] = swatch?.brandColor;
+                                    let attribute = swatch?.attributes;
 
                                     return (
-                                       <option key={index} selected={swatch?.sku === sku} disabled={product?.variation?.stock === "out" ? true : false} value={swatch?.sku}>
-                                          {variantLooping(variant)}
+                                       <option key={index} disabled={product?.variation?.stock === "out" ? true : false} value={swatch?.sku}>
+                                          {variantLooping(attribute)}
                                        </option>
                                     )
                                  })
                               }
                            </select>
 
-                 
+
                         </div>
                      }
 
@@ -211,7 +208,7 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
 
                      <button className='ph_btn addToCartBtn'
                         onClick={() => (inCart ? router.push('/my-cart') :
-                           addToCartHandler(product?._id, product?._lid, product?.variation?.sku, "toCart"))}>
+                           addToCartHandler(product?._id, product?.variation?.sku, "toCart"))}>
                         <FontAwesomeIcon icon={faCartShopping} />&nbsp;
                         {inCart ? "Go To Cart" : addCartLoading ? <BtnSpinner text={"Adding..."} /> : "Add To Cart"}
                      </button>
@@ -222,11 +219,10 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
                            pathname: `/single-checkout`,
                            query: {
                               data: JSON.stringify({
-                                 listingID: product?._lid,
-                                 productID: product?._id,
+                                 productId: product?._id,
                                  sku: product?.variation?.sku,
                                  quantity: 1,
-                                 customerEmail: userInfo?.email
+                                 customerId: userInfo?._id
                               }),
                               oTracker: `buy.${product?.title}`
                            }
@@ -270,7 +266,26 @@ onClick={() => (product?.inWishlist ? removeToWishlist(product?._id) : addToWish
                                        }
                                     </span>
 
-                                    : <span>Please Login</span>
+                                    : <div className='d-flex align-items-center justify-content-between position-relative'>
+                                       <input type="number" name="pin_code" id="pin_code" ref={pinRef} className='form-control form-control-sm' />
+                                       <button className='btn btn-sm btn-primary' onClick={handleLocation}>Check</button>
+
+                                       <ul className="py-2 list-group position-absolute" style={{
+                                          top: "30px",
+                                          right: "0",
+                                          zIndex: 1,
+                                          width: "calc(100% + 20%)"
+                                       }}>
+                                          {
+                                             address && address?.map((addr, index) => {
+                                                return (
+                                                   <li className='list-group-item' key={index}>{addr?.display_name}</li>
+                                                )
+                                             })
+                                          }
+                                       </ul>
+                                    </div>
+
                               }
                            </div>
                         </div>
@@ -330,8 +345,8 @@ onClick={() => (product?.inWishlist ? removeToWishlist(product?._id) : addToWish
                            <img src="/ecom/store-official-ecommerce-svgrepo-com.svg" width="28" height="28" alt="" />
                         </div>
                         <div className='seller_div_text'>
-                           <span>{product?.supplier?.storeName}</span>
-                           <button onClick={() => router.push(`/store/${product?.supplier?.storeName}`)}>View Shop</button>
+                           <span>{product?.storeName}</span>
+                           <button onClick={() => router.push(`/store/${product?.storeName}`)}>View Shop</button>
                         </div>
                      </div>
                   </div>

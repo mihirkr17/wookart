@@ -1,0 +1,36 @@
+
+
+// import { loadStripe } from '@stripe/stripe-js';
+// import { Elements } from '@stripe/react-stripe-js';
+// import CartCheckoutComponent from "@/Components/CheckoutComponents/CartCheckOutComponent";
+// import { ProtectedHOC } from "./_ProtectedHOC";
+// import { useCartContext } from '@/lib/CartProvider';
+// import { useEffect, useState } from 'react';
+// import { apiHandler } from '@/Functions/common';
+// export const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK_KEY);
+
+// export default ProtectedHOC(function Checkout() {
+//    const { cartData, cartRefetch } = useCartContext();
+
+//    let totalAmount = cartData?.container_p?.finalAmounts;
+//    const [clientSecret, setClientSecret] = useState("");
+
+//    useEffect(() => {
+//       const setTimed = setTimeout(async () => {
+//          const { clientSecret } = await apiHandler(`/payment/create-payment-intent`, "POST", { totalAmount });
+
+//          if (clientSecret)
+//             setClientSecret(clientSecret);
+//       }, 100);
+
+//       return () => clearTimeout(setTimed);
+//    }, [totalAmount]);
+
+
+//    if (clientSecret)
+//       return (
+//          <Elements stripe={stripePromise} options={{ clientSecret }}>
+//             <CartCheckoutComponent />
+//          </Elements>
+//       )
+// })

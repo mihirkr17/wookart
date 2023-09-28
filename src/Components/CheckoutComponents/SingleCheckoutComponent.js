@@ -219,10 +219,9 @@ export default function SingleCheckoutComponent() {
                            <CartItem
                               cartType={"buy"}
                               checkOut={false}
-                              state={productData}
                               setState={setProductData}
                               setMessage={setMessage}
-                              product={data?.product && data?.product}
+                              products={data?.product && [data?.product]}
                            />
                         }
                      </div>

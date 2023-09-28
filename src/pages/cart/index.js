@@ -1,16 +1,17 @@
-import CartCalculation from "@/Components/CartComponents/CartCalculation";
-import CartItem from "@/Components/CartComponents/CartItem";
-import Spinner from "@/Components/Shared/Spinner/Spinner";
-import { useAuthContext } from "@/lib/AuthProvider";
-import { useCartContext } from "@/lib/CartProvider";
-import Link from "next/link";
-import { ProtectedHOC } from "./_ProtectedHOC";
+import React from 'react';
+import { ProtectedHOC } from '../_ProtectedHOC';
+import CartCalculation from '@/Components/CartComponents/CartCalculation';
+import Link from 'next/link';
+import CartItem from '@/Components/CartComponents/CartItem';
+import { useAuthContext } from '@/lib/AuthProvider';
+import { useCartContext } from '@/lib/CartProvider';
+import { v4 as uuidv4 } from 'uuid';
 
-export default ProtectedHOC(function MyCart() {
-
+const Cart = () => {
    const { userInfo, setMessage } = useAuthContext();
 
    const { cartData, cartLoading, cartRefetch } = useCartContext();
+
 
    return (
       <div className='section_default'>
@@ -19,13 +20,13 @@ export default ProtectedHOC(function MyCart() {
             <div className="row">
                <div className="col-lg-8 mb-3">
                   <div className="cart_card" style={cartLoading ? { opacity: "0.3" } : { opacity: "1" }}>
-                     <h6>Total In Cart ({(cartData?.numberOfProducts && cartData?.numberOfProducts) || 0})</h6>
+                     <h6>Total In Cart ({(cartData?.numberOfProduct && cartData?.numberOfProduct) || 0})</h6>
                      <hr />
                      {
 
-                        (cartData?.products && cartData?.products.length >= 1) ? <CartItem
+                        (Array.isArray(cartData?.cart_context) && cartData?.cart_context.length >= 1) ? <CartItem
                            cartRefetch={cartRefetch}
-                           products={cartData?.products}
+                           products={cartData?.cart_context}
                            cartType={"toCart"}
                            setMessage={setMessage}
                            checkOut={false}
@@ -42,7 +43,7 @@ export default ProtectedHOC(function MyCart() {
                <div className="col-lg-4 mb-3">
                   <div className="cart_card">
                      <CartCalculation
-                        product={cartData?.container_p && cartData?.container_p}
+                        product={cartData?.cart_calculation && cartData?.cart_calculation}
                      />
 
                      <br />
@@ -51,13 +52,7 @@ export default ProtectedHOC(function MyCart() {
 
                         {
                            cartData?.numberOfProducts <= 0 ? "Please Add Product To Your Cart" :
-                              <Link className='bt9_checkout' href={{
-                                 pathname: `/checkout`,
-                                 query: {
-                                    spa: `${userInfo?._uuid + "cart.proceed_to_checkout"}`,
-                                    data: JSON.stringify(cartData && cartData)
-                                 }
-                              }} as={`/checkout?spa=${userInfo?._uuid + "cart.proceed_to_checkout"}`}>
+                              <Link className='bt9_checkout' href={`/cart/checkout?session=${uuidv4()}`}>
                                  PROCEED TO CHECKOUT
                               </Link>
                         }
@@ -69,4 +64,6 @@ export default ProtectedHOC(function MyCart() {
       </div>
 
    )
-})
+};
+
+export default ProtectedHOC(Cart);

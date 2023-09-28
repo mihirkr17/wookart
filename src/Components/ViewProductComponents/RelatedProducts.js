@@ -12,7 +12,7 @@ export default function RelatedProducts({ relatedProducts }) {
                {
                   relatedProducts && relatedProducts.map((product, i) => {
 
-                     console.log(product);
+   
                      return (
                         <div key={i} className='product_card product_card_rel my-2'>
 

@@ -2,14 +2,11 @@
 // src/lib/CartProvider.js
 
 import { createContext, useContext, useEffect, useState } from "react"
-import { useAuthContext } from "./AuthProvider";
 import { CookieParser, deleteAuth } from "@/Functions/common";
 
 const cartContext = createContext();
 
 export default function CartProvider({ children }) {
-
-   const { role } = useAuthContext();
 
    const [cartLoading, setCartLoading] = useState(false);
    const [cartData, setCartData] = useState({});
@@ -21,9 +18,9 @@ export default function CartProvider({ children }) {
 
    useEffect(() => {
 
-      if (role !== "BUYER" || !role) return;
-
       const cookie = CookieParser();
+
+      if (!cookie?.appSession) return;
 
       const startFetch = setTimeout(() => {
          (async () => {
@@ -48,7 +45,7 @@ export default function CartProvider({ children }) {
                const { statusCode, success, data } = await response.json();
 
                if (statusCode === 200 && success === true) {
-                  setCartQuantity((data?.module?.products && data?.module?.products.length) || 0)
+                  setCartQuantity((data?.module?.cart_context && data?.module?.cart_context.length) || 0)
                   setCartData(data?.module);
                }
             } catch (error) {
@@ -60,7 +57,7 @@ export default function CartProvider({ children }) {
       }, 0);
 
       return () => clearTimeout(startFetch);
-   }, [cartRef, role]);
+   }, [cartRef]);
 
    return (
       <cartContext.Provider value={{ cartRefetch, cartLoading, cartData, cartQuantity, cartError }}>

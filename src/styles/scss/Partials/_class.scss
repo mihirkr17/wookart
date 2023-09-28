@@ -718,6 +718,8 @@ label {
     align-items: flex-start;
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: 4px;
+    cursor: pointer;
 
     > div {
       // width: 100%;

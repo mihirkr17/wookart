@@ -14,12 +14,15 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo, rou
    const { menuRef, openMenu, setOpenMenu } = useMenu();
    const [cancelLoading, setCancelLoading] = useState(false);
 
-   const { final_amount, order_status, is_canceled,
-      payment, customer, order_placed_at, supplier,
+   const { amount, orderStatus, isCanceled,
+      paymentMode, customer, orderPlacedAt, supplier, paymentStatus,
       product,
       quantity,
-      order_id,
-      shipping_charge
+      _id,
+      sellingPrice,
+      shipping_charge,
+      imageUrl,
+      productId, sku
    } = data;
 
 
@@ -104,11 +107,11 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo, rou
          <div className="p-1 pt-3" style={{
             display: "flex", alignItems: "center", justifyContent: "space-between", flexDirection: "row"
          }}>
-            <span>Order: {order_id}
+            <span>Order: {_id}
                <br />
-               <small className="textMute">Placed on {order_placed_at?.date + ", " + order_placed_at?.time}</small>
+               <small className="textMute">Placed on {new Date(orderPlacedAt).toLocaleDateString() + ", " + new Date(orderPlacedAt).toLocaleTimeString()}</small>
             </span>
-            <span>Total: <b className="currency_sign">{final_amount}</b></span>
+            <span>Total: <b className="currency_sign">{amount}</b></span>
          </div>
 
          <hr />
@@ -131,17 +134,17 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo, rou
 
             <div className="col-lg-6" style={{ textAlign: "end" }}>
                {
-                  order_status === "canceled" && is_canceled ?
-                     <button className='btn btn-sm text-uppercase text-muted' onClick={() => removeOrderHandler(order_id, customer?.email)}>
+                  orderStatus === "canceled" && isCanceled ?
+                     <button className='btn btn-sm text-uppercase text-muted' onClick={() => removeOrderHandler(_id, customer?.email)}>
                         Remove
                      </button> :
-                     cancelTemplate(order_id, customer?.email, {
+                     cancelTemplate(_id, customer?.email, {
                         productID: product?.product_id,
                         listingID: product?.listing_id,
                         sku: product?.sku,
                         quantity,
                         title: product?.title,
-                        finalAmount: final_amount,
+                        finalAmount: amount,
                         sellerEmail: supplier?.email
                      })
                }
@@ -162,12 +165,12 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo, rou
                marginBottom: "18px"
             }}>
                <div style={{ marginRight: "14px" }}>
-                  <img src={product?.assets?.images[0] ?? ""} width={55} height={55} alt="" />
+                  <img src={imageUrl ?? ""} width={55} height={55} alt="" />
                </div>
                <div>
                   <b>{product?.title}</b> <br />
                   <small>
-                     Selling Price: {product?.sellingPrice} <br />
+                     Selling Price: {sellingPrice} <br />
                      Quantity: {quantity}
                   </small>
                </div>
@@ -175,7 +178,7 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo, rou
 
                {
                   <div className="rv_div" style={{ alignSelf: "center" }}>
-                     <button className="status_btn" onClick={() => router.push(`/rating-review?oid=${order_id}&pid=${product?.product_id}&sku=${product?.sku}`)}
+                     <button className="status_btn" onClick={() => router.push(`/rating-review?oid=${_id}&pid=${productId}&sku=${sku}`)}
                      >
                         Add Review
                      </button>
@@ -212,20 +215,20 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo, rou
                      <tbody>
                         <tr>
                            <td><i className="material-icons"></i>Subtotal ({quantity})</td>
-                           <td className="right-t currency_sign">{product?.base_amount || 0}</td>
+                           <td className="right-t currency_sign">{amount || 0}</td>
                         </tr>
                         <tr>
                            <td><i className="material-icons"></i> Shipping fee</td>
-                           <td className="right-t currency_sign">{shipping_charge}</td>
+                           <td className="right-t currency_sign">{shipping_charge || 0}</td>
                         </tr>
                         <tr className="br-top">
                            <td>Amount Payable</td>
-                           <td className="right-t currency_sign">{final_amount}</td>
+                           <td className="right-t currency_sign">{amount}</td>
                         </tr>
                         <tr>
                            <td>
-                              Payment Status: {payment?.status} <br />
-                              <i className="textMute">Paid by {payment?.mode}</i>
+                              Payment Status: {paymentStatus} <br />
+                              <i className="textMute">Paid by {paymentMode}</i>
                            </td>
 
                         </tr>

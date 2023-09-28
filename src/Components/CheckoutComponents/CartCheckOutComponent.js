@@ -2,7 +2,7 @@
 // Components/CheckoutComponents/CartCheckoutComponent.js
 
 import { useRouter } from "next/router";
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { CardElement, useElements, useStripe, PaymentElement } from '@stripe/react-stripe-js';
 import CartAddress from "../CartComponents/CartAddress";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
@@ -15,17 +15,63 @@ import { apiHandler } from "@/Functions/common";
 import { useCartContext } from "@/lib/CartProvider";
 
 
-export default function CartCheckoutComponent() {
+export default function CartCheckoutComponent({ totalAmount, session }) {
    const { authRefetch, userInfo, setMessage } = useAuthContext();
    const router = useRouter();
    const [orderLoading, setOrderLoading] = useState(false);
    const [confirmLoading, setConfirmLoading] = useState(false);
    const { cartData, cartRefetch } = useCartContext();
 
+
+   let productIds = cartData?.cart_context && cartData?.cart_context?.map((p) => p?.productId);
+
    const stripe = useStripe();
    const elements = useElements();
 
+   // console.log(totalAmount);
+
+   const tm = totalAmount;
+
    const selectedAddress = (userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true)) || null;
+
+
+   const handleServerResponse = async (response) => {
+      if (response?.message) return setMessage(response?.message, "danger");
+
+      if (response.status === "requires_action") {
+         // Use Stripe.js to handle the required next action
+         const {
+            error,
+            paymentIntent
+         } = await stripe.handleNextAction({
+            clientSecret: response.clientSecret
+         });
+
+         if (error) {
+            // Show error from Stripe.js in payment form
+            return setMessage(error?.message, "danger");
+         } else {
+            // Actions handled, show success message
+
+            return setMessage("Payment success", "success");
+         }
+      }
+
+      let products = cartData?.cart_context && cartData?.cart_context;
+      setOrderLoading(true);
+
+      const { productInfos, message, success } =
+         await apiHandler(`/order/cart-purchase/`, "POST", {
+            state: "byCart",
+            cartItems: products, totalAmount,
+            paymentIntentId: response?.paymentIntentId
+         });
+
+      setOrderLoading(false);
+
+      setMessage("Payment success 2", "success");
+
+   }
 
    const buyBtnHandler = async (e) => {
       try {
@@ -39,11 +85,54 @@ export default function CartCheckoutComponent() {
             return setMessage("Card initialization failed !", "danger");
          }
 
-         const card = elements.getElement(CardElement);
-
-         if (card === null) {
-            return setMessage("Your card is null !", "danger");
+         // Trigger form validation and wallet collection
+         const { error: submitError } = await elements.submit();
+         if (submitError) {
+            return;
          }
+
+         const { error: pmErr, paymentMethod: pm } = await stripe.createPaymentMethod({
+            elements,
+            params: {
+               billing_details: {
+                  name: selectedAddress?.name,
+                  email: userInfo?.email,
+                  phone: selectedAddress?.phone_number,
+                  address: {
+                     city: selectedAddress?.city,
+                     state: selectedAddress?.division,
+                     line1: selectedAddress?.area,
+                     line2: selectedAddress?.landmark,
+                     country: "BD"
+                  }
+               }
+            }
+         });
+
+         if (pmErr) {
+            return setMessage(pmErr?.message, "danger");
+         }
+
+
+         const data = await apiHandler(`/payment/create-payment-intent`, "POST", {
+            totalAmount: tm, session, paymentMethodId: pm?.id, productIds: productIds.join(", ") || ""
+         });
+
+         // if (!clientSecret) return setMessage("Payment intent creation failed !", "danger");
+
+         return handleServerResponse(data);
+
+         // Confirm the PaymentIntent using the details collected by the Payment Element
+         const { error: err } = await stripe.confirmPayment({
+            elements,
+            clientSecret,
+            confirmParams: {
+               return_url: 'https://example.com/order/123/complete',
+            },
+         });
+
+         console.log(err);
+         return setMessage(err?.message, "danger");
 
          // Use your card Element with other Stripe.js APIs
          const { error, paymentMethod } = await stripe.createPaymentMethod({ type: 'card', card });
@@ -52,7 +141,7 @@ export default function CartCheckoutComponent() {
             return setMessage(error?.message, "danger")
          }
 
-         let products = cartData?.products && cartData?.products;
+         let products = cartData?.cart_context && cartData?.cart_context;
 
          if (!Array.isArray(products) || products.length <= 0) {
             return setMessage("Please select product in your cart !", "danger");
@@ -60,7 +149,8 @@ export default function CartCheckoutComponent() {
 
          setOrderLoading(true);
 
-         const { clientSecret, orderPaymentID, paymentIntentID, orderIDs, totalAmount, productInfos, message, success } = await apiHandler(`/order/cart-purchase/`, "POST", { state: "byCart", paymentMethod, customerEmail: userInfo?.email });
+         const { orderPaymentID, paymentIntentID, orderIDs, totalAmount, productInfos, message, success } =
+            await apiHandler(`/order/cart-purchase/`, "POST", { state: "byCart", cartItems: products, totalAmount });
 
          setOrderLoading(false);
 
@@ -250,7 +340,7 @@ export default function CartCheckoutComponent() {
                            <CartAddress
                               setMessage={setMessage}
                               authRefetch={authRefetch}
-                              addr={userInfo?.buyer?.shippingAddress ? userInfo?.buyer?.shippingAddress : []}
+                              addr={userInfo?.shippingAddress ? userInfo?.shippingAddress : []}
                            /> : <Link className="bt9_primary my-3" href={`/user/address-book`}>Select Shipping Address</Link>
                      }
                      <br />
@@ -258,18 +348,11 @@ export default function CartCheckoutComponent() {
                      <h6>Order Summary</h6>
                      <hr />
                      <div className="row px-3">
-                        {
-                           Array.isArray(cartData?.products) && cartData?.products.filter(p => p?.stock === "in").map((product) => {
-                              return (
-                                 <CartItem
-                                    cartType={"toCart"}
-                                    checkOut={true}
-                                    product={product}
-                                    key={product?.sku}
-                                 />
-                              )
-                           })
-                        }
+                        <CartItem
+                           cartType={"toCart"}
+                           checkOut={true}
+                           products={cartData?.cart_context}
+                        />
                      </div>
 
                   </div>
@@ -281,7 +364,7 @@ export default function CartCheckoutComponent() {
 
                   <div className="cart_card">
                      <CartCalculation
-                        product={(cartData?.container_p && cartData?.container_p)}
+                        product={(cartData?.cart_calculation && cartData?.cart_calculation)}
                         headTitle={"Order Details"}
                      />
 
@@ -293,7 +376,8 @@ export default function CartCheckoutComponent() {
                            width: "100%"
                         }} onSubmit={buyBtnHandler}>
                            <div className="py-4">
-                              <CardElement id="card-element"
+                              <PaymentElement />
+                              {/* <CardElement id="card-element"
                                  options={{
                                     style: {
                                        base: {
@@ -315,7 +399,7 @@ export default function CartCheckoutComponent() {
                                        }
                                     }
                                  }}
-                              />
+                              /> */}
                            </div>
                            {
                               !selectedAddress && <p>Please select shipping address.</p>
@@ -323,7 +407,7 @@ export default function CartCheckoutComponent() {
 
                            {
                               (orderLoading || confirmLoading) ?
-                                 <span style={{ padding: "5px 8px" }}>{orderLoading ? "Paying..." : "Confirming..."}</span> : <button className='bt9_checkout' disabled={(cartData?.products && userInfo?.buyer?.defaultShippingAddress) ? false : true} type='submit'>
+                                 <span style={{ padding: "5px 8px" }}>{orderLoading ? "Paying..." : "Confirming..."}</span> : <button className='bt9_checkout' disabled={(cartData?.cart_context && userInfo?.buyer?.defaultShippingAddress) ? false : true} type='submit'>
                                     Pay Now
                                  </button>
                            }

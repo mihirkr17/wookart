@@ -1,23 +1,21 @@
 import { apiHandler } from '@/Functions/common';
-import { useAuthContext } from '@/lib/AuthProvider';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import React from 'react';
 import { useState } from 'react';
 
-const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state, setState }) => {
+const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMessage }) => {
    const [qtyLoading, setQtyLoading] = useState(false);
    const [loading, setLoading] = useState(false);
-   const { setMessage } = useAuthContext();
 
-   //  Remove product from cartProduct && cartProduct handler
+
    const removeItemFromCartHandler = async (cp) => {
       try {
          setLoading(true);
 
-         const { productID, title, sku } = cp;
-         const { success, message } = await apiHandler(`/cart/delete-cart-item/${productID}/${sku}/${cartType && cartType}`, "DELETE", {});
+         const { productId, title, sku } = cp;
+         const { success, message } = await apiHandler(`/cart/delete-cart-item/${productId}/${sku}/${cartType && cartType}`, "DELETE", {});
 
          setLoading(false);
 
@@ -40,11 +38,10 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
          setQtyLoading(true);
          let quantity = parseInt(value);
 
-         if (cartType === 'buy' && state) {
+         if (cartType === 'buy' && setState) {
             setQtyLoading(false);
-            let qty = (state.quantity = quantity);
-            setMessage("Quantity updated to " + qty, "success");
-            setState({ ...state, qty });
+            setMessage("Quantity updated to " + quantity, "success");
+            setState((state) => ({ ...state, quantity }));
             return;
          }
 
@@ -74,89 +71,104 @@ const CartItem = ({ product: cartProduct, cartRefetch, checkOut, cartType, state
       }
    }
 
-   function getVariant(obj = {}) {
+   function printAttributes(obj = {}) {
       const newObj = Object.entries(obj);
-      const arr = [];
+      let str = "";
 
       for (let [key, value] of newObj) {
-         arr.push(
-            <small key={key} className="text-muted">{key}:&nbsp;{value.split(",")[0]}</small>
-         );
+         str += `${key}: ${value.split(",")[0]}, `;
       }
 
-      return arr;
+      return str.slice(0, str.lastIndexOf(',')) + str.slice(str.lastIndexOf(',') + 1);
    }
 
    return (
       <>
          {loading && <div className="text-center py-2">Removing...</div>}
-         <div className="mb-2 cart_wrapper">
-            <div className="c_list1">
-               <div className="c_img">
-                  {qtyLoading ? "Loading" : <img src={cartProduct?.imageUrl ?? ""} alt="" />}
-               </div>
 
-               {
-                  !checkOut &&
-                  <div className="ms-2 c_btn">
+         {
+            Array.isArray(products) && products.map((item, i) => {
 
-                     <button
-                        className='badge bg-primary my-1'
-                        disabled={cartProduct && cartProduct?.quantity <= 1 ? true : false}
-                        onClick={() => itemQuantityHandler(parseInt(cartProduct?.quantity) - 1, cartProduct?.productID, cartProduct?.sku, cartProduct?.cartID)}>
-                        -
-                     </button>
+               return (
+                  <div key={i} className="mb-2 cart_wrapper">
+                     <div className="c_list1">
+                        <div className="c_img">
+                           {qtyLoading ? "Loading" : <img src={item?.imageUrl ?? ""} alt="" />}
+                        </div>
 
-                     <input
-                        className='border px-2' type="number"
-                        value={cartProduct?.quantity || 0}
-                        onChange={(e) => itemQuantityHandler(e.target.value, cartProduct?.productID, cartProduct?.sku, cartProduct?.cartID)}
-                        maxLength='5'
-                        style={{ width: '50px' }}
-                     />
+                        {
+                           !checkOut &&
+                           <div className="ms-2 c_btn">
 
-                     <button
-                        className='badge bg-primary my-1'
-                        disabled={cartProduct && cartProduct?.quantity >= cartProduct?.available ? true : false}
-                        onClick={() => itemQuantityHandler(parseInt(cartProduct?.quantity) + 1, cartProduct?.productID, cartProduct?.sku, cartProduct?.cartID)}>
-                        +
-                     </button>
-                  </div>
-               }
-            </div>
+                              <button
+                                 className='badge bg-primary my-1'
+                                 disabled={item?.quantity <= 1 ? true : false}
+                                 onClick={() => itemQuantityHandler(parseInt(item?.quantity) - 1, item?.productId, item?.sku, item?._id)}>
+                                 -
+                              </button>
 
-            <div className="c_list2">
-               <div className='c_meta_info'>
+                              <input
+                                 className='border px-2' type="number"
+                                 value={item?.quantity || 0}
+                                 onChange={(e) => itemQuantityHandler(e.target.value, item?.productId, item?.sku, item?._id)}
+                                 maxLength='5'
+                                 style={{ width: '50px' }}
+                              />
 
-                  <b className="c_title">
-                     <Link href={`/product/${cartProduct?.slug}?pId=${cartProduct?.productID}&sku=${cartProduct?.sku}`}>
-                        {cartProduct && cartProduct?.title}
-                     </Link>
-                  </b>
+                              <button
+                                 className='badge bg-primary my-1'
+                                 disabled={item?.quantity >= item?.available ? true : false}
+                                 onClick={() => itemQuantityHandler(parseInt(item?.quantity) + 1, item?.productId, item?.sku, item?._id)}>
+                                 +
+                              </button>
+                           </div>
+                        }
+                     </div>
 
-                  <div className="c_meta">
-                     <big className="c_price currency_sign">
-                        {cartProduct?.sellingPrice}
-                     </big>
-                     {
-                        getVariant(cartProduct?.variant)
-                     }
-                     <small className="text-muted">Qty : {cartProduct?.quantity}</small>
-                     <small className="text-muted">Stock : {cartProduct?.stock}</small>
-                  </div>
-               </div>
-               {
-                  !checkOut && <div className="remove_btn text-end">
-                     {
-                        cartType !== "buy" && <button className='btn btn-sm' onClick={() => removeItemFromCartHandler(cartProduct)}>
-                           <FontAwesomeIcon icon={faClose} />
-                        </button>
-                     }
-                  </div>
-               }
+                     <div className="c_list2">
+                        <div className='c_meta_info'>
 
-            </div>
-         </div>
+                           <b className="c_title">
+                              <Link href={`/product/${item?.slug}?pId=${item?.productId}&sku=${item?.sku}`}>
+                                 {item?.title}
+                              </Link>
+                           </b>
+
+                           <div className="d-flex flex-column">
+                              <big className="currency_sign text-success fw-bold">
+                                 {item?.sellingPrice}
+                              </big>
+
+                              <div className='d-flex flex-wrap flex-column'>
+
+                                 <strong>
+                                    <small className='text-muted'>Sold By: {item?.storeName},  Stock: {item?.stock}</small>
+                                 </strong>
+
+                                 <small className='text-muted'>
+                                    {
+                                       printAttributes(item?.attributes)
+                                    }
+                                 </small>
+                              </div>
+                           </div>
+                        </div>
+                        {
+                           !checkOut && <div className="remove_btn text-end">
+                              {
+                                 cartType !== "buy" && <button className='btn btn-sm' onClick={() => removeItemFromCartHandler(item)}>
+                                    <FontAwesomeIcon icon={faClose} />
+                                 </button>
+                              }
+                           </div>
+                        }
+
+                     </div>
+                  </div >
+               )
+            })
+         }
+
       </>
    );
 };
