@@ -881,7 +881,6 @@ label {
   word-break: break-word;
 }
 .my_order_items .ssg {
-  border-bottom: 1px solid rgba(95, 95, 95, 0.1098039216);
   padding: 10px 0;
   display: -webkit-box;
   display: -ms-flexbox;

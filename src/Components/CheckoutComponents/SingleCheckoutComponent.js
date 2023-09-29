@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { CardElement, useElements, useStripe, PaymentElement } from '@stripe/react-stripe-js';
 import CartAddress from "../CartComponents/CartAddress";
 import { CookieParser, apiHandler, deleteAuth } from "@/Functions/common";
 
@@ -17,7 +17,7 @@ import { CookieParser, apiHandler, deleteAuth } from "@/Functions/common";
 export default function SingleCheckoutComponent() {
    const router = useRouter();
 
-   const { data: queryData, oTracker } = router.query;
+   const { data: queryData, session } = router.query;
 
    const { userInfo, authLoading, authRefetch, setMessage } = useAuthContext();
    const [data, setData] = useState({});
@@ -60,133 +60,95 @@ export default function SingleCheckoutComponent() {
    }, [productData]);
 
 
+
    const buyBtnHandler = async (e) => {
       try {
          e.preventDefault();
-
-         let product = data?.product ? data?.product : null;
-
-         if (!product) {
-            return setMessage("Please select product first", "danger");
-         }
 
          if (!stripe || !elements) {
             return;
          }
 
-         const card = elements.getElement(CardElement);
+         // const card = elements.getElement(CardElement);
 
-         if (!card) {
+         // if (!card) {
+         //    return;
+         // }
+
+         // if (card === null) {
+         //    return;
+         // }
+
+         // Trigger form validation and wallet collection
+         const { error: submitError } = await elements.submit();
+
+         if (submitError) {
             return;
          }
 
-         if (card === null) {
-            return;
+         const { error: pmErr, paymentMethod: pm } = await stripe.createPaymentMethod({
+            elements,
+            params: {
+               billing_details: {
+                  name: selectedAddress?.name,
+                  email: userInfo?.email,
+                  phone: selectedAddress?.phone_number,
+                  address: {
+                     city: selectedAddress?.city,
+                     state: selectedAddress?.division,
+                     line1: selectedAddress?.area,
+                     line2: selectedAddress?.landmark,
+                     country: "BD"
+                  }
+               }
+            }
+         });
+
+         if (pmErr) {
+            return setMessage(pmErr?.message, "danger");
          }
 
-         // Use your card Element with other Stripe.js APIs
-         const { error, paymentMethod } = await stripe.createPaymentMethod({ type: 'card', card });
-
-
-         if (error) {
-            return setMessage(error?.message, "danger");
-         }
 
          setOrderLoading(true);
 
-         if (data?.container_p?.finalAmounts && paymentMethod) {
+         const { productId, quantity, sku } = JSON.parse(queryData);
 
-            const { success, message, clientSecret, productInfos, orderIDs, orderPaymentID, totalAmount } = await apiHandler(`/order/single-purchase`, "POST", {
-               productID: product?.productID,
-               listingID: product?.listingID,
-               sku: product?.sku,
-               quantity: product?.quantity,
-               customerEmail: product?.customerEmail,
-               state: "byPurchase"
+         if (productId && quantity && sku && pm) {
+
+            const response = await apiHandler(`/order/single-purchase`, "POST", {
+               productId,
+               sku,
+               quantity,
+               paymentMethodId: pm?.id,
+               session
             });
 
-            if (!success) {
-               setMessage(message, "danger");
-               return;
-            };
 
-            const { paymentIntent, error } = await stripe.confirmCardPayment(
-               clientSecret,
-               {
-                  payment_method: {
-                     card: card,
-                     billing_details: {
-                        name: selectedAddress?.name,
-                        email: userInfo?.email,
-                        phone: selectedAddress?.phone_number,
-                        address: {
-                           city: selectedAddress?.city,
-                           state: selectedAddress?.division,
-                           line1: selectedAddress?.area,
-                           line2: selectedAddress?.landmark,
-                           country: "BD"
-                        }
-                     },
-                     metadata: {
-                        order_id: orderPaymentID
-                     },
-                  },
-               },
-            );
+            if (!response?.success) return setMessage(response?.message, "danger");
 
-            if (error) {
-               setOrderLoading(false);
-               return setMessage(error?.message, "danger");
-            }
+            if (response.status === "requires_action") {
 
-            if (!paymentIntent?.id) {
-               setOrderLoading(false);
-               return;
-            }
-
-            setOrderLoading(true);
-
-
-            if (!paymentIntent?.payment_method) {
-               return setMessage("Payment method failed !", "danger");
-            }
-
-            if (paymentIntent?.id && paymentIntent?.payment_method && paymentIntent?.status === "succeeded") {
-               setMessage("Payment succeeded.", "success");
-
-               setOrderLoading(false);
-
-               const { success } = await apiHandler(`/order/confirm-order`, "POST", {
-                  orderPaymentID,
-                  paymentIntentID: paymentIntent?.id,
-                  paymentMethodID: paymentIntent?.payment_method,
-                  productInfos,
-                  orderIDs,
-                  clientSecret,
-                  orderState: "byPurchase"
+               const {
+                  error,
+                  paymentIntent
+               } = await stripe.handleNextAction({
+                  clientSecret: response.clientSecret
                });
 
-               if (success) {
-                  setMessage("Order confirmed.", "success");
-                  return router.push("/user/orders-management");
+               if (error) {
+                  // Show error from Stripe.js in payment form
+                  return setMessage(error?.message, "danger");
+               } else {
+                  // Actions handled, show success message
+
+                  setMessage("Payment success", "success");
                }
             }
 
-            return;
-
-            data["paymentMethodID"] = paymentIntent?.payment_method;
-
-            const result = await apiHandler(`/order/confirm-single-purchase-order`, "POST", data);
-
-            if (result.success) {
-               setOrderLoading(false);
-               return router.push("/user/orders-management");
-
-            } else {
-               setOrderLoading(false);
-            }
-
-
+            setMessage(response?.message, "success");
+            router.push("/user/orders-management");
+         } else {
+            return setMessage("Missing fields !", "danger");
          }
       } catch (error) {
          return setMessage(error?.message, "danger");
@@ -221,7 +183,7 @@ export default function SingleCheckoutComponent() {
                               checkOut={false}
                               setState={setProductData}
                               setMessage={setMessage}
-                              products={data?.product && [data?.product]}
+                              products={data?.cartItems && data?.cartItems}
                            />
                         }
                      </div>
@@ -232,7 +194,7 @@ export default function SingleCheckoutComponent() {
                   <div className="cart_card">
 
                      <CartCalculation
-                        product={data?.container_p && data?.container_p}
+                        product={data?.cartCalculation && data?.cartCalculation}
                         headTitle={"Order Details"}
                      />
 
@@ -244,7 +206,8 @@ export default function SingleCheckoutComponent() {
                            width: "100%"
                         }} onSubmit={buyBtnHandler}>
                            <div className="py-4">
-                              <CardElement
+                              <PaymentElement />
+                              {/* <CardElement
                                  options={{
                                     style: {
                                        base: {
@@ -266,7 +229,7 @@ export default function SingleCheckoutComponent() {
                                        }
                                     }
                                  }}
-                              />
+                              /> */}
                            </div>
                            {
                               !selectedAddress && <p>Please select shipping address.</p>
@@ -275,8 +238,8 @@ export default function SingleCheckoutComponent() {
                            {
                               (orderLoading) ?
                                  <span style={{ padding: "5px 8px" }}>Confirming...</span> :
-                                 <button className='bt9_checkout' disabled={((data?.product && selectedAddress)) ? false : true} type='submit'>
-                                    Pay Now
+                                 <button className='bt9_checkout' disabled={((data?.cartItems && selectedAddress)) ? false : true} type='submit'>
+                                    Confirm Now
                                  </button>
                            }
                         </form>

@@ -17,31 +17,7 @@ export default ProtectedHOC(() => {
 
    const { cartData } = useCartContext();
 
-   let totalAmount = cartData?.cart_calculation?.finalAmount || 0;
-
-   // console.log(totalAmount);
-
-   // const [clientSecret, setClientSecret] = useState("");
-   // const [paymentIntId, setPaymentIntId] = useState("");
-
-   // useEffect(() => {
-   //    const setTimed = setTimeout(async () => {
-   //       const { clientSecret, paymentIntentId } = await apiHandler(`/payment/create-payment-intent`, "POST", { totalAmount, session });
-
-   //       if (clientSecret) {
-   //          setClientSecret(clientSecret);
-   //          setPaymentIntId(paymentIntentId);
-   //       }
-   //       else {
-   //          router.push("/cart");
-   //       }
-   //    }, 100);
-
-   //    return () => clearTimeout(setTimed);
-   // }, [totalAmount, session, router]);
-
-
-   // if (checkout !== "checkout") return;
+   let totalAmount = cartData?.cartCalculation?.finalAmount || 0;
 
    if (totalAmount <= 0) return;
 

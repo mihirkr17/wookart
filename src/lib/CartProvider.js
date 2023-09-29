@@ -45,7 +45,7 @@ export default function CartProvider({ children }) {
                const { statusCode, success, data } = await response.json();
 
                if (statusCode === 200 && success === true) {
-                  setCartQuantity((data?.module?.cart_context && data?.module?.cart_context.length) || 0)
+                  setCartQuantity(data?.module?.numberOfProduct || 0)
                   setCartData(data?.module);
                }
             } catch (error) {

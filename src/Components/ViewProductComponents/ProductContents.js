@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCartContext } from '@/lib/CartProvider';
 import MoreInfoModal from './MoreInfoModal';
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default function ProductContents({ product, sku, setMessage, userInfo }) {
@@ -216,19 +217,18 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
                      {
                         product?.variation?.stock === "in" &&
                         <Link href={{
-                           pathname: `/single-checkout`,
+                           pathname: `/checkout`,
                            query: {
                               data: JSON.stringify({
                                  productId: product?._id,
                                  sku: product?.variation?.sku,
-                                 quantity: 1,
-                                 customerId: userInfo?._id
+                                 quantity: 1
                               }),
-                              oTracker: `buy.${product?.title}`
+                              session: `${uuidv4()}`
                            }
                         }}
 
-                           as={`/single-checkout?oTracker=buy.${product?.title}`}
+                           as={`/checkout?session=${uuidv4()}`}
                            className='buyBtn ph_btn'
                         >
                            Buy Now

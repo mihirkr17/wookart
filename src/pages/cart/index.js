@@ -24,9 +24,9 @@ const Cart = () => {
                      <hr />
                      {
 
-                        (Array.isArray(cartData?.cart_context) && cartData?.cart_context.length >= 1) ? <CartItem
+                        (Array.isArray(cartData?.cartItems) && cartData?.cartItems.length >= 1) ? <CartItem
                            cartRefetch={cartRefetch}
-                           products={cartData?.cart_context}
+                           products={cartData?.cartItems}
                            cartType={"toCart"}
                            setMessage={setMessage}
                            checkOut={false}
@@ -43,7 +43,7 @@ const Cart = () => {
                <div className="col-lg-4 mb-3">
                   <div className="cart_card">
                      <CartCalculation
-                        product={cartData?.cart_calculation && cartData?.cart_calculation}
+                        product={cartData?.cartCalculation && cartData?.cartCalculation}
                      />
 
                      <br />
