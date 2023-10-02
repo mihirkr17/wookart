@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { productCategories } from '@/CustomData/categories';
+import { categories } from '@/CustomData/categories';
 import { apiHandler } from '@/Functions/common';
 import ImageUploader from '@/Components/Global/ImageUploader';
 
@@ -29,7 +29,7 @@ const ProductVariations = ({ data, formTypes, refetch, closeModal }) => {
    const [images, setImages] = useState((variation?.images ?? [""]));
 
    // categories
-   const sub_category = productCategories && productCategories.find(e => e.name === category);
+   const sub_category = categories && categories.find(e => e.name === category);
 
    const post_category = sub_category?.subCategories?.find(e => e.name === subCategory);
 

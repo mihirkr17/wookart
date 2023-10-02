@@ -4,7 +4,7 @@ import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { apiHandler, inputHandler, slugMaker } from '@/Functions/common';
 import dynamic from 'next/dynamic';
 import ImageUploader from '@/Components/Global/ImageUploader';
-import { productCategories } from '@/CustomData/categories';
+import { categories } from '@/CustomData/categories';
 import BtnSpinner from '@/Components/Shared/BtnSpinner/BtnSpinner.js';
 import { usePrice } from '@/Hooks/usePrice.js';
 
@@ -48,7 +48,7 @@ const ProductListing = ({ userInfo, formTypes, setMessage }) => {
    const { discount } = usePrice(pricing.price, pricing.sellingPrice);
 
    // this is global variable of categories states
-   const sub_category = productCategories && productCategories.find(e => e.name === category);
+   const sub_category = categories && categories.find(e => e.name === category);
    const post_category = sub_category?.subCategories?.find(e => e.name === subCategory);
    const categoryFeatures = post_category?.postCategories?.find(e => e.name === postCategory);
 
@@ -191,7 +191,7 @@ const ProductListing = ({ userInfo, formTypes, setMessage }) => {
                      <select className="form-select form-select-sm text-capitalize" name="category" id="category" onChange={(e) => setCategory(e.target.value)}>
                         <option value={""}>{"Choose"}</option>
                         {
-                           productCategories && productCategories.map((category, index) => {
+                           categories && categories.map((category, index) => {
                               return (
                                  <option value={category?.name} key={index}>{category?.name}</option>
                               )
