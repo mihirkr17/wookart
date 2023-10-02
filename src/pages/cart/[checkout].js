@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import { ProtectedHOC } from '../_ProtectedHOC';
+import ProtectedHOC from '../_ProtectedHOC';
 import { useRouter } from 'next/router';
 import { useCartContext } from '@/lib/CartProvider';
 // import { apiHandler } from '@/Functions/common';

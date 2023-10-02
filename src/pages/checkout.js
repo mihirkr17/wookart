@@ -2,7 +2,7 @@
 
 
 import SingleCheckoutComponent from "@/Components/CheckoutComponents/SingleCheckoutComponent";
-import { ProtectedHOC } from "./_ProtectedHOC";
+import ProtectedHOC from "./_ProtectedHOC";
 
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';

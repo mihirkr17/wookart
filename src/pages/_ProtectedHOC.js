@@ -2,7 +2,7 @@ import { useAuthContext } from "@/lib/AuthProvider";
 import { useRouter } from "next/router";
 
 
-export function ProtectedHOC(Components) {
+export default function ProtectedHOC(Components) {
    return function HOC(props) {
       const router = useRouter();
       const { authLoading, role } = useAuthContext();

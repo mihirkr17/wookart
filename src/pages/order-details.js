@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { ProtectedHOC } from "./_ProtectedHOC";
+import ProtectedHOC from "./_ProtectedHOC";
 import { useFetch } from "@/Hooks/useFetch";
 // import { initProgressBar } from "@/Functions/ProgressBar";
 import ProgressBar from "@/Components/Shared/ProgressBar";

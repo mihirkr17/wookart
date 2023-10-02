@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProtectedHOC } from '../_ProtectedHOC';
+import ProtectedHOC from '../_ProtectedHOC';
 import CartCalculation from '@/Components/CartComponents/CartCalculation';
 import Link from 'next/link';
 import CartItem from '@/Components/CartComponents/CartItem';

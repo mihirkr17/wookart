@@ -5,7 +5,7 @@ import Profile from "@/Components/UserComponents/Profile";
 import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import Link from "next/link";
-import { ProtectedHOC } from "../_ProtectedHOC";
+import ProtectedHOC from "../_ProtectedHOC";
 
 function User() {
 

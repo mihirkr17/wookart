@@ -7,7 +7,7 @@ import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { useAuthContext } from "@/lib/AuthProvider";
 import Link from "next/link";
 import { useRouter } from "next/router"
-import { ProtectedHOC } from "../_ProtectedHOC";
+import ProtectedHOC from "../_ProtectedHOC";
 
 
 export default ProtectedHOC(function MyAccount() {

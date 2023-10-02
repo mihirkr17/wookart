@@ -3,7 +3,7 @@
 // import { loadStripe } from '@stripe/stripe-js';
 // import { Elements } from '@stripe/react-stripe-js';
 // import CartCheckoutComponent from "@/Components/CheckoutComponents/CartCheckOutComponent";
-// import { ProtectedHOC } from "./_ProtectedHOC";
+// import ProtectedHOC from "./_ProtectedHOC";
 // import { useCartContext } from '@/lib/CartProvider';
 // import { useEffect, useState } from 'react';
 // import { apiHandler } from '@/Functions/common';
