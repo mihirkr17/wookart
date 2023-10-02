@@ -161,7 +161,7 @@ export default function SingleCheckoutComponent() {
       <div className='section_default'>
          <div className="container">
             <div className="mb-4">
-               <Link href='/my-cart'> <FontAwesomeIcon icon={faLeftLong} /> Back To Cart</Link>
+               <Link href='/cart'> <FontAwesomeIcon icon={faLeftLong} /> Back To Cart</Link>
             </div>
             <div className="row">
                <div className="col-lg-8 mb-3">

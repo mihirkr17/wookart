@@ -1,3 +1,56 @@
+// // Define an array of objects to represent categories
+// const categoryList = [
+//    { id: 1, name: "electronics", parent_id: null },
+//    { id: 2, name: "laptops", parent_id: 1 },
+//    { id: 3, name: "mobile", parent_id: 1 },
+//    { id: 4, name: "home-garden", parent_id: null },
+//    { id: 5, name: "furniture", parent_id: 4 },
+//    { id: 6, name: "kitchen-appliances", parent_id: 4 },
+//    { id: 7, name: "office-furniture", parent_id: 5 },
+//    { id: 8, name: "living-room-furniture", parent_id: 5 },
+//    { id: 9, name: "mobile-accessories", parent_id: 1 },
+//    { id: 10, name: "headphones", parent_id: 9 },
+//    { id: 11, name: "smartphones", parent_id: 3 }
+// ];
+
+// // Function to create a nested category structure
+// function createCategoryTree(categories) {
+//    const categoryMap = new Map();
+
+//    // Create a map of category IDs to their corresponding objects
+//    categories.forEach(category => {
+//       if (!categoryMap.has(category.id)) {
+//          categoryMap.set(category.id, { ...category, children: [] });
+//       }
+//    });
+
+//    const categoryTree = [];
+
+//    // Populate the parent-child relationships
+//    categories.forEach(category => {
+//       const currentCategory = categoryMap.get(category.id);
+//       if (category.parent_id === null) {
+//          categoryTree.push(currentCategory);
+//       } else {
+//          const parentCategory = categoryMap.get(category.parent_id);
+//          if (parentCategory) {
+//             parentCategory.children.push(currentCategory);
+//          }
+//       }
+//    });
+
+//    return categoryTree;
+// }
+
+// // Create the nested category structure
+// const nestedCategories = createCategoryTree(categoryList);
+
+// // Print the result
+// export const categories = nestedCategories;
+
+
+
+
 const color = [
    "Multicolor",
    "black",
@@ -13,50 +66,18 @@ const color = [
 ]
 const clothingSizes = ['S', 'M', 'L', 'XXL', 'XS'];
 
-export const productCategories = [
+export const categories = [
    {
       id: 1,
       name: "electronics",
       img: "",
-      subCategories: [
+      children: [
          {
             id: 1,
             name: "mobile",
-            postCategories: [
+            children: [
                {
-                  name: 'smartphone',
-                  attrs: {
-                     model_number: "",
-                     model_name: "",
-                     expandable_storage: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB', '32GB', '64GB', "128GB"],
-                  },
-                  color,
-                  variant: {
-                     ram: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB'],
-                     rom: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB', '32GB', '64GB', "128GB"]
-                  },
-                  specification: {
-                     browse_type: ["Smartphones", "Cell Phone"],
-                     sim_type: ['Dual Sim', "Single Sim"],
-                     hybrid_sim_slot: ["Yes", "No"],
-                     touch_screen: ["Yes", "No"],
-                     otg_compatible: ["Yes", "No"],
-                     display_size: ['4 inch', '4.5 inch', '5 inch', "16.26 cm (6.4 inch)", '6.6 inch'],
-                     resolution: ["1600 x 720 Pixels", "1200 x 720 Pixels"],
-                     resolution_type: ["HD+", "Full HD"],
-                     gpu: "",
-                     display_type: "",
-                     display_color: "",
-                     other_display_features: "",
-                     operating_system: ["Android 11", "Android 12"],
-                     processor_type: "",
-                     processor_core: ["Octa Core", "Dual Core"],
-                     primary_clock_speed: ["2 GHz", "1.9 GHz"],
-                     secondary_clock_speed: ["2 GHz", "1.9 GHz", "1.8 GHz"],
-                     supported_memory_card_type: "",
-                     memory_card_slot_type: "",
-                     primary_camera_available: ["Yes", "No"]
-                  }
+                  name: 'smartphones'
                }
 
             ],
@@ -64,26 +85,12 @@ export const productCategories = [
          {
             id: 2,
             name: "mobile-accessories",
-            postCategories: [
+            children: [
                {
                   name: 'headphone',
                },
                {
-                  name: "cases-and-covers",
-                  color,
-                  attrs: {
-                     model_number: "",
-                  },
-                  specification: {
-                     sales_package: "",
-                     design_for: "",
-                     pack_of: "",
-                     other_features: "",
-                     suite_for: ['men', "women"],
-                     material: ['Iron', 'Steel', 'Rubber', 'Leather', 'Metal', "Plastic", "Silicon", "Wood"],
-                     theme: ['3D/Hologram', "Animal/Bird/Nature", "Automobiles", "Comics/Cartoon/Superheros", "Famous Personalities", "No Theme", "Marble", "Patterns"],
-                     type: ""
-                  }
+                  name: "cases-and-covers"
                }
 
             ],
@@ -95,31 +102,13 @@ export const productCategories = [
       id: 2,
       name: "men-clothing",
       img: "",
-      subCategories: [
+      children: [
          {
             id: 1,
             name: "top-wear",
-            postCategories: [
+            children: [
                {
                   name: 't-shirt',
-                  attrs: {
-                     model: "",
-                  },
-                  color,
-                  variant: {
-                     sizes: clothingSizes,
-                  },
-                  specification: {
-                     fabric: ['lace', 'net', 'denim', 'nylon', 'pure-cotton', 'muslin', 'latex'],
-                     type: ['round-neck'],
-                     pattern: ['solid', 'thin', 'stripped', 'printed'],
-                     ideal_for: ['men', 'women', 'couple'],
-                     sleeve: ['sleeveless', 'layered-sleeve', 'short-sleeve', 'half-sleeve', 'full-sleeve', '3/4-sleeve', 'roll-up-sleeve'],
-                     fabric_care: ['regular-machine-wash', 'reverse-and-dry', 'dry-and-shade', 'do-not-tumble-dry', 'do-not-dry-clean', 'dry-clean-only'],
-                     fit: ['regular', 'slim', 'loose', 'boxy', 'compression'],
-                     suite_for: ['maternity-wear', 'western-wear'],
-                     sport_type: ['football', 'cricket', 'N/A']
-                  }
                }
 
             ],
@@ -127,30 +116,60 @@ export const productCategories = [
          {
             id: 2,
             name: "bottom-wear",
-            postCategories: [
+            children: [
                {
-                  name: 'pants',
-                  attrs: {
-                     model_name: "",
-                  },
-                  color,
-                  variant: {
-                     sizes: clothingSizes,
-                  },
-                  specification: {
-                     fabric: ['lace', 'net', 'denim', 'nylon', 'pure-cotton', 'muslin', 'latex'],
-                     type: ['round-neck'],
-                     pattern: ['solid', 'thin', 'stripped', 'printed'],
-                     ideal_for: ['men', 'women', 'couple'],
-                     sleeve: ['sleeveless', 'layered-sleeve', 'short-sleeve', 'half-sleeve', 'full-sleeve', '3/4-sleeve', 'roll-up-sleeve'],
-                     fabric_care: ['regular-machine-wash', 'reverse-and-dry', 'dry-and-shade', 'do-not-tumble-dry', 'do-not-dry-clean', 'dry-clean-only'],
-                     fit: ['regular', 'slim', 'loose', 'boxy', 'compression'],
-                     suite_for: ['maternity-wear', 'western-wear']
-                  }
+                  name: 'pants'
                }
             ],
 
          }
       ],
    },
+]
+
+export const filterOptions = [
+   {
+      name: 'electronics/mobile/smartphones',
+      attributes: {
+         color,
+         ram: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB'],
+         rom: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB', '32GB', '64GB', "128GB"]
+      }
+   },
+   {
+      name: "electronics/accessories/case-and-cover",
+      attributes: {
+         color,
+         suite_for: ['men', "women"],
+         material: ['Iron', 'Steel', 'Rubber', 'Leather', 'Metal', "Plastic", "Silicon", "Wood"],
+         theme: ['3D/Hologram', "Animal/Bird/Nature", "Automobiles", "Comics/Cartoon/Superheros", "Famous Personalities", "No Theme", "Marble", "Patterns"]
+      }
+   },
+   {
+      name: 'men-clothing/top-wear/t-shirts',
+      attributes: {
+         size: clothingSizes,
+         color,
+         fabric: ['lace', 'net', 'denim', 'nylon', 'pure-cotton', 'muslin', 'latex'],
+         pattern: ['solid', 'thin', 'stripped', 'printed'],
+         ideal_for: ['men', 'women', 'couple'],
+         sleeve: ['sleeveless', 'layered-sleeve', 'short-sleeve', 'half-sleeve', 'full-sleeve', '3/4-sleeve', 'roll-up-sleeve'],
+         fabric_care: ['regular-machine-wash', 'reverse-and-dry', 'dry-and-shade', 'do-not-tumble-dry', 'do-not-dry-clean', 'dry-clean-only'],
+         fit: ['regular', 'slim', 'loose', 'boxy', 'compression'],
+         suite_for: ['maternity-wear', 'western-wear'],
+         sport_type: ['football', 'cricket', 'N/A']
+      }
+   },
+   {
+      name: 'men-clothing/bottom-wear/pants',
+      attributes: {
+         size: clothingSizes,
+         color,
+         fabric: ['lace', 'net', 'denim', 'nylon', 'pure-cotton', 'muslin', 'latex'],
+         ideal_for: ['men', 'women', 'couple'],
+         fabric_care: ['regular-machine-wash', 'reverse-and-dry', 'dry-and-shade', 'do-not-tumble-dry', 'do-not-dry-clean', 'dry-clean-only'],
+         fit: ['regular', 'slim', 'loose', 'boxy', 'compression'],
+         suite_for: ['maternity-wear', 'western-wear']
+      }
+   }
 ]

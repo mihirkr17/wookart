@@ -5,7 +5,7 @@ import { useFetch } from '@/Hooks/useFetch';
 import Spinner from '@/Components/Shared/Spinner/Spinner';
 import { useAuthContext } from '@/lib/AuthProvider';
 import { useRouter } from 'next/router';
-import { newCategory } from '@/CustomData/categories';
+import { categories } from '@/CustomData/categories';
 
 const ManageProduct = () => {
    const { userInfo, role, setMessage } = useAuthContext();
@@ -56,7 +56,7 @@ const ManageProduct = () => {
             <ManageProductHome
                refetch={refetch}
                setMessage={setMessage}
-               newCategory={newCategory}
+               categories={categories}
                role={role}
                counter={counter}
                loading={loading}

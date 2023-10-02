@@ -14,7 +14,7 @@ const ManageProductHome = (
    {
       refetch,
       setMessage,
-      newCategory,
+      categories,
       role,
       counter,
       loading,
@@ -180,7 +180,7 @@ const ManageProductHome = (
                   <select name="filter_product" style={{ textTransform: "capitalize" }} className='form-select form-select-sm' onChange={e => setFilterCategory(e.target.value)}>
                      <option value="">All</option>
                      {
-                        newCategory && newCategory.map((opt, index) => {
+                        categories && categories.map((opt, index) => {
                            return (
                               <option value={opt?.category} key={index}>{opt?.category}</option>
                            )

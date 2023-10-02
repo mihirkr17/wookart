@@ -2,7 +2,7 @@
 
 import Breadcrumbs from "@/Components/Shared/Breadcrumbs";
 import Product from "@/Components/Shared/Product";
-import { newCategory } from "@/CustomData/categories";
+import { categories, filterOptions } from "@/CustomData/categories";
 import { textToTitleCase } from "@/Functions/common";
 import { withOutDashboard } from "@/Functions/withOutDashboard";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
@@ -89,14 +89,56 @@ export function __dynamicCategory({ products, filterData }) {
    let lastCtg = ctg?.slice(-1)[0];
 
    let fc = ctg?.[0];
+   let options = ctg.join("/");
 
-   let category = newCategory?.find(c => c?.category === fc) ?? {};
+   const FilterOption = filterOptions.find((f) => f?.name === options);
+
+
+   let category = categories?.find(c => c?.name === fc) ?? {};
 
    let brand = filterData?.map(d => d?.brand).filter(e => e) ?? [];
    const sizes = products?.map(d => d?.variant?.sizes).filter(e => e) ?? [];
    const ram = products?.map(d => d?.variant?.ram).filter(e => e) ?? [];
    const rom = products?.map(d => d?.variant?.rom).filter(e => e) ?? [];
    const colors = products?.map(d => d?.variant?.color).filter(e => e) ?? [];
+
+
+
+
+   function generateFilterOption(attribute) {
+      let arr = [];
+
+      for (const key in attribute) {
+
+         const value = attribute[key]
+
+         if (Array.isArray(value)) {
+            arr.push(<div key={key}>
+               <strong>{key}</strong> <br />
+               <div className="row">
+                  <div className="col-lg-12">
+                     {/* <select name="" id=""> */}
+                     {
+                        value.map((v, i) => {
+                           return (
+                              <div key={i}>
+                                 <label htmlFor={key}>{v}</label>
+                                 <input type="checkbox" id={key}/>
+                              </div>
+                           )
+
+                        })
+                     }
+                     {/* </select> */}
+                  </div>
+               </div>
+            </div>);
+         }
+
+
+      }
+      return arr;
+   }
 
    return (
       <section className="section_default">
@@ -111,19 +153,19 @@ export function __dynamicCategory({ products, filterData }) {
                      <b>Categories</b> <br />
                      <ul>
                         {
-                           category?.sub_category_items && category?.sub_category_items.map(sb => {
+                           category?.children && category?.children.map(sb => {
                               return (
                                  <li key={sb?.name}>
-                                    <Link style={{ fontWeight: lastCtg === sb?.name ? "bold" : "normal" }} href={`/category/${category?.category}/${sb?.name}`}>{textToTitleCase(sb?.name)}</Link> <small>
+                                    <Link style={{ fontWeight: lastCtg === sb?.name ? "bold" : "normal" }} href={`/category/${category?.name}/${sb?.name}`}>{textToTitleCase(sb?.name)}</Link> <small>
                                        <FontAwesomeIcon icon={faArrowDown} />
                                     </small>
 
                                     <ul className='post_ctg'>
                                        {
-                                          Array.isArray(sb?.post_category_items) && sb?.post_category_items.map((p) => {
+                                          Array.isArray(sb?.children) && sb?.children.map((p) => {
                                              return (
                                                 <li key={p?.name}>
-                                                   <Link style={{ fontWeight: lastCtg === p?.name ? "bold" : "normal" }} href={`/category/${category?.category}/${sb?.name}/${p?.name}`}>{textToTitleCase(p?.name)}</Link>
+                                                   <Link style={{ fontWeight: lastCtg === p?.name ? "bold" : "normal" }} href={`/category/${category?.name}/${sb?.name}/${p?.name}`}>{textToTitleCase(p?.name)}</Link>
                                                 </li>
                                              )
                                           })
@@ -175,6 +217,10 @@ export function __dynamicCategory({ products, filterData }) {
                               })
                            }
                         </div> : ""
+                  }
+
+                  {
+                     generateFilterOption(FilterOption?.attributes)
                   }
 
 

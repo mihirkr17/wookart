@@ -47,7 +47,7 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
 
          const { message, success } = await apiHandler(`/cart/update-cart-product-quantity`, "PUT", {
             actionRequestContext: {
-               pageUri: '/my-cart',
+               pageUri: '/cart',
                type: cartType,
                pageNumber: 1
             },

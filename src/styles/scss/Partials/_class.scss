@@ -630,12 +630,22 @@ label {
       }
     }
 
-    .post_ctg {
+    .post_ctg_ul {
       li {
         background: darkkhaki;
         padding: 2px 10px;
       }
     }
+  }
+}
+
+.listToggler {
+  cursor: pointer;
+  padding: 4px;
+  margin-left: 3px;
+
+  &:hover {
+    border: 1px solid black;
   }
 }
 

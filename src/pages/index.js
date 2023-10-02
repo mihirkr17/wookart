@@ -1,21 +1,23 @@
 import Product from '@/Components/Shared/Product';
-import { newCategory } from '@/CustomData/categories';
+import { categories } from '@/CustomData/categories';
 import { withOutDashboard } from '@/Functions/withOutDashboard';
 import { textToTitleCase } from '@/Functions/common';
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import useMenu from '@/Hooks/useMenu';
 
 
 
 export function Home({ data }) {
   const router = useRouter();
   let [limit, setLimit] = useState(12);
-  const [ctg, setCtg] = useState("");
-
+  const [subCtg, setSubCtg] = useState("");
+  const { menuRef, openMenu, setOpenMenu } = useMenu();
+  const [hoveredCategory, setHoveredCategory] = useState(null);
   const showMoreHandler = () => {
     limit += 6;
     setLimit(limit);
@@ -39,37 +41,45 @@ export function Home({ data }) {
           }}>
             <div className='p-3 category_main'>
               <b>Categories</b>
-              <ul className='ctg'>
+
+              <ul className='ctg' ref={menuRef}>
                 {
-                  newCategory && newCategory.map(c => {
+                  categories && categories.map(c => {
 
                     return (
-                      <li key={c?.id} style={{ backgroundColor: ctg === c?.category ? "#d1d1d1" : "" }} onMouseOver={() => setCtg(c?.category)} onMouseOut={() => setCtg("")}>
-                        <Link href={`/category/${c?.category}`}>{textToTitleCase(c?.category)}</Link>
-                        <ul className='sub_ctg' style={ctg === c?.category ? { display: "block" } : { display: "none" }}>
+                      <li key={c?.id} style={openMenu === c?.name ? { backgroundColor: "#d1d1d1" } : { backgroundColor: "unset" }}>
+                        <Link href={`/category/${c?.name}`}>{textToTitleCase(c?.name)}</Link>
+                        <small className='listToggler' onClick={() => setOpenMenu(e => (e === c?.name ? "" : c?.name))}>
+                          <FontAwesomeIcon icon={openMenu !== c?.name ? faPlus : faMinus} />
+                        </small>
+                        {(openMenu === c?.name) && <ul className='sub_ctg' >
                           {
-                            Array.isArray(c?.sub_category_items) && c?.sub_category_items.map((s, i) => {
+                            Array.isArray(c?.children) && c?.children.map((s, i) => {
                               return (
-                                <li key={i}>
-                                  <Link href={`/category/${c?.category}/${s?.name}`}>{textToTitleCase(s?.name)}</Link> <small>
-                                    <FontAwesomeIcon icon={faArrowDown} />
+                                <li key={i} className='sub_ctg_list' style={{ zIndex: 9999 }}>
+                                  <Link href={`/category/${c?.name}/${s?.name}`}>{textToTitleCase(s?.name)}</Link>
+                                  <small className='listToggler' onClick={() => setSubCtg(e => (e === s?.name ? "" : s?.name))}>
+                                    <FontAwesomeIcon icon={subCtg !== s?.name ? faPlus : faMinus} />
                                   </small>
-                                  <ul className='post_ctg'>
-                                    {
-                                      Array.isArray(s?.post_category_items) && s?.post_category_items.map((p, i) => {
-                                        return (
-                                          <li key={i}>
-                                            <Link href={`/category/${c?.category}/${s?.name}/${p?.name}`}>{textToTitleCase(p?.name)}</Link>
-                                          </li>
-                                        )
-                                      })
-                                    }
-                                  </ul>
+                                  {
+                                    subCtg === s?.name && <ul className='post_ctg_ul'>
+                                      {
+                                        Array.isArray(s?.children) && s?.children.map((p, i) => {
+                                          return (
+                                            <li key={i} style={{ background: "aquamarine", padding: "2px 10px", margin: "4px 0" }}>
+                                              <Link href={`/category/${c?.name}/${s?.name}/${p?.name}`}>{textToTitleCase(p?.name)}</Link>
+                                            </li>
+                                          )
+                                        })
+                                      }
+                                    </ul>
+                                  }
+
                                 </li>
                               )
                             })
                           }
-                        </ul>
+                        </ul>}
                       </li>
                     )
                   })

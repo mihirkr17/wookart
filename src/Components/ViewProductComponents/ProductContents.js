@@ -208,7 +208,7 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
                   <div className="py-3 mt-4 product_handler">
 
                      <button className='ph_btn addToCartBtn'
-                        onClick={() => (inCart ? router.push('/my-cart') :
+                        onClick={() => (inCart ? router.push('/cart') :
                            addToCartHandler(product?._id, product?.variation?.sku, "toCart"))}>
                         <FontAwesomeIcon icon={faCartShopping} />&nbsp;
                         {inCart ? "Go To Cart" : addCartLoading ? <BtnSpinner text={"Adding..."} /> : "Add To Cart"}

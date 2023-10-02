@@ -118,7 +118,7 @@ export default function CartCheckoutComponent({ totalAmount, session }) {
       <div className='section_default'>
          <div className="container">
             <div className="mb-4">
-               <Link href='/my-cart'> <FontAwesomeIcon icon={faLeftLong} /> Back To Cart</Link>
+               <Link href='/cart'> <FontAwesomeIcon icon={faLeftLong} /> Back To Cart</Link>
             </div>
 
             <div className="row">
