@@ -175,9 +175,10 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
                                  product?.swatch?.map((swatch, index) => {
 
                                     let attribute = swatch?.attributes;
+                           
 
                                     return (
-                                       <option key={index} disabled={product?.variation?.stock === "out" ? true : false} value={swatch?.sku}>
+                                       <option key={index} disabled={(swatch?.stock === "out" && swatch?.sku === sku ) ? true : false} value={swatch?.sku}>
                                           {variantLooping(attribute)}
                                        </option>
                                     )
@@ -346,7 +347,7 @@ onClick={() => (product?.inWishlist ? removeToWishlist(product?._id) : addToWish
                         </div>
                         <div className='seller_div_text'>
                            <span>{product?.storeName}</span>
-                           <button onClick={() => router.push(`/store/${product?.storeName}`)}>View Shop</button>
+                           <button onClick={() => router.push(`/store/${product?.storeName}?id=${product?.supplierId}`)}>View Shop</button>
                         </div>
                      </div>
                   </div>

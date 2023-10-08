@@ -14,96 +14,81 @@ import React, { useEffect, useState } from "react";
 export function __dynamicCategory({ products, filterData }) {
    const router = useRouter();
    const { ctg } = router.query;
-   const [fBrand, setFBrand] = useState([]);
-   const [sorted, setSorted] = useState("");
    const [priceRanger, setPriceRanger] = useState(0);
    const basePath = ctg?.join("/");
 
 
-   useEffect(() => {
-      setFBrand(router?.query?.brand?.replace(/\s/g, "-").split("~") ?? []);
-      setSorted((router?.query?.sorted && router?.query?.sorted) || "");
-      setPriceRanger((router?.query?.price_range && router?.query?.price_range) || "")
-   }, [router?.query?.brand, router?.query?.sorted, router?.query?.price_range]);
-
-   // useEffect(() => {
-   //    let newData = priceRanger && products?.filter(e => e?.pricing?.sellingPrice <= priceRanger);
-   //    setData(newData || products);
-   // }, [priceRanger, products]);
+   const [filterOption, setFilterOption] = useState(router.query || {});
 
 
-   let sort = sorted ? `&sorted=${sorted}` : "";
-   let priceR = priceRanger ? `&price_range=${priceRanger}` : "";
+   const handleInputChanges = (event) => {
+      const { name, value, type, checked } = event.target;
+      // Clone the current filter options
+      const updatedOptions = { ...filterOption };
 
-   // for handling products by brand value
-   function handleBrandFilter(params) {
-      const { value, checked } = params.target;
-      let newVal = value.replace(/\s/g, "-");
+      // Update the filter options based on checkbox change
+      if (type === "checkbox") {
 
-      let b = checked
-         ? [...fBrand, newVal].filter((e, i, fa) => fa.indexOf(e) === i)
-         : fBrand.filter(e => e !== newVal);
+         if (!updatedOptions[name]) {
+            updatedOptions[name] = [];
+         }
 
-      setFBrand(b);
-      router.push(`${basePath}?brand=${(b ? b.join("~") : "") + sort + priceR}`);
-   }
+         // Toggle the selected value for checkboxes
+         if (checked) {
+            if (Array.isArray(updatedOptions[name]) && !updatedOptions[name].includes(value)) {
+               updatedOptions[name].push(value);
+            }
+         } else {
+            updatedOptions[name] = (Array.isArray(updatedOptions[name])
+               ? updatedOptions[name].filter((item) => item !== value)
+               : []
+            );
+         }
+      }
 
-   // sorting products by price lower or higher
-   function handleSortedPrice(e) {
-      const { value } = e.target;
-      setSorted(value);
-      router.push(`${basePath}?brand=${fBrand && fBrand.join("~")}&sorted=${value + priceR}`)
-   }
-
-   function handlePriceRanger(e) {
-      const { value } = e.target;
-      setPriceRanger(value);
-      router.push(`${basePath}?brand=${fBrand && fBrand.join("~") + sort}&price_range=${value}`)
-   }
+      if (type === 'select-one') {
+         if (!updatedOptions[name]) {
+            updatedOptions[name] = "";
+         }
+         updatedOptions[name] = value;
+      }
 
 
-   // others options
-   // function getAttributes(variants = []) {
-   //     return variants.reduce((acc, curr) => {
+      // Update state with the new filter options
+      setFilterOption(updatedOptions);
 
-   //       Object.entries(curr).forEach(([key, value]) => {
+      // Apply filters immediately when a checkbox changes
+      applyFilters(updatedOptions);
+   };
 
-   //          if (acc.hasOwnProperty(key)) {
+   const applyFilters = (filterOpt) => {
 
-   //             if (Array.isArray(acc[key])) {
-   //                acc[key].push(value);
-   //             } else {
-   //                acc[key] = [acc[key], value];
-   //             }
-   //          } else {
-   //             acc[key] = value;
-   //          }
-   //       });
-   //       return acc;
-   //    });
-   // }
+      // Construct the URL based on filterOptions
+      const queryParams = Object.keys(filterOpt)?.filter(e => e !== "ctg").map((key) => {
+         const value = filterOpt[key];
+         const values = Array.isArray(value) ? value.join(',') : value;
+         return `${encodeURIComponent(key)}=${encodeURIComponent(values)}`;
+      });
 
-   // let v = filterData?.map(item => item?.variant);
+      const queryString = queryParams.join('&');
+      const finalURL = `${basePath}${queryString ? `?${queryString}` : ''}`;
+
+      // Redirect or navigate to the finalURL using router.push
+      router.push(finalURL);
+   };
 
 
    let lastCtg = ctg?.slice(-1)[0];
 
    let fc = ctg?.[0];
-   let options = ctg.join("/");
+   let options = ctg.join(",");
 
-   const FilterOption = filterOptions.find((f) => f?.name === options);
-
-
-   let category = categories?.find(c => c?.name === fc) ?? {};
-
-   let brand = filterData?.map(d => d?.brand).filter(e => e) ?? [];
-   const sizes = products?.map(d => d?.variant?.sizes).filter(e => e) ?? [];
-   const ram = products?.map(d => d?.variant?.ram).filter(e => e) ?? [];
-   const rom = products?.map(d => d?.variant?.rom).filter(e => e) ?? [];
-   const colors = products?.map(d => d?.variant?.color).filter(e => e) ?? [];
+   const FilterOption = filterOptions.find((f) => f?.categories.includes(lastCtg));
 
 
+   let category = categories?.find(c => c?.value === fc) ?? {};
 
+   let brands = filterData?.map(d => d?.brand).filter(e => e) ?? [];
 
    function generateFilterOption(attribute) {
       let arr = [];
@@ -113,32 +98,42 @@ export function __dynamicCategory({ products, filterData }) {
          const value = attribute[key]
 
          if (Array.isArray(value)) {
-            arr.push(<div key={key}>
-               <strong>{key}</strong> <br />
+            arr.push(<div key={key} className="p-1">
+               <b style={{ textTransform: "capitalize" }}>{key}</b> <br />
                <div className="row">
                   <div className="col-lg-12">
-                     {/* <select name="" id=""> */}
                      {
-                        value.map((v, i) => {
+                        value.map((v) => {
                            return (
-                              <div key={i}>
-                                 <label htmlFor={key}>{v}</label>
-                                 <input type="checkbox" id={key}/>
+                              <div key={v?.codec}>
+                                 <label className="form-check-label" htmlFor={v?.codec}>
+                                    <input
+                                       className="form-check-input"
+                                       type="checkbox"
+                                       id={v?.codec}
+                                       name={"filters"}
+                                       value={v?.codec.toString()}
+                                       checked={filterOption["filters"] && filterOption["filters"]?.includes(v?.codec.toString())
+                                       }
+                                       onChange={handleInputChanges}
+                                    />
+
+                                    &nbsp;&nbsp;{v.value}
+                                 </label>
+
                               </div>
                            )
 
                         })
                      }
-                     {/* </select> */}
                   </div>
                </div>
             </div>);
          }
-
-
       }
       return arr;
    }
+
 
    return (
       <section className="section_default">
@@ -155,8 +150,8 @@ export function __dynamicCategory({ products, filterData }) {
                         {
                            category?.children && category?.children.map(sb => {
                               return (
-                                 <li key={sb?.name}>
-                                    <Link style={{ fontWeight: lastCtg === sb?.name ? "bold" : "normal" }} href={`/category/${category?.name}/${sb?.name}`}>{textToTitleCase(sb?.name)}</Link> <small>
+                                 <li key={sb?.value}>
+                                    <Link style={{ fontWeight: lastCtg === sb?.value ? "bold" : "normal" }} href={`/category/${category?.value}/${sb?.value}`}>{sb?.title}</Link> <small>
                                        <FontAwesomeIcon icon={faArrowDown} />
                                     </small>
 
@@ -164,8 +159,8 @@ export function __dynamicCategory({ products, filterData }) {
                                        {
                                           Array.isArray(sb?.children) && sb?.children.map((p) => {
                                              return (
-                                                <li key={p?.name}>
-                                                   <Link style={{ fontWeight: lastCtg === p?.name ? "bold" : "normal" }} href={`/category/${category?.name}/${sb?.name}/${p?.name}`}>{textToTitleCase(p?.name)}</Link>
+                                                <li key={p?.value}>
+                                                   <Link style={{ fontWeight: lastCtg === p?.value ? "bold" : "normal" }} href={`/category/${category?.value}/${sb?.value}/${p?.value}`}>{textToTitleCase(p?.name)}</Link>
                                                 </li>
                                              )
                                           })
@@ -182,42 +177,21 @@ export function __dynamicCategory({ products, filterData }) {
                      <b>Brand</b> <br />
 
                      {
-                        brand?.map((b, i) => {
+                        brands?.map((b, i) => {
                            return (
                               <React.Fragment key={i}>
-                                 <label htmlFor={b}>
-                                    <input type="checkbox" name={b} id={b} value={b} onChange={(e) => handleBrandFilter(e)}
-                                       checked={fBrand && fBrand.includes(b.replace(/\s/g, "-"))}
+                                 <label className="form-check-label" htmlFor={"brand"}>
+                                    <input type="checkbox" className="form-check-input" name={"brand"} id={"brand"} value={b} onChange={handleInputChanges}
+                                       checked={filterOption["brand"] && filterOption["brand"].includes(b)}
                                     />
+
                                     &nbsp;&nbsp;{b}
-                                 </label> <br />
+                                 </label>
                               </React.Fragment>
                            )
                         })
                      }
                   </div>
-
-                  {
-                     Array.isArray(sizes) && sizes.length >= 1 ?
-                        <div className="p-1">
-                           <b>Size</b> <br />
-                           {
-                              sizes.map((s) => {
-                                 return (
-                                    <React.Fragment key={s}>
-                                       <label htmlFor="size">
-                                          <input type="checkbox" name="size" id="size" value={s}
-                                             onChange={(e) => setSize(e.target.value)}
-
-                                          />
-                                          &nbsp;&nbsp;{s}
-                                       </label> <br />
-                                    </React.Fragment>
-                                 )
-                              })
-                           }
-                        </div> : ""
-                  }
 
                   {
                      generateFilterOption(FilterOption?.attributes)
@@ -250,33 +224,13 @@ export function __dynamicCategory({ products, filterData }) {
 
                         <div className="filter_by py-2">
 
-                           <select name="sorted" id="sorted" onChange={(e) => handleSortedPrice(e)}>
-                              <option selected={sorted === "relevant" ? true : false} value="relevant">Relevant</option>
-                              <option selected={sorted === "lowest" ? true : false} value="lowest">Lowest Price</option>
-                              <option selected={sorted === "highest" ? true : false} value="highest">Highest Price</option>
+                           <select name="sorted" id="sorted" value={filterOption["sorted"] || ""} onChange={handleInputChanges}>
+                              <option value="relevant">Relevant</option>
+                              <option value="lowest">Lowest Price</option>
+                              <option value="highest">Highest Price</option>
                            </select>
 
-                           <br />
-                           {
-                              fBrand && fBrand.map((e, i) => {
-                                 return e ? (
-                                    <div className="badge_success m-1" key={i}>
-                                       Brand: {e}
-                                       &nbsp;
-                                       &nbsp;
-                                       &nbsp;
-                                       <b onClick={
-                                          () =>
-                                             setFBrand(f => {
-                                                let y = f?.filter(g => g !== e) || [];
-                                                router.push(`${basePath}?brand=${(y ? y.join("~") : "") + sort + priceR}`);
-                                                return y;
-                                             })
-                                       } style={{ cursor: "pointer" }}>X</b>
-                                    </div>
-                                 ) : ""
-                              })
-                           }
+
                         </div>
                      </div>
 
@@ -307,7 +261,7 @@ export async function getServerSideProps({ params, query }) {
       headers: {
          "Content-Type": "application/json"
       },
-      body: JSON.stringify({ brand, sorted, price_range })
+      body: JSON.stringify({ brand, sorted, price_range, queries: query })
    });
 
    const { products, filterData } = await response.json();

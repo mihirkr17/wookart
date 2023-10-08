@@ -47,27 +47,27 @@ export function Home({ data }) {
                   categories && categories.map(c => {
 
                     return (
-                      <li key={c?.id} style={openMenu === c?.name ? { backgroundColor: "#d1d1d1" } : { backgroundColor: "unset" }}>
-                        <Link href={`/category/${c?.name}`}>{textToTitleCase(c?.name)}</Link>
-                        <small className='listToggler' onClick={() => setOpenMenu(e => (e === c?.name ? "" : c?.name))}>
-                          <FontAwesomeIcon icon={openMenu !== c?.name ? faPlus : faMinus} />
+                      <li key={c?.id} style={openMenu === c?.value ? { backgroundColor: "#d1d1d1" } : { backgroundColor: "unset" }}>
+                        <Link href={`/category/${c?.value}`}>{c?.title}</Link>
+                        <small className='listToggler' onClick={() => setOpenMenu(e => (e === c?.value ? "" : c?.value))}>
+                          <FontAwesomeIcon icon={openMenu !== c?.value ? faPlus : faMinus} />
                         </small>
-                        {(openMenu === c?.name) && <ul className='sub_ctg' >
+                        {(openMenu === c?.value) && <ul className='sub_ctg' >
                           {
                             Array.isArray(c?.children) && c?.children.map((s, i) => {
                               return (
                                 <li key={i} className='sub_ctg_list' style={{ zIndex: 9999 }}>
-                                  <Link href={`/category/${c?.name}/${s?.name}`}>{textToTitleCase(s?.name)}</Link>
-                                  <small className='listToggler' onClick={() => setSubCtg(e => (e === s?.name ? "" : s?.name))}>
-                                    <FontAwesomeIcon icon={subCtg !== s?.name ? faPlus : faMinus} />
+                                  <Link href={`/category/${c?.value}/${s?.value}`}>{s?.title}</Link>
+                                  <small className='listToggler' onClick={() => setSubCtg(e => (e === s?.value ? "" : s?.value))}>
+                                    <FontAwesomeIcon icon={subCtg !== s?.value ? faPlus : faMinus} />
                                   </small>
                                   {
-                                    subCtg === s?.name && <ul className='post_ctg_ul'>
+                                    subCtg === s?.value && <ul className='post_ctg_ul'>
                                       {
                                         Array.isArray(s?.children) && s?.children.map((p, i) => {
                                           return (
                                             <li key={i} style={{ background: "aquamarine", padding: "2px 10px", margin: "4px 0" }}>
-                                              <Link href={`/category/${c?.name}/${s?.name}/${p?.name}`}>{textToTitleCase(p?.name)}</Link>
+                                              <Link href={`/category/${c?.value}/${s?.value}/${p?.value}`}>{p?.title}</Link>
                                             </li>
                                           )
                                         })

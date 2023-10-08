@@ -24,12 +24,15 @@ function __DynamicStore({ data, active }) {
    const { urlQuery, buildDynamicURL, removeUrlQuery } = useUrlQuery();
 
    // const [windowWidth, setWindowWidth] = useState();
+   // const url = `${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/store/${slug}?id=${id}&page=${page ?? 1}&filters=${filters ?? ""}&sorted=${sorted ?? ""}`
 
-   const { page, sorted } = query;
+   const { page, sorted, id, slug } = query;
 
    const [filterData, setFilterData] = useState([]);
 
    // useEffect(() => setWindowWidth(width), [width]);
+
+
 
    useEffect(() => {
       if (filteringProductTotal) {
@@ -53,6 +56,8 @@ function __DynamicStore({ data, active }) {
       }
 
    }, [urlQuery]);
+
+
 
    // page button initialization here;
    let pageBtn = [];
@@ -116,7 +121,7 @@ function __DynamicStore({ data, active }) {
                   </div>
 
                   <div className="sh_title">
-                     <h4>{textToTitleCase(storeInfo?.store?.name ?? "Unknown")?.toUpperCase()}</h4>
+                     <h4>{textToTitleCase(storeInfo?._id ?? "Unknown")?.toUpperCase()}</h4>
                      <div className="sht_meta">
                         <span className="shtm_average_rating">
                            {storeInfo?.averageRating}
@@ -215,10 +220,10 @@ function __DynamicStore({ data, active }) {
 export async function getServerSideProps({ query, params }) {
 
    const { slug } = params;
-   const { page, filters, sorted } = query;
+   const { page, filters, sorted, id } = query;
    const regex = /[<>{}|\\^%]/g;
 
-   const url = `${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/store/${slug}?page=${page ?? 1}&filters=${filters ?? ""}&sorted=${sorted ?? ""}`
+   const url = `${process.env.NEXT_PUBLIC_S_BASE_URL}api/v1/store/${slug}?id=${id}&page=${page ?? 1}&filters=${filters ?? ""}&sorted=${sorted ?? ""}`
 
    const response = await fetch(url.replace(regex, ""));
 
