@@ -16,13 +16,17 @@ export default withOutDashboard(function ForgotPwdPage() {
 
    const [showPwd, setShowPwd] = useState(false);
 
-   let [timer, setTimer] = useState(0);
+   let [timer, setTimer] = useState({ minutes: "00", seconds: "00" });
 
    const [target, setTarget] = useState([1]);
 
    const [newPwdForm, setNewPwdForm] = useState({});
 
+   const [exTime, setExTime] = useState(0);
+
    const router = useRouter();
+
+   const { action } = router?.query;
 
    useEffect(() => {
       if (role) {
@@ -33,64 +37,75 @@ export default withOutDashboard(function ForgotPwdPage() {
 
    useEffect(() => {
       const dd = setInterval(() => {
-         setTimer(p => p - 1)
+
+         const newDate = new Date();
+         const ctime = newDate.getTime();
+
+         if (ctime >= exTime) {
+            setTarget([1]);
+            return null;
+         }
+
+         const timeRemaining = exTime - ctime;
+
+         const exDate = new Date(timeRemaining);
+
+         setTimer({
+            minutes: exDate.getMinutes().toString().padStart(2, "0"),
+            seconds: exDate.getSeconds().toString().padStart(2, "0")
+         })
       }, 1000);
 
-      if (timer === 0) {
-         clearInterval(dd);
-      }
 
       return () => clearInterval(dd);
-   }, [timer]);
+   }, [exTime]);
 
-   async function handleForgotPwd(e, cEmail) {
+
+   async function getOtpHandler(e) {
       try {
          e.preventDefault();
 
-         let clientEmail = cEmail || e.target.email.value;
+         let email = e.target.email.value;
 
-         if (!clientEmail) {
+         if (!email) {
             return setMessage("Required email address or phone number !", "danger");
          }
 
-         const { success, message, email, lifeTime } = await apiHandler("/auth/check-user-authentication", "POST", { email: clientEmail });
+         const { success, message, data } = await apiHandler("/auth/forgot-pwd/send-otp", "POST", { email });
 
-         if (success && lifeTime && email) {
-            setFPWDEmail(email);
-            setTarget([...target, 2]);
-            setTimer(lifeTime / 1000);
+         if (data && success) {
+            const { otpExTime, returnEmail } = data;
             setMessage(message, "success");
-            return;
-
-         } else {
-            return setMessage(message, "danger");
+            setExTime(otpExTime);
+            setFPWDEmail(returnEmail);
+            return setTarget([...target, 2]);
          }
-
+         return setMessage(message, "danger");
       } catch (error) {
          return setMessage(error?.message, "danger");
       }
    }
 
 
-   async function securityCodeHandler(e) {
+   async function submitOtpHandler(e) {
       try {
          e.preventDefault();
 
          let email = fPWDEmail || "";
          let securityCode = e.target.securityCode.value;
 
+         if (!email) return setMessage("Required email !", "danger");
+
          if (!securityCode) {
             return setMessage("Required security code !", "danger");
          }
 
-         const { success, message, data } = await apiHandler("/auth/check-user-forgot-pwd-security-key", "POST", { securityCode, email });
+         const { success, message, data } = await apiHandler("/auth/submit-otp", "POST", { otp: securityCode, email });
 
          if (success && data) {
-            setFPWDEmail(false);
+            const { redirectUri } = data;
             setMessage(message, "success");
             setTarget([...target, 3]);
-            setNewPwdForm({ user: data?.email, session: data?.securityCode, life_time: data?.sessionLifeTime });
-
             return;
          } else {
             return setMessage(message, "danger");
@@ -112,12 +127,12 @@ export default withOutDashboard(function ForgotPwdPage() {
             return setMessage("Required password !", "danger");
          }
 
-         const { success, message } = await apiHandler("/auth/user/set-new-password", "POST", { email: newPwdForm?.user, password, securityCode: newPwdForm?.session });
+         const { success, message } = await apiHandler("/auth/set-new-password", "POST", { email: fPWDEmail, password });
 
          if (success) {
             setMessage(message, "success");
 
-            router.push("/login?email=" + newPwdForm?.user);
+            router.push("/login?email=" + fPWDEmail);
          } else {
             return setMessage(message, "danger");
          }
@@ -142,7 +157,7 @@ export default withOutDashboard(function ForgotPwdPage() {
                </div>
 
                {
-                  (newPwdForm?.user && target.includes(3)) ? <div className="row">
+                  (target.includes(3)) ? <div className="row">
                      <div className="col-lg-4 mx-auto" style={{
                         boxShadow: "0 0 8px 0 #c5c5c599"
                      }}>
@@ -173,65 +188,50 @@ export default withOutDashboard(function ForgotPwdPage() {
                         </form>
                      </div>
                   </div> :
-                     (fPWDEmail && target.includes(2)) ?
-                        <div className="row">
 
-                           <div className="col-lg-4 mx-auto" style={{
-                              boxShadow: "0 0 8px 0 #c5c5c599"
-                           }}>
-                              <form onSubmit={securityCodeHandler} className="p-4">
+                     <div className="row">
+                        <div className="col-lg-4 mx-auto" style={{
+                           boxShadow: "0 0 8px 0 #c5c5c599"
+                        }}>
+                           <form onSubmit={getOtpHandler} className='bordered p-4'>
+                              <div className="input_group">
+                                 <label htmlFor="email">Email Address</label>
+                                 <input
+                                    type="text"
+                                    name="email"
+                                    id="email"
+                                    className="form-control form-control-sm"
+                                    placeholder="enter email address..."
+                                 />
+                              </div>
 
-                                 <div className="input_group">
-                                    <label htmlFor="securityCode"> {
-                                       timer === 0 ?
-                                          <div style={{ color: "red" }}>
-                                             <span>Session Expired !</span>
-                                             <button className="bt9_primary ms-2" onClick={(e) => handleForgotPwd(e, fPWDEmail)}>Resend</button>
-                                          </div>
-                                          : <div>
-                                             <span>Your Security Code is <b style={{ color: "green" }}>&nbsp;{fPWDEmail}&nbsp;</b> </span>
-                                             <br />
-                                             <i>Time Remaining <b>{timer}</b> seconds</i>
-                                          </div>
-                                    }
-                                    </label>
+                              {!target.includes(2 || 3) && <button className="bt9_edit w-100" type="submit">Get Otp</button>}
+                           </form>
 
-                                    <input
-                                       type="text"
-                                       disabled={timer === 0 ? true : false}
-                                       name="securityCode"
-                                       id="securityCode"
-                                       className="form-control form-control-sm"
-                                       autoComplete="off"
-                                       defaultValue=""
-                                    />
-                                 </div>
+                           {target.includes(2) && <form onSubmit={submitOtpHandler} className="p-4">
+                              <div className="input_group">
+                                 <label htmlFor="securityCode"> {
+                                    <div>
+                                       <i>Time Remaining <b>{timer?.minutes}: {timer?.seconds}</b> seconds</i>
+                                    </div>
+                                 }
+                                 </label>
 
-                                 <button className="bt9_edit w-100" type="submit" disabled={timer === 0 ? true : false}>Verify Security Code</button>
-                              </form>
+                                 <input
+                                    type="text"
+                                    disabled={timer === 0 ? true : false}
+                                    name="securityCode"
+                                    id="securityCode"
+                                    className="form-control form-control-sm"
+                                    autoComplete="off"
+                                    defaultValue=""
+                                 />
+                              </div>
 
-                           </div>
-                        </div> :
-                        <div className="row">
-                           <div className="col-lg-4 mx-auto" style={{
-                              boxShadow: "0 0 8px 0 #c5c5c599"
-                           }}>
-                              <form onSubmit={handleForgotPwd} className='bordered p-4'>
-                                 <div className="input_group">
-                                    <label htmlFor="email">Email Address</label>
-                                    <input
-                                       type="text"
-                                       name="email"
-                                       id="email"
-                                       className="form-control form-control-sm"
-                                       placeholder="enter email address..."
-                                    />
-                                 </div>
-
-                                 <button className="bt9_edit w-100" type="submit">Check Account</button>
-                              </form>
-                           </div>
+                              <button className="bt9_edit w-100" type="submit" disabled={timer === 0 ? true : false}>Submit Otp</button>
+                           </form>}
                         </div>
+                     </div>
                }
             </div>
          </div>

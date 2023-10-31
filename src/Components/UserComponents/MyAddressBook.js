@@ -7,6 +7,7 @@ import { useAuthContext } from '@/lib/AuthProvider';
 import { addressBook } from '@/CustomData/addressBook';
 import { apiHandler } from '@/Functions/common';
 import Spinner from '../Shared/Spinner/Spinner';
+import { useFetch } from '@/Hooks/useFetch';
 
 
 const MyAddressBook = () => {
@@ -16,8 +17,14 @@ const MyAddressBook = () => {
    const [newDivision, setNewDivision] = useState({});
    const [newCity, setNewCity] = useState({});
    const [address, setAddress] = useState({});
-   const addr = userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress;
+
    const [loading, setLoading] = useState(false);
+
+   const { data, refetch } = useFetch('/user/buyer/address-book');
+
+   const addr = data && data?.data?.shippingAddress;
+   console.log(data);
+
 
    useEffect(() => {
       if (oldShipAddrs) {
@@ -28,11 +35,11 @@ const MyAddressBook = () => {
             division: "",
             city: "",
             area: "",
-            area_type: "",
+            areaType: "",
             landmark: "",
-            phone_number: 0,
-            postal_code: 0,
-            default_shipping_address: false
+            phoneNumber: 0,
+            postalCode: 0,
+            active: false
          })
       }
 
@@ -59,18 +66,18 @@ const MyAddressBook = () => {
 
       if (e.type === "submit") {
 
-         address['area_type'] = newDivision?.area_type || address?.area_type;
+         address['areaType'] = newDivision?.area_type || address?.area_type;
 
-         if (oldShipAddrs?.addrsID) {
-            address['addrsID'] = oldShipAddrs?.addrsID;
+         if (oldShipAddrs?.id) {
+            address['id'] = oldShipAddrs?.id;
          }
 
-         const data = await apiHandler(`/user/shipping-address`, oldShipAddrs?.addrsID ? "PUT" : "POST", address);
+         const data = await apiHandler(`/user/buyer/shipping-address`, oldShipAddrs?.id ? "PUT" : "POST", address);
 
          if (data.success) {
             closeAddressForm();
             setMessage(data?.message, "success");
-            await authRefetch();
+            refetch();
          } else {
             setMessage(data?.message, "danger");
          }
@@ -78,14 +85,14 @@ const MyAddressBook = () => {
    }
 
 
-   const selectAddressHandler = async (addrsID, selectAddress) => {
+   const selectAddressHandler = async (id, active) => {
       setLoading(true);
 
-      const data = await apiHandler(`/user/shipping-address-select`, "POST", { addrsID, default_shipping_address: selectAddress });
+      const data = await apiHandler(`/user/buyer/shipping-address-select`, "POST", { id, active });
 
       if (data.success) {
          setLoading(false);
-         await authRefetch();
+         refetch();
          setMessage(data?.message, "success");
       } else {
          setLoading(false);
@@ -94,13 +101,13 @@ const MyAddressBook = () => {
    }
 
    // delete shipping address form account.
-   const deleteAddressHandler = async (addressId) => {
+   const deleteAddressHandler = async (id) => {
       if (window.confirm("Want to remove address ?")) {
-         const data = await apiHandler(`/user/shipping-address-delete/${addressId}`, "DELETE");
+         const data = await apiHandler(`/user/buyer/shipping-address-delete/${id}`, "DELETE");
 
          if (data.success) {
             setMessage(data?.message, "success");
-            await authRefetch();
+            refetch();
             return;
          } else {
             setMessage(data?.message, "danger");
@@ -137,8 +144,8 @@ const MyAddressBook = () => {
 
                               <div className="col-lg-6">
                                  <div className="form-group my-1">
-                                    <label htmlFor="phone_number">Phone Number</label>
-                                    <input type="number" value={address?.phone_number || ""} className='form-control form-control-sm' name='phone_number' id='phone_number' required onChange={(e) => addressHandler(e)} />
+                                    <label htmlFor="phoneNumber">Phone Number</label>
+                                    <input type="number" value={address?.phoneNumber || ""} className='form-control form-control-sm' name='phoneNumber' id='phoneNumber' required onChange={(e) => addressHandler(e)} />
                                  </div>
                               </div>
 
@@ -205,9 +212,9 @@ const MyAddressBook = () => {
 
                               <div className="col-lg-6">
                                  <div className="form-group my-1">
-                                    <label htmlFor="postal_code">Postal Code</label>
+                                    <label htmlFor="postalCode">Postal Code</label>
                                     <input value={address?.postal_code || ""} type="number"
-                                       className='form-control form-control-sm' name='postal_code' id='postal_code' required onChange={(e) => addressHandler(e)} />
+                                       className='form-control form-control-sm' name='postalCode' id='postalCode' required onChange={(e) => addressHandler(e)} />
                                  </div>
                               </div>
 
@@ -227,24 +234,26 @@ const MyAddressBook = () => {
                      <div className="row">
                         {
                            Array.isArray(addr) && addr.map(addrs => {
-                        
-                              const { addrsID, name, division, city, phone_number, postal_code, landmark, default_shipping_address } = addrs;
-              
+
+
+
+                              const { id, name, division, city, phoneNumber, postalCode, landmark, active } = addrs;
+
                               return (
-                                 <div className="col-lg-6" key={addrsID}>
-                                    <div className={`row shipping_address_card ${default_shipping_address ? "selected" : ""}`}>
+                                 <div className="col-lg-6" key={id}>
+                                    <div className={`row shipping_address_card ${active ? "selected" : ""}`}>
                                        <div className="col-10">
-                                          <address title={default_shipping_address ? "Default shipping address." : 'Select as a default shipping address.'} onClick={() => selectAddressHandler(addrsID, default_shipping_address)}>
+                                          <address title={active ? "Default shipping address." : 'Select as a default shipping address.'} onClick={() => selectAddressHandler(id, active)}>
                                              <div className="address_card">
                                                 {
-                                                   <div style={{ wordBreak: "break-word" }} className={`${default_shipping_address ? '' : 'text-muted'}`}>
-                                                      <small><b className='me-3'>{name}</b>{default_shipping_address && <FontAwesomeIcon icon={faCheckCircle} />}</small>
+                                                   <div style={{ wordBreak: "break-word" }} className={`${active ? '' : 'text-muted'}`}>
+                                                      <small><b className='me-3'>{name}</b>{active && <FontAwesomeIcon icon={faCheckCircle} />}</small>
                                                       <p>
-                                                         <small>{division}, {city}, {postal_code}</small> <br />
+                                                         <small>{division}, {city}, {postalCode}</small> <br />
                                                          <small>{landmark}</small> <br />
-                                                         <small>Phone : {phone_number}</small> <br />
+                                                         <small>Phone : {phoneNumber}</small> <br />
                                                          {
-                                                            default_shipping_address === true &&
+                                                            active === true &&
                                                             <span className="badge bg-danger">
                                                                Default Shipping Address
                                                             </span>
@@ -270,7 +279,7 @@ const MyAddressBook = () => {
                                                 </button>
                                           }
 
-                                          <button title='Delete this address!' onClick={() => deleteAddressHandler(addrsID)} className="btn btn-sm mt-3">
+                                          <button title='Delete this address!' onClick={() => deleteAddressHandler(id)} className="btn btn-sm mt-3">
                                              <FontAwesomeIcon icon={faTrashAlt}></FontAwesomeIcon>
                                           </button>
                                        </div>

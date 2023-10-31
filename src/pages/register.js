@@ -65,7 +65,7 @@ export default function Register() {
          // if all input fields validate then call the api request
          else {
 
-            const { message, success, verificationExpiredAt, returnEmail } = await apiHandler(`/auth/register-new-user`, "POST", formData);
+            const { message, success, verificationExpiredAt, returnEmail } = await apiHandler(`/auth/registration?role=buyer`, "POST", formData);
 
             setLoading(false);
 
