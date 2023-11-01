@@ -170,7 +170,7 @@ const NavigationBar = () => {
                   </div>
 
                   {
-                     ((role === 'BUYER')) &&
+                     ((role === 'CUSTOMER')) &&
                      <div className="account_box nv_items" ref={menuRef}>
                         <span onClick={() => setOpenMenu(e => !e)}>
                            <FontAwesomeIcon icon={faUserAlt}></FontAwesomeIcon>

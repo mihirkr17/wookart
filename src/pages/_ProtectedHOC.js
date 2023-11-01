@@ -11,7 +11,7 @@ export default function ProtectedHOC(Components) {
          return;
       }
 
-      if (role !== "BUYER") {
+      if (role !== "CUSTOMER") {
          router.push(`/login?redirect_to=${encodeURIComponent(router?.asPath)}`);
       }
 

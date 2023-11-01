@@ -84,7 +84,7 @@ const CheckSeller = () => {
                            return (
                               <tr key={index}>
                                  <td>{user?.fullName}</td>
-                                 <td>{user?.seller?.storeInfos?.storeName}</td>
+                                 <td>{user?.seller?.storeInfos?.storeTitle}</td>
                                  <td>{user?.phone}</td>
                                  <td>{user?.isSeller}</td>
                                  <td>
@@ -118,7 +118,7 @@ const CheckSeller = () => {
                            </address> <br />
                            <small><strong>Seller Phone</strong> : {modals?.phone}</small><br />
                            <small><strong>Seller Request</strong> : {modals?.isSeller}</small><br />
-                           <small><strong>Store Name</strong> : {modals?.seller?.storeInfos?.storeName}</small><br />
+                           <small><strong>Store Name</strong> : {modals?.seller?.storeInfos?.storeTitle}</small><br />
                            <small><strong>Store License</strong> : {modals?.seller?.storeInfos?.storeLicense}</small><br />
                            <div className="py-3">
                               <button className="btn btn-sm btn-primary me-3" onClick={() => makeSellerHandler(modals?._id, modals?._uuid, modals?.email)}>Make Seller</button>

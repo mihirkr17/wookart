@@ -1,5 +1,5 @@
 import { apiHandler } from '@/Functions/common';
-import { faClose } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faTrash, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import React from 'react';
@@ -135,14 +135,16 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
                            </b>
 
                            <div className="d-flex flex-column">
-                              <big className="currency_sign text-success fw-bold">
-                                 {item?.sellingPrice}
-                              </big>
+                              <div>
+                                 <big className='currency_sign text-success fw-bold'>{item?.sellingPrice.toLocaleString()}&nbsp;&nbsp;</big>
+                                 <small><strike className='currency_sign text-muted'>{item?.price.toLocaleString()}</strike>&nbsp;&nbsp;{-item?.initialDiscount}%</small>
+                              </div>
+
 
                               <div className='d-flex flex-wrap flex-column'>
 
                                  <strong>
-                                    <small className='text-muted'>Sold By: {item?.storeName},  Stock: {item?.stock}</small>
+                                    <small className='text-muted'>Sold By: {item?.storeTitle},  Stock: {item?.stock}</small>
                                  </strong>
 
                                  <small className='text-muted'>
@@ -157,7 +159,7 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
                            !checkOut && <div className="remove_btn text-end">
                               {
                                  cartType !== "buy" && <button className='btn btn-sm' onClick={() => removeItemFromCartHandler(item)}>
-                                    <FontAwesomeIcon icon={faClose} />
+                                    <FontAwesomeIcon icon={faTrash} />
                                  </button>
                               }
                            </div>

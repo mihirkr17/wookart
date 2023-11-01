@@ -6,7 +6,7 @@ import GenerateStar from '../Shared/GenerateStar';
 
 const MyReviews = () => {
    const { userInfo } = useAuthContext();
-   const { data } = useFetch(userInfo?.role === "BUYER" && `/review/my-reviews/${userInfo?._uuid}`);
+   const { data } = useFetch(userInfo?.role === "CUSTOMER" && `/review/my-reviews/${userInfo?._uuid}`);
 
    const { reviews } = data ?? {};
 

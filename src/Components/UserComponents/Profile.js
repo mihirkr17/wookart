@@ -12,7 +12,7 @@ const Profile = () => {
    async function submitProfileData() {
       try {
 
-         const data = await apiHandler(`/user/update-profile-data?userEmail=${userInfo?.email}`, "PUT", inputs);
+         const data = await apiHandler(`/user/customer/update-profile-data?userEmail=${userInfo?.email}`, "PUT", inputs);
 
          if (data?.success) {
             setMessage(data?.message, 'success');
@@ -44,7 +44,7 @@ const Profile = () => {
             return setMessage("Required new password !", "danger");
          }
 
-         const data = await apiHandler(`/auth/user/changed-password`, "POST", { oldPassword, newPassword });
+         const data = await apiHandler(`/user/customer/password-update`, "POST", { oldPassword, newPassword });
 
          if (data?.success) {
             setMessage(data?.message, "success");

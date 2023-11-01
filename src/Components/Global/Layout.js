@@ -9,7 +9,7 @@ export default function Layout({ children }) {
    return (
       <>
          {
-            (role === "BUYER" || !role) && <NavigationBar></NavigationBar>
+            (role === "CUSTOMER" || !role) && <NavigationBar></NavigationBar>
          }
          <main>{children}</main>
       </>

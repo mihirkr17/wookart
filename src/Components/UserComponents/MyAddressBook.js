@@ -20,11 +20,9 @@ const MyAddressBook = () => {
 
    const [loading, setLoading] = useState(false);
 
-   const { data, refetch } = useFetch('/user/buyer/address-book');
+   const { data, refetch } = useFetch('/user/customer/address-book');
 
    const addr = data && data?.data?.shippingAddress;
-   console.log(data);
-
 
    useEffect(() => {
       if (oldShipAddrs) {
@@ -72,7 +70,7 @@ const MyAddressBook = () => {
             address['id'] = oldShipAddrs?.id;
          }
 
-         const data = await apiHandler(`/user/buyer/shipping-address`, oldShipAddrs?.id ? "PUT" : "POST", address);
+         const data = await apiHandler(`/user/customer/shipping-address`, oldShipAddrs?.id ? "PUT" : "POST", address);
 
          if (data.success) {
             closeAddressForm();
@@ -88,7 +86,7 @@ const MyAddressBook = () => {
    const selectAddressHandler = async (id, active) => {
       setLoading(true);
 
-      const data = await apiHandler(`/user/buyer/shipping-address-select`, "POST", { id, active });
+      const data = await apiHandler(`/user/customer/shipping-address-select`, "POST", { id, active });
 
       if (data.success) {
          setLoading(false);
@@ -103,7 +101,7 @@ const MyAddressBook = () => {
    // delete shipping address form account.
    const deleteAddressHandler = async (id) => {
       if (window.confirm("Want to remove address ?")) {
-         const data = await apiHandler(`/user/buyer/shipping-address-delete/${id}`, "DELETE");
+         const data = await apiHandler(`/user/customer/shipping-address-delete/${id}`, "DELETE");
 
          if (data.success) {
             setMessage(data?.message, "success");
@@ -122,7 +120,7 @@ const MyAddressBook = () => {
          <div className="col-lg-12">
             <div className="d-flex align-items-center justify-content-between flex-wrap w-100">
                <h6 className=''>Shipping Address</h6>
-               <button onClick={() => setNewShipAddrs((Array.isArray(addr) && addr.length < 2) ? true : false)} title="Add New Address" className="bt9_edit ms-2">
+               <button onClick={() => setNewShipAddrs((!addr || addr.length < 2) ? true : false)} title="Add New Address" className="bt9_edit ms-2">
                   <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>&nbsp; Add new address
                </button>
 
@@ -213,7 +211,7 @@ const MyAddressBook = () => {
                               <div className="col-lg-6">
                                  <div className="form-group my-1">
                                     <label htmlFor="postalCode">Postal Code</label>
-                                    <input value={address?.postal_code || ""} type="number"
+                                    <input value={address?.postalCode || ""} type="number"
                                        className='form-control form-control-sm' name='postalCode' id='postalCode' required onChange={(e) => addressHandler(e)} />
                                  </div>
                               </div>

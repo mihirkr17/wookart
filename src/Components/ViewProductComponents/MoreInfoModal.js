@@ -3,7 +3,7 @@ import ModalWrapper from "../Global/ModalWrapper";
 
 export default function MoreInfoModal({ data, closeModal }) {
 
-   const { policies, manufacturer, storeName, weight, weightUnit, supplierPhone } = data;
+   const { policies, manufacturer, storeTitle, weight, weightUnit, supplierPhone } = data;
 
    function destructObject(obj = {}) {
 
@@ -27,9 +27,9 @@ export default function MoreInfoModal({ data, closeModal }) {
             <ul>
                {destructObject({
                   manufacturer_information: `${manufacturer?.details}, Origin of ${manufacturer?.origin}`,
-                  packer_information: textToTitleCase(storeName),
+                  packer_information: textToTitleCase(storeTitle),
                   net_weight: `${weight} (${weightUnit})`,
-                  supplier_information: `${textToTitleCase(storeName)} c/o WooKart`,
+                  supplier_information: `${textToTitleCase(storeTitle)} c/o WooKart`,
                   contact_information: `Contact seller ${supplierPhone}, c/o ${policies?.contact_info}`,
                   legal_disclaimer: policies?.legal_disclaimer,
                })}

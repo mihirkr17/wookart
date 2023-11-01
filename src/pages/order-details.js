@@ -89,7 +89,7 @@ export default ProtectedHOC(() => {
                            <div>
                               <span className="card-title">{selectOrder?.title}</span> <br />
                               <small className="text-muted">
-                                 Store: {selectOrder?.storeName} <br />
+                                 Store: {selectOrder?.storeTitle} <br />
                                  Qty: {selectOrder?.quantity} pcs <br />
                                  {printAttributes(selectOrder?.attributes)}
                       
@@ -135,7 +135,7 @@ export default ProtectedHOC(() => {
                                           <div className="p-1">
                                              <span className="card-title">{title}</span> <br />
                                              <small className="text-muted">
-                                                Store: {selectOrder?.storeName} <br />
+                                                Store: {selectOrder?.storeTitle} <br />
                                                 {printAttributes(attributes)}
                                              </small> <br />
                                              <span className="currency_sign">

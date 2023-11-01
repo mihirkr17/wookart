@@ -29,10 +29,10 @@ const Product = ({ product }) => {
                   </div>
 
                   <div className="price_model">
-                     <big><span className='dollar_Symbol currency_sign'></span>{product?.pricing?.sellingPrice || product?.pricing?.price}</big>
+                     <big><span className='dollar_Symbol currency_sign'></span>{product?.pricing?.sellingPrice?.toLocaleString() || product?.pricing?.price}</big>
                      <p>
                         <strike className="currency_sign">
-                           {product?.pricing?.price}
+                           {product?.pricing?.price.toLocaleString()}
                         </strike>
                         ({product?.pricing?.discount || 0}%) off
                      </p>

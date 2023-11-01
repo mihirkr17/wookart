@@ -140,12 +140,12 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
                      <div className="product_price_model">
                         <big>
                            <span className="currency_sign"></span>
-                           {product?.pricing?.sellingPrice || product?.pricing?.price}
+                           {product?.pricing?.sellingPrice?.toLocaleString() || product?.pricing?.price?.toLocaleString()}
                         </big>
 
                         <div>
                            <strike>
-                              <i className='currency_sign'>{product?.pricing?.price}</i>
+                              <i className='currency_sign'>{product?.pricing?.price?.toLocaleString()}</i>
                            </strike>
                            <span>
                               ({product?.pricing?.discount || 0}%) off
@@ -346,8 +346,8 @@ onClick={() => (product?.inWishlist ? removeToWishlist(product?._id) : addToWish
                            <img src="/ecom/store-official-ecommerce-svgrepo-com.svg" width="28" height="28" alt="" />
                         </div>
                         <div className='seller_div_text'>
-                           <span>{product?.storeName}</span>
-                           <button onClick={() => router.push(`/store/${product?.storeName}?id=${product?.supplierId}`)}>View Shop</button>
+                           <span>{product?.storeTitle}</span>
+                           <button onClick={() => router.push(`/store/${product?.storeTitle}?id=${product?.storeId}`)}>View Shop</button>
                         </div>
                      </div>
                   </div>

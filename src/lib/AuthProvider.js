@@ -59,12 +59,13 @@ export default function AuthProvider(props) {
             deleteAuth();
          }
 
-         const { u_data } = await response.json();
+         const { data } = await response.json();
 
          if (response.ok) {
 
-            if (u_data && typeof u_data !== "undefined") {
-               localStorage.setItem("client_data", u_data);
+            if (data && typeof data !== "undefined") {
+               const { userToken } = data;
+               localStorage.setItem("client_data", userToken);
             }
 
             setRef(e => !e);

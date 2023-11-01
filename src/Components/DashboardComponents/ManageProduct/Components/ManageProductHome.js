@@ -55,10 +55,10 @@ const ManageProductHome = (
    }
 
 
-   const deleteThisProductHandler = async (_id, _lid, storeName) => {
+   const deleteThisProductHandler = async (_id, _lid, storeTitle) => {
       if (window.confirm("Want href delete this product ?")) {
 
-         const { success, message } = await apiHandler(`/dashboard/${storeName}/product/delete-product/${_id}/${_lid}`, "DELETE");
+         const { success, message } = await apiHandler(`/dashboard/${storeTitle}/product/delete-product/${_id}/${_lid}`, "DELETE");
 
          if (success) {
             refetch();

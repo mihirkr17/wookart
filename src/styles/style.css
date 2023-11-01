@@ -1934,13 +1934,14 @@ label {
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  background: ghostwhite;
+  background: white;
   border-radius: 4px;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
   padding: 0.6rem 0.4rem;
+  border: 1px solid #e7e7e7;
 }
 .cart_wrapper .c_list1 {
   -webkit-box-flex: 1;
@@ -1969,11 +1970,18 @@ label {
           align-items: center;
 }
 .cart_wrapper .c_list2 .c_meta_info .c_title a {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #212121;
+  text-overflow: ellipsis;
 }
 .cart_wrapper .c_list2 .remove_btn {
   -ms-flex-item-align: start;
       align-self: flex-start;
+}
+.cart_wrapper .c_list2 .remove_btn button svg {
+  color: gray;
+  font-size: 1rem;
 }
 
 .c_img {

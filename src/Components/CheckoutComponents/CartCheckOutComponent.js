@@ -99,8 +99,8 @@ export default function CartCheckoutComponent({ totalAmount, session }) {
 
 
          setOrderLoading(true);
-         const response = await apiHandler(`/order/cart-purchase/`, "POST", {
-            state: "byCart",
+         const response = await apiHandler(`/purchase/cart`, "POST", {
+            state: "CART",
             paymentMethodId: pm?.id,
             session
          });

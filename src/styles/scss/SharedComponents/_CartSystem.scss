@@ -1,11 +1,11 @@
 .cart_wrapper {
   display: flex;
   flex-wrap: wrap;
-  // border: 1px solid #ededed;
-  background: ghostwhite;
+  background: white;
   border-radius: 4px;
   flex-direction: row;
   padding: 0.6rem 0.4rem;
+  border: 1px solid #e7e7e7;
 
   .c_list1 {
     flex: 1 1;
@@ -22,13 +22,23 @@
     .c_meta_info {
       .c_title {
         a {
-          font-size: 0.8rem;
+          font-size: 0.875rem;
+          font-weight: 400;
+          color: #212121;
+          text-overflow: ellipsis;
         }
       }
     }
 
     .remove_btn {
       align-self: flex-start;
+
+      button {
+        svg {
+          color: gray;
+          font-size: 1rem;
+        }
+      }
     }
   }
 }
