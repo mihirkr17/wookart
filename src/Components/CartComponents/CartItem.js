@@ -1,9 +1,11 @@
 import { apiHandler } from '@/Functions/common';
-import { faClose, faTrash, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faMinus, faPlus, faTrash, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import React from 'react';
 import { useState } from 'react';
+import swal from 'sweetalert';
+
 
 const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMessage }) => {
    const [qtyLoading, setQtyLoading] = useState(false);
@@ -12,14 +14,27 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
 
    const removeItemFromCartHandler = async (cp) => {
       try {
+         const { productId, title, sku } = cp;
+
+         const willDelete = await swal({
+            title: "Are you sure?",
+            text: "Want to delete " + title + " from cart ?",
+            icon: "warning",
+            dangerMode: true,
+            confirmButtonText: "Cool"
+         });
+
+         if (!willDelete) return;
+
          setLoading(true);
 
-         const { productId, title, sku } = cp;
          const { success, message } = await apiHandler(`/cart/delete-cart-item/${productId}/${sku}/${cartType && cartType}`, "DELETE", {});
 
          setLoading(false);
 
          if (success) {
+            swal("Deleted!", "Your imaginary file has been deleted!", "success");
+
             setMessage(`${title} ${message}`, 'success');
             cartRefetch();
          } else {
@@ -31,6 +46,7 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
          setLoading(false);
       }
    }
+
 
 
    const itemQuantityHandler = async (value, productID, sku, cartID) => {
@@ -101,10 +117,10 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
                            <div className="ms-2 c_btn">
 
                               <button
-                                 className='badge bg-primary my-1'
+                                 className='bt9_edit px-2 my-1'
                                  disabled={item?.quantity <= 1 ? true : false}
                                  onClick={() => itemQuantityHandler(parseInt(item?.quantity) - 1, item?.productId, item?.sku, item?._id)}>
-                                 -
+                                 <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
                               </button>
 
                               <input
@@ -116,10 +132,10 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
                               />
 
                               <button
-                                 className='badge bg-primary my-1'
+                                 className='bt9_edit px-2 my-1'
                                  disabled={item?.quantity >= item?.available ? true : false}
                                  onClick={() => itemQuantityHandler(parseInt(item?.quantity) + 1, item?.productId, item?.sku, item?._id)}>
-                                 +
+                                 <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
                               </button>
                            </div>
                         }

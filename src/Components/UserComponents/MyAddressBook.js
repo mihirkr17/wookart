@@ -120,7 +120,7 @@ const MyAddressBook = () => {
          <div className="col-lg-12">
             <div className="d-flex align-items-center justify-content-between flex-wrap w-100">
                <h6 className=''>Shipping Address</h6>
-               <button onClick={() => setNewShipAddrs((!addr || addr.length < 2) ? true : false)} title="Add New Address" className="bt9_edit ms-2">
+               <button onClick={() => setNewShipAddrs((!addr || addr.length < 2) ? true : false)} title="Add New Address" className="bt9_primary ms-2">
                   <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>&nbsp; Add new address
                </button>
 
@@ -240,8 +240,8 @@ const MyAddressBook = () => {
                               return (
                                  <div className="col-lg-6" key={id}>
                                     <div className={`row shipping_address_card ${active ? "selected" : ""}`}>
-                                       <div className="col-10">
-                                          <address title={active ? "Default shipping address." : 'Select as a default shipping address.'} onClick={() => selectAddressHandler(id, active)}>
+                                       <div className="col-12">
+                                          <address>
                                              <div className="address_card">
                                                 {
                                                    <div style={{ wordBreak: "break-word" }} className={`${active ? '' : 'text-muted'}`}>
@@ -250,37 +250,40 @@ const MyAddressBook = () => {
                                                          <small>{division}, {city}, {postalCode}</small> <br />
                                                          <small>{landmark}</small> <br />
                                                          <small>Phone : {phoneNumber}</small> <br />
-                                                         {
-                                                            active === true &&
-                                                            <span className="badge bg-danger">
+                                                         {active === true &&
+                                                            <small style={{ color: "gray", letterSpacing: "1px", fontWeight: 400, textTransform: "uppercase" }}>
                                                                Default Shipping Address
-                                                            </span>
+                                                            </small>
                                                          }
                                                       </p>
                                                    </div>
                                                 }
+
+
+                                                <div className="d-flex align-items-center flex-row justify-content-start gap-3 py-1">
+                                                   <button className='bt9_trans'
+                                                      onClick={() => setOldShipAddrs(addrs)}>
+                                                      Edit
+                                                   </button>
+
+                                                   <button title='Delete this address!'
+                                                      onClick={() => deleteAddressHandler(id)}
+                                                      className="bt9_trans">
+                                                      Delete
+                                                   </button>
+
+                                                   <button
+                                                      title={active ? "Default shipping address." : 'Select as a default shipping address.'}
+                                                      className='bt9_trans border px-1' onClick={() => selectAddressHandler(id, active)}>
+                                                      {active ? "Unselect" : "Set As Default"}
+                                                   </button>
+
+                                                </div>
                                              </div>
+
                                           </address>
                                        </div>
-                                       <div className="col-2 d-flex align-items-center flex-column justify-content-center">
 
-
-                                          {
-                                             (!oldShipAddrs) ?
-                                                <button className='btn btn-sm'
-                                                   style={oldShipAddrs === false ? { display: "block" } : { display: "none" }}
-                                                   onClick={() => setOldShipAddrs(addrs)}>
-                                                   {address && <FontAwesomeIcon icon={faPenAlt} />}
-                                                </button> :
-                                                <button className='btn btn-sm' title='Cancel'>
-                                                   {<FontAwesomeIcon icon={faClose} />}
-                                                </button>
-                                          }
-
-                                          <button title='Delete this address!' onClick={() => deleteAddressHandler(id)} className="btn btn-sm mt-3">
-                                             <FontAwesomeIcon icon={faTrashAlt}></FontAwesomeIcon>
-                                          </button>
-                                       </div>
                                     </div>
                                  </div>
 

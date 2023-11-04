@@ -90,7 +90,10 @@
 
   &:hover {
     background-color: var(--color-accent-alt);
+    color: var(--color-light-alt);;
   }
+
+ 
 
   &:disabled {
     background-color: gray;
@@ -106,13 +109,14 @@
 }
 
 .bt9_edit {
-  padding: 0.2rem 0.3rem;
+  line-height: 1;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-accent);
   border-radius: 3px;
   background-color: var(--color-accent);
   color: var(--color-light);
   font-size: 0.7rem;
-  font-weight: bold;
+  font-weight: 400;
   letter-spacing: 1px;
   transition: all 0.4s linear;
   appearance: button;
@@ -130,7 +134,8 @@
 }
 
 .bt9_delete {
-  padding: 0.2rem 0.3rem;
+  line-height: 1;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-danger);
   border-radius: 3px;
   background-color: var(--color-danger);
@@ -148,12 +153,12 @@
 }
 
 .bt9_trans {
-  padding: 0.2rem 0;
+  padding: 0.3rem 0.3rem;
   border: unset;
-  background-color: var(--color-trans-one);
+  background-color: unset;
   color: var(--color-dark);
   font-size: 0.7rem;
-  font-weight: bold;
+  font-weight: 400;
   letter-spacing: 1px;
   transition: all 0.4s linear;
   appearance: button;
@@ -161,7 +166,7 @@
 }
 
 .bt9_warning {
-  padding: 0.2rem 0.3rem;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-warning);
   border-radius: 3px;
   background-color: var(--color-warning);
@@ -179,7 +184,7 @@
 }
 
 .bt9_create {
-  padding: 0.2rem 0.3rem;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-primary);
   border-radius: 3px;
   background-color: var(--color-primary);
@@ -197,7 +202,8 @@
 }
 
 .bt9_primary {
-  padding: 0.2rem 0.3rem;
+  line-height: 1;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-primary);
   border-radius: 3px;
   background-color: var(--color-primary);
@@ -215,13 +221,14 @@
 }
 
 .bt9_cancel {
-  padding: 0.2rem 0.3rem;
+  line-height: 1;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-mute);
   border-radius: 3px;
   background-color: var(--color-mute);
   color: var(--color-light);
   font-size: 0.7rem;
-  font-weight: bold;
+  font-weight: 400;
   letter-spacing: 1px;
   transition: all 0.4s linear;
   cursor: pointer;

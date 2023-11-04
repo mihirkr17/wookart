@@ -46,3 +46,10 @@ textarea {
   border: unset;
   outline: unset;
 }
+
+button {
+  line-height: 1;
+  svg {
+    color: var(--color-light);
+  }
+}

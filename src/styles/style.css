@@ -19,7 +19,7 @@
   --color-green: #26a541;
   --color-nav: #0084ff;
   --color-nav-down: #f8f8f8;
-  --color-mute: #878787;
+  --color-mute: #949494;
   --color-mute-alt: #6e6e6e;
   --color-link: #565656 // #ff7019;
   --color-link-alt: #e75900;
@@ -151,6 +151,13 @@ textarea {
   outline: unset;
 }
 
+button {
+  line-height: 1;
+}
+button svg {
+  color: var(--color-light);
+}
+
 .card_default {
   background: var(--color-trans-one);
   border-radius: 4px;
@@ -257,6 +264,7 @@ textarea {
 }
 .bt9_checkout:hover {
   background-color: var(--color-accent-alt);
+  color: var(--color-light-alt);
 }
 .bt9_checkout:disabled {
   background-color: gray;
@@ -271,13 +279,14 @@ textarea {
 }
 
 .bt9_edit {
-  padding: 0.2rem 0.3rem;
+  line-height: 1;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-accent);
   border-radius: 3px;
   background-color: var(--color-accent);
   color: var(--color-light);
   font-size: 0.7rem;
-  font-weight: bold;
+  font-weight: 400;
   letter-spacing: 1px;
   -webkit-transition: all 0.4s linear;
   transition: all 0.4s linear;
@@ -296,7 +305,8 @@ textarea {
 }
 
 .bt9_delete {
-  padding: 0.2rem 0.3rem;
+  line-height: 1;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-danger);
   border-radius: 3px;
   background-color: var(--color-danger);
@@ -316,12 +326,12 @@ textarea {
 }
 
 .bt9_trans {
-  padding: 0.2rem 0;
+  padding: 0.3rem 0.3rem;
   border: unset;
-  background-color: var(--color-trans-one);
+  background-color: unset;
   color: var(--color-dark);
   font-size: 0.7rem;
-  font-weight: bold;
+  font-weight: 400;
   letter-spacing: 1px;
   -webkit-transition: all 0.4s linear;
   transition: all 0.4s linear;
@@ -332,7 +342,7 @@ textarea {
 }
 
 .bt9_warning {
-  padding: 0.2rem 0.3rem;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-warning);
   border-radius: 3px;
   background-color: var(--color-warning);
@@ -352,7 +362,7 @@ textarea {
 }
 
 .bt9_create {
-  padding: 0.2rem 0.3rem;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-primary);
   border-radius: 3px;
   background-color: var(--color-primary);
@@ -372,7 +382,8 @@ textarea {
 }
 
 .bt9_primary {
-  padding: 0.2rem 0.3rem;
+  line-height: 1;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-primary);
   border-radius: 3px;
   background-color: var(--color-primary);
@@ -392,13 +403,14 @@ textarea {
 }
 
 .bt9_cancel {
-  padding: 0.2rem 0.3rem;
+  line-height: 1;
+  padding: 0.3rem 0.3rem;
   border: 1px solid var(--color-mute);
   border-radius: 3px;
   background-color: var(--color-mute);
   color: var(--color-light);
   font-size: 0.7rem;
-  font-weight: bold;
+  font-weight: 400;
   letter-spacing: 1px;
   -webkit-transition: all 0.4s linear;
   transition: all 0.4s linear;
@@ -2052,6 +2064,7 @@ label {
   padding: 0.2rem;
   margin: 0.3rem;
   position: relative;
+  border: 1px solid var(--color-mute);
 }
 .shipping_address_card.selected {
   background-color: var(--color-active);
@@ -2068,21 +2081,22 @@ label {
 .shipping_address_card.selected::before {
   border-right: 30px solid var(--color-accent-alt);
 }
+.shipping_address_card:hover {
+  background-color: var(--color-active);
+  border: 1px solid var(--color-accent-alt);
+}
+.shipping_address_card:hover::before {
+  border-right: 30px solid var(--color-accent-alt);
+}
 
 .address_card {
   position: relative;
-  cursor: pointer;
   -webkit-transition: all 0.4s linear;
   transition: all 0.4s linear;
   padding: 0.2rem 0.5rem;
-  border: 1px solid #e7e7e7;
-  height: 135px;
+  max-height: 150px;
   display: block;
   color: var(--color-text-primary);
-}
-.address_card:hover {
-  background-color: whitesmoke;
-  border: 1px solid var(--color-accent);
 }
 
 .cart_card {
