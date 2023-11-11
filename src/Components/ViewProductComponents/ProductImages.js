@@ -6,7 +6,7 @@ import { apiHandler } from '@/Functions/common';
 const ProductImages = ({ product, userInfo, authRefetch, setMessage }) => {
    const [tabImg, setTabImg] = useState("");
    const [zoom, setZoom] = useState({ transform: "translate3d('0px, 0px, 0px')" });
-   useEffect(() => setTabImg(product?.imageUrls && product?.imageUrls[0]), [product?.imageUrls]);
+   useEffect(() => setTabImg(product?.images && product?.images[0].src), [product?.images]);
 
    const handleImgTab = (params) => {
       setTabImg(params);
@@ -28,10 +28,10 @@ const ProductImages = ({ product, userInfo, authRefetch, setMessage }) => {
          </div>
          <div className="product_image_tab">
             {
-               Array.isArray(product?.imageUrls) && product?.imageUrls?.map((img, index) => {
+               Array.isArray(product?.images) && product?.images?.map((img, index) => {
                   return (
-                     <div key={index} className="image_btn" onMouseOver={() => handleImgTab(img)}>
-                        <img src={img} alt="" />
+                     <div key={index} className="image_btn" onMouseOver={() => handleImgTab(img?.src)}>
+                        <img src={img?.src} alt="" />
                      </div>
                   )
                })

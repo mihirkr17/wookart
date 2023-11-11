@@ -4,6 +4,7 @@ import React from 'react';
 
 const Product = ({ product }) => {
 
+   console.log(product);
 
    return (
       <div className='product_card my-2'>
@@ -11,13 +12,15 @@ const Product = ({ product }) => {
          <Link href={`/product/${product?.slug}?pId=${product?._id}&sku=${product?.sku}&oTracker=${product?.sku}`}>
 
             <div className="product_card_img">
-               <img src={product?.imageUrl} alt='' />
+               <img src={product?.image?.src} alt='' />
             </div>
             <article className='product_card_description'>
                <div className="product_title">
                   <span>{product?.brand}</span>
                   <h1>
-                     {product?.title && product?.title.length > 20 ? product?.title.slice(0, 20) + "..." : product?.title}
+                     {product?.title
+                     // && product?.title.length > 20 ? product?.title.slice(0, 20) + "..." : product?.title
+                     }
                   </h1>
                   <small>{product?.packageInfo?.inTheBox}</small>
                </div>
@@ -29,12 +32,12 @@ const Product = ({ product }) => {
                   </div>
 
                   <div className="price_model">
-                     <big><span className='dollar_Symbol currency_sign'></span>{product?.pricing?.sellingPrice?.toLocaleString() || product?.pricing?.price}</big>
+                     <big><span className='dollar_Symbol currency_sign'></span>{product?.sellPrice?.toLocaleString() || product?.stockPrice}</big>
                      <p>
                         <strike className="currency_sign">
-                           {product?.pricing?.price.toLocaleString()}
+                           {product?.stockPrice?.toLocaleString()}
                         </strike>
-                        ({product?.pricing?.discount || 0}%) off
+                        ({product?.discount || 0}%) off
                      </p>
                      {
                         product?.shipping?.isFree && product?.shipping?.isFree && <small className='text-center'>Free Shipping</small>

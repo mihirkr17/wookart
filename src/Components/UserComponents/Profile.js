@@ -112,22 +112,23 @@ const Profile = () => {
                {
                   openProfileUpdateForm ?
                      <>
-                        <button className="bt9_edit me-2" onClick={submitProfileData}>
+                        <button className="bt9_edit me-2" variation="medium" onClick={submitProfileData}>
                            Save Change
                         </button>
-                        <button className="bt9_cancel" onClick={() => setOpenProfileUpdateForm(false)}>
+                        <button className="bt9_cancel" variation="medium" type='button' onClick={() => setOpenProfileUpdateForm(false)}>
                            Cancel
                         </button>
                      </> :
                      <>
-                        <button className="bt9_edit" onClick={() => setOpenProfileUpdateForm(true)}>
+                        <button className="bt9_edit" variation="medium" onClick={() => setOpenProfileUpdateForm(true)}>
                            Edit Profile
                         </button>
 
                         <br />
                         <br />
                         {
-                           userInfo?.authProvider === "system" && <button className={openPwdForm ? "bt9_cancel" : "bt9_edit"} onClick={() => setOpenPwdForm(e => !e)}>
+                           userInfo?.authProvider === "system" && <button variation="medium" className={openPwdForm ? "bt9_cancel" : "bt9_edit"}
+                              onClick={() => setOpenPwdForm(e => !e)}>
                               {openPwdForm ? "Cancel" : "Change Password"}
                            </button>
                         }</>
@@ -163,7 +164,7 @@ const Profile = () => {
                            </div>
                         </div>
                      </div>
-                     <button type='submit' className='bt9_edit'>Update Password</button>
+                     <button type='submit' className='bt9_edit' variation="medium">Update Password</button>
                   </form>
                }
 

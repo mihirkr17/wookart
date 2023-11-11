@@ -16,7 +16,7 @@ const ImagePreviewer = ({ previewImages, setPreviewImages }) => {
          </div>
 
          {
-            previewImages?.length >= 1 && <button className='status_btn' onClick={() => setPreviewImages([])}>Clear</button>
+            previewImages?.length >= 1 && <button className='bt9_status' onClick={() => setPreviewImages([])}>Clear</button>
          }
       </div>
    );

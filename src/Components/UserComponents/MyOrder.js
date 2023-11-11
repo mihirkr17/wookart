@@ -111,14 +111,15 @@ const MyOrder = () => {
                   <div className="col-12">
                      {
                         Array.isArray(orderItems) && orderItems.map((orderItem, index) => {
-                           const { amount, itemStatus, title, itemId, sellingPrice, attributes, imageUrl, productId, sku, quantity, _id, orderPlacedAt } = orderItem;
+                           const { amount, status, title, orderId, sellPrice, attributes, image, productId, sku, quantity, _id } = orderItem;
 
+                           const lastStatus = Array.isArray(status) && status[status.length - 1];
                            return (
-                              <div className="my_order_items" key={itemId}>
-                                 <div className="ssg" onClick={() => orderDetailHandler(_id, itemId)}>
+                              <div className="my_order_items" key={_id}>
+                                 <div className="ssg" onClick={() => orderDetailHandler(orderId, _id)}>
 
                                     <div>
-                                       <img src={imageUrl ?? ""}
+                                       <img src={image?.src ?? ""}
                                           alt="product-image" srcSet="" width="40" height="40"
                                           style={{ objectFit: "contain" }}
                                        />
@@ -128,23 +129,26 @@ const MyOrder = () => {
                                        <small>
                                           <span style={{ color: "#d33900" }}><strong>{title}</strong></span>
                                        </small>
-                                       <small className='text-muted'>
+                                     
+                                    </div>
+
+                                      <small className='text-muted'>
+                                       Qty:
                                           {
-                                             printAttributes(attributes)
+                                             quantity
                                           }
                                        </small>
-                                    </div>
 
                                     <strong className='currency_sign'>{amount}</strong>
 
                                     <div>
                                        <small>
-                                          Status: <i style={itemStatus === "canceled" ? { color: "red" } : { color: "green" }}>
-                                             {itemStatus}
+                                          Status: <i style={lastStatus?.name === "canceled" ? { color: "red" } : { color: "green" }}>
+                                             {lastStatus?.name}
                                           </i>
                                        </small> <br />
                                        <i className='textMute'>
-                                          Placed on {new Date(orderPlacedAt).toLocaleDateString() + ", " + new Date(orderPlacedAt).toLocaleTimeString()}
+                                          Placed on {new Date(lastStatus?.time).toLocaleDateString() + ", " + new Date(lastStatus?.time).toLocaleTimeString()}
                                        </i>
 
                                        {/* <button className='manage_order_button' onClick={() => setManageOrderModal(orderItem)}>

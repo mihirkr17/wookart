@@ -1,0 +1,193 @@
+button {
+  line-height: 1;
+  padding: 0.3rem 0.3rem;
+  border-radius: 1px;
+  border: unset;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.8px;
+  transition: all 0.4s linear;
+  appearance: button;
+  margin: 1px;
+
+  &[variation="big"] {
+    padding: 0.8rem 0.4rem;
+    font-size: 1rem;
+  }
+
+  &[variation="medium"] {
+    padding: 0.6rem 0.3rem;
+    font-size: 0.875rem;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: var(--color-mute);
+    border: 1px solid var(--color-mute);
+
+    &:hover {
+      background-color: var(--color-mute);
+      border: 1px solid var(--color-mute);
+    }
+  }
+}
+
+.bt9_edit {
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-light);
+  appearance: button;
+  &:hover {
+    background-color: var(--color-accent-alt);
+  }
+}
+
+.bt9_delete {
+  background-color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+  color: var(--color-light);
+  appearance: button;
+  &:hover {
+    background-color: var(--color-danger-alt);
+  }
+}
+
+.bt9_trans {
+  background-color: unset;
+  border: 1px solid transparent;
+  color: var(--color-dark);
+  appearance: button;
+
+  &:hover {
+    border: 1px solid var(--color-dark);
+  }
+}
+
+.bt9_trans_alt {
+  background-color: unset;
+  border: 1px solid var(--color-dark);
+  color: var(--color-dark);
+  appearance: button;
+
+  &:hover {
+    border: 1px solid transparent;
+  }
+}
+
+.bt9_warning {
+  border: 1px solid var(--color-warning);
+  background-color: var(--color-warning);
+  color: var(--color-dark);
+  appearance: button;
+  &:hover {
+    background-color: var(--color-warning-alt);
+  }
+}
+
+.bt9_create {
+  border: 1px solid var(--color-primary);
+  background-color: var(--color-primary);
+  color: var(--color-light);
+  appearance: button;
+  &:hover {
+    background-color: var(--color-primary-alt);
+  }
+}
+
+.bt9_primary {
+  border: 1px solid var(--color-primary);
+  background-color: var(--color-primary);
+  color: var(--color-light);
+  appearance: button;
+  &:hover {
+    background-color: var(--color-primary-alt);
+  }
+}
+
+.bt9_cancel {
+  border: 1px solid var(--color-mute);
+  background-color: var(--color-mute);
+  color: var(--color-light);
+  appearance: button;
+  &:hover {
+    background-color: var(--color-mute-alt);
+  }
+}
+
+.bt9_withdraw {
+  border: 1px solid var(--color-orange);
+  background-color: var(--color-orange);
+  color: var(--color-light);
+  appearance: button;
+  &:hover {
+    background-color: var(--color-orange-alt);
+  }
+}
+
+.bt9_checkout {
+  background-color: var(--color-accent);
+  color: var(--color-light);
+  border: none;
+  appearance: button;
+  width: 100%;
+  padding: 0.5rem;
+
+  &:hover {
+    background-color: var(--color-accent-alt);
+    color: var(--color-light-alt);
+  }
+}
+
+.bt9_status {
+  border: 1px solid var(--color-dark);
+  font-size: var(--font-size-smaller);
+  appearance: button;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.bt9_status_alt {
+  background-color: transparent;
+  border: 1px solid var(--color-dark);
+  appearance: button;
+
+  &:hover {
+    color: gray;
+    border-color: gray;
+  }
+}
+
+.bt9_dynamic {
+  cursor: pointer;
+  display: block;
+  padding: 0.2rem;
+  margin-left: 0.5rem;
+}
+
+.bt9_accent {
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  appearance: button;
+
+  svg {
+    color: var(--color-light);
+  }
+
+  &:hover {
+    background-color: var(--color-accent-alt);
+  }
+}
+
+.bt9_orange {
+  background-color: #fb641b;
+  color: white;
+  appearance: button;
+
+  &:hover {
+    color: white;
+    background-color: #cc4502;
+  }
+}

@@ -221,9 +221,9 @@ const MyAddressBook = () => {
                                     oldShipAddrs ? "Edit Address" : "Add Address"
                                  }</button>
                                  {
-                                    <span className='bt9_cancel' title='Cancel' onClick={closeAddressForm}>
+                                    <button type='button' className='bt9_cancel' title='Cancel' onClick={closeAddressForm}>
                                        Cancel
-                                    </span>
+                                    </button>
                                  }
                               </div>
                            </div>
@@ -274,7 +274,7 @@ const MyAddressBook = () => {
 
                                                    <button
                                                       title={active ? "Default shipping address." : 'Select as a default shipping address.'}
-                                                      className='bt9_trans border px-1' onClick={() => selectAddressHandler(id, active)}>
+                                                      className='bt9_trans_alt px-1' onClick={() => selectAddressHandler(id, active)}>
                                                       {active ? "Unselect" : "Set As Default"}
                                                    </button>
 

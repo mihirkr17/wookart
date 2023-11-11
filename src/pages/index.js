@@ -23,6 +23,7 @@ export function Home({ data }) {
     setLimit(limit);
     router.push("./?limit=" + limit);
   }
+  console.log(data);
 
   return (
     <>

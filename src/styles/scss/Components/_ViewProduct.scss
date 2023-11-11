@@ -399,41 +399,8 @@
   justify-content: flex-start;
   width: 100%;
   flex-wrap: wrap;
-
-  .ph_btn {
-    margin: 2px 10px 2px 0;
-    padding: 1rem 1.5rem;
-    font-weight: 500;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.4s linear;
-  }
 }
 
-.buyBtn {
-  background-color: #fb641b;
-  color: white;
-
-  &:hover {
-    color: white;
-    background-color: #cc4502;
-  }
-}
-
-.addToCartBtn {
-  background-color: var(--color-accent);
-  color: white;
-  border: none;
-
-  svg {
-    color: var(--color-light);
-  }
-
-  &:hover {
-    background-color: var(--color-accent-alt);
-  }
-}
 
 .wishlistBtn {
   width: 40px;

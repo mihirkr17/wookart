@@ -477,13 +477,13 @@ const ProductListing = ({ userInfo, formTypes, setMessage }) => {
                                        />
 
                                        {
-                                          searchKeywords.length !== 1 && <span className="dynamic_bt9"
+                                          searchKeywords.length !== 1 && <span className="bt9_dynamic"
                                              onClick={() => inputHandler(searchKeywords, setSearchKeywords, null, i)}>
                                              <FontAwesomeIcon icon={faMinusSquare} />
                                           </span>
                                        }
                                        {
-                                          searchKeywords.length - 1 === i && <span className="dynamic_bt9"
+                                          searchKeywords.length - 1 === i && <span className="bt9_dynamic"
                                              onClick={() => setSearchKeywords([...searchKeywords, ''])}>
                                              <FontAwesomeIcon icon={faPlusSquare} />
                                           </span>
@@ -510,13 +510,13 @@ const ProductListing = ({ userInfo, formTypes, setMessage }) => {
                                        />
 
                                        {
-                                          highlight.length !== 1 && <span className="dynamic_bt9"
+                                          highlight.length !== 1 && <span className="bt9_dynamic"
                                              onClick={() => inputHandler(highlight, setHighlight, null, i)}>
                                              <FontAwesomeIcon icon={faMinusSquare} />
                                           </span>
                                        }
                                        {
-                                          highlight.length - 1 === i && <span className="dynamic_bt9"
+                                          highlight.length - 1 === i && <span className="bt9_dynamic"
                                              onClick={() => setHighlight([...highlight, ''])}>
                                              <FontAwesomeIcon icon={faPlusSquare} />
                                           </span>

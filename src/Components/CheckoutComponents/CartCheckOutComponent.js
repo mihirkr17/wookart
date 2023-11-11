@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useAuthContext } from "@/lib/AuthProvider";
 import { apiHandler } from "@/Functions/common";
 import { useCartContext } from "@/lib/CartProvider";
+import { useFetch } from "@/Hooks/useFetch";
 
 
 export default function CartCheckoutComponent({ totalAmount, session }) {
@@ -21,6 +22,7 @@ export default function CartCheckoutComponent({ totalAmount, session }) {
    const [orderLoading, setOrderLoading] = useState(false);
    const [confirmLoading, setConfirmLoading] = useState(false);
    const { cartData, cartRefetch } = useCartContext();
+   const { data, refetch } = useFetch('/user/customer/address-book');
 
    const stripe = useStripe();
    const elements = useElements();
@@ -28,6 +30,7 @@ export default function CartCheckoutComponent({ totalAmount, session }) {
 
    const selectedAddress = (userInfo?.buyer?.shippingAddress && userInfo?.buyer?.shippingAddress.find(e => e?.default_shipping_address === true)) || null;
 
+   const addr = data && data?.data?.shippingAddress;
 
    const handleServerResponse = async (response) => {
       if (!response?.success) return setMessage(response?.message, "danger");
@@ -60,9 +63,9 @@ export default function CartCheckoutComponent({ totalAmount, session }) {
       try {
          e.preventDefault();
 
-         if (!selectedAddress) {
-            return setMessage("Please select shipping address.", "danger");
-         }
+         // if (!selectedAddress) {
+         //    return setMessage("Please select shipping address.", "danger");
+         // }
 
          if (!stripe || !elements) {
             return setMessage("Card initialization failed !", "danger");
@@ -125,12 +128,12 @@ export default function CartCheckoutComponent({ totalAmount, session }) {
                <div className="col-lg-8 mb-3">
                   <div className="cart_card">
                      {
-                        userInfo?.buyer?.shippingAddress?.length >= 1 ?
+                        addr?.length >= 1 ?
 
                            <CartAddress
                               setMessage={setMessage}
-                              authRefetch={authRefetch}
-                              addr={userInfo?.shippingAddress ? userInfo?.shippingAddress : []}
+                              refetch={refetch}
+                              addr={addr || []}
                            /> : <Link className="bt9_primary my-3" href={`/user/address-book`}>Select Shipping Address</Link>
                      }
                      <br />
@@ -192,12 +195,13 @@ export default function CartCheckoutComponent({ totalAmount, session }) {
                               /> */}
                            </div>
                            {
-                              !selectedAddress && <p>Please select shipping address.</p>
+                              !addr?.find(e => (e.active)) && <p>Please select shipping address.</p>
                            }
 
                            {
                               (orderLoading || confirmLoading) ?
-                                 <span style={{ padding: "5px 8px" }}>{orderLoading ? "Paying..." : "Confirming..."}</span> : <button className='bt9_checkout' disabled={(cartData?.cartItems && userInfo?.buyer?.defaultShippingAddress) ? false : true} type='submit'>
+                                 <span style={{ padding: "5px 8px" }}>{orderLoading ? "Paying..." : "Confirming..."}</span> :
+                                 <button className='bt9_checkout' disabled={(cartData?.cartItems && addr?.find(e => (e.active))) ? false : true} type='submit'>
                                     Confirm Order
                                  </button>
                            }

@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import '~@fortawesome/fontawesome-svg-core/styles.css';
 :root {
   --color-bg: #ffffff;
   --color-primary: #c45ab3;
@@ -9,7 +10,7 @@
   --color-accent-alt: #049477;
   --color-light: #fdfbfb;
   --color-light-alt: #e0e0e0;
-  --color-dark: #0f0f0f;
+  --color-dark: #363636;
   --color-dark-alt: #1f1f1f;
   --color-orange: #ff751a;
   --color-orange-alt: #c75407;
@@ -158,6 +159,219 @@ button svg {
   color: var(--color-light);
 }
 
+button {
+  line-height: 1;
+  padding: 0.3rem 0.3rem;
+  border-radius: 1px;
+  border: unset;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.8px;
+  -webkit-transition: all 0.4s linear;
+  transition: all 0.4s linear;
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+  margin: 1px;
+}
+button[variation=big] {
+  padding: 0.8rem 0.4rem;
+  font-size: 1rem;
+}
+button[variation=medium] {
+  padding: 0.6rem 0.3rem;
+  font-size: 0.875rem;
+}
+button:disabled {
+  cursor: not-allowed;
+  background-color: var(--color-mute);
+  border: 1px solid var(--color-mute);
+}
+button:disabled:hover {
+  background-color: var(--color-mute);
+  border: 1px solid var(--color-mute);
+}
+
+.bt9_edit {
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-light);
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_edit:hover {
+  background-color: var(--color-accent-alt);
+}
+
+.bt9_delete {
+  background-color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+  color: var(--color-light);
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_delete:hover {
+  background-color: var(--color-danger-alt);
+}
+
+.bt9_trans {
+  background-color: unset;
+  border: 1px solid transparent;
+  color: var(--color-dark);
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_trans:hover {
+  border: 1px solid var(--color-dark);
+}
+
+.bt9_trans_alt {
+  background-color: unset;
+  border: 1px solid var(--color-dark);
+  color: var(--color-dark);
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_trans_alt:hover {
+  border: 1px solid transparent;
+}
+
+.bt9_warning {
+  border: 1px solid var(--color-warning);
+  background-color: var(--color-warning);
+  color: var(--color-dark);
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_warning:hover {
+  background-color: var(--color-warning-alt);
+}
+
+.bt9_create {
+  border: 1px solid var(--color-primary);
+  background-color: var(--color-primary);
+  color: var(--color-light);
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_create:hover {
+  background-color: var(--color-primary-alt);
+}
+
+.bt9_primary {
+  border: 1px solid var(--color-primary);
+  background-color: var(--color-primary);
+  color: var(--color-light);
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_primary:hover {
+  background-color: var(--color-primary-alt);
+}
+
+.bt9_cancel {
+  border: 1px solid var(--color-mute);
+  background-color: var(--color-mute);
+  color: var(--color-light);
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_cancel:hover {
+  background-color: var(--color-mute-alt);
+}
+
+.bt9_withdraw {
+  border: 1px solid var(--color-orange);
+  background-color: var(--color-orange);
+  color: var(--color-light);
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_withdraw:hover {
+  background-color: var(--color-orange-alt);
+}
+
+.bt9_checkout {
+  background-color: var(--color-accent);
+  color: var(--color-light);
+  border: none;
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+  width: 100%;
+  padding: 0.5rem;
+}
+.bt9_checkout:hover {
+  background-color: var(--color-accent-alt);
+  color: var(--color-light-alt);
+}
+
+.bt9_status {
+  border: 1px solid var(--color-dark);
+  font-size: var(--font-size-smaller);
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_status:hover {
+  text-decoration: underline;
+}
+
+.bt9_status_alt {
+  background-color: transparent;
+  border: 1px solid var(--color-dark);
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_status_alt:hover {
+  color: gray;
+  border-color: gray;
+}
+
+.bt9_dynamic {
+  cursor: pointer;
+  display: block;
+  padding: 0.2rem;
+  margin-left: 0.5rem;
+}
+
+.bt9_accent {
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_accent svg {
+  color: var(--color-light);
+}
+.bt9_accent:hover {
+  background-color: var(--color-accent-alt);
+}
+
+.bt9_orange {
+  background-color: #fb641b;
+  color: white;
+  -webkit-appearance: button;
+     -moz-appearance: button;
+          appearance: button;
+}
+.bt9_orange:hover {
+  color: white;
+  background-color: #cc4502;
+}
+
 .card_default {
   background: var(--color-trans-one);
   border-radius: 4px;
@@ -234,219 +448,6 @@ button svg {
   margin: 0;
   font-family: var(--font-primary);
   font-size: var(--font-size-normal);
-}
-
-.status_btn {
-  padding: 0.1rem 0.4rem;
-  border: 1px solid var(--color-dark);
-  border-radius: 3px;
-  font-size: var(--font-size-smaller);
-}
-.status_btn:hover {
-  text-decoration: underline;
-}
-
-.bt9_checkout {
-  padding: 0.5rem 0.9rem;
-  background-color: var(--color-accent);
-  color: var(--color-light);
-  font-weight: 500;
-  display: block;
-  border: none;
-  -webkit-transition: all 0.4s linear;
-  transition: all 0.4s linear;
-  width: 99%;
-  margin: auto;
-  letter-spacing: 0.9px;
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button;
-}
-.bt9_checkout:hover {
-  background-color: var(--color-accent-alt);
-  color: var(--color-light-alt);
-}
-.bt9_checkout:disabled {
-  background-color: gray;
-  cursor: not-allowed;
-}
-
-.dynamic_bt9 {
-  cursor: pointer;
-  display: block;
-  padding: 0.2rem;
-  margin-left: 0.5rem;
-}
-
-.bt9_edit {
-  line-height: 1;
-  padding: 0.3rem 0.3rem;
-  border: 1px solid var(--color-accent);
-  border-radius: 3px;
-  background-color: var(--color-accent);
-  color: var(--color-light);
-  font-size: 0.7rem;
-  font-weight: 400;
-  letter-spacing: 1px;
-  -webkit-transition: all 0.4s linear;
-  transition: all 0.4s linear;
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button;
-  margin: 1px;
-}
-.bt9_edit:hover {
-  background-color: var(--color-accent-alt);
-}
-.bt9_edit:disabled {
-  cursor: not-allowed;
-  background-color: var(--color-mute);
-  border: 1px solid var(--color-mute);
-}
-
-.bt9_delete {
-  line-height: 1;
-  padding: 0.3rem 0.3rem;
-  border: 1px solid var(--color-danger);
-  border-radius: 3px;
-  background-color: var(--color-danger);
-  color: var(--color-light);
-  font-size: 0.7rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  -webkit-transition: all 0.4s linear;
-  transition: all 0.4s linear;
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button;
-  margin: 1px;
-}
-.bt9_delete:hover {
-  background-color: var(--color-danger-alt);
-}
-
-.bt9_trans {
-  padding: 0.3rem 0.3rem;
-  border: unset;
-  background-color: unset;
-  color: var(--color-dark);
-  font-size: 0.7rem;
-  font-weight: 400;
-  letter-spacing: 1px;
-  -webkit-transition: all 0.4s linear;
-  transition: all 0.4s linear;
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button;
-  margin: 1px;
-}
-
-.bt9_warning {
-  padding: 0.3rem 0.3rem;
-  border: 1px solid var(--color-warning);
-  border-radius: 3px;
-  background-color: var(--color-warning);
-  color: var(--color-dark);
-  font-size: 0.7rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  -webkit-transition: all 0.4s linear;
-  transition: all 0.4s linear;
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button;
-  margin: 1px;
-}
-.bt9_warning:hover {
-  background-color: var(--color-warning-alt);
-}
-
-.bt9_create {
-  padding: 0.3rem 0.3rem;
-  border: 1px solid var(--color-primary);
-  border-radius: 3px;
-  background-color: var(--color-primary);
-  color: var(--color-light);
-  font-size: 0.7rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  -webkit-transition: all 0.4s linear;
-  transition: all 0.4s linear;
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button;
-  margin: 1px;
-}
-.bt9_create:hover {
-  background-color: var(--color-primary-alt);
-}
-
-.bt9_primary {
-  line-height: 1;
-  padding: 0.3rem 0.3rem;
-  border: 1px solid var(--color-primary);
-  border-radius: 3px;
-  background-color: var(--color-primary);
-  color: var(--color-light);
-  font-size: 0.7rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  -webkit-transition: all 0.4s linear;
-  transition: all 0.4s linear;
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button;
-  margin: 1px;
-}
-.bt9_primary:hover {
-  background-color: var(--color-primary-alt);
-}
-
-.bt9_cancel {
-  line-height: 1;
-  padding: 0.3rem 0.3rem;
-  border: 1px solid var(--color-mute);
-  border-radius: 3px;
-  background-color: var(--color-mute);
-  color: var(--color-light);
-  font-size: 0.7rem;
-  font-weight: 400;
-  letter-spacing: 1px;
-  -webkit-transition: all 0.4s linear;
-  transition: all 0.4s linear;
-  cursor: pointer;
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button;
-  margin: 1px;
-}
-.bt9_cancel:hover {
-  background-color: var(--color-mute-alt);
-}
-
-.bt9_withdraw {
-  padding: 0.2rem 0.3rem;
-  border: 1px solid var(--color-orange);
-  border-radius: 3px;
-  background-color: var(--color-orange);
-  color: var(--color-light);
-  font-size: 0.7rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  -webkit-transition: all 0.4s linear;
-  transition: all 0.4s linear;
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button;
-  cursor: pointer;
-}
-.bt9_withdraw:hover {
-  background-color: var(--color-orange-alt);
-}
-
-.bt9_big {
-  padding: 0.5rem 0.8rem;
-  font-size: 1rem;
 }
 
 .input_group {
@@ -572,20 +573,6 @@ label {
 }
 .action_menu ul li {
   margin: 0.5rem 0;
-}
-
-.status_btn_alt {
-  padding: 0.2rem;
-  background-color: transparent;
-  border: 1px solid black;
-  cursor: pointer;
-  margin: 0.3rem;
-  font-size: 0.8rem;
-  border-radius: 3px;
-}
-.status_btn_alt:hover {
-  color: gray;
-  border-color: gray;
 }
 
 .headers .hBtn {
@@ -1127,6 +1114,114 @@ label {
   color: var(--color-primary);
 }
 
+/*Icon progressbar*/
+#progressbar {
+  margin-bottom: 30px;
+  overflow: hidden;
+  color: #455a64;
+  padding-left: 0px;
+  padding: 25px 0 10px 0;
+  margin-top: 30px;
+}
+
+#progressbar li {
+  list-style-type: none;
+  font-size: 13px;
+  width: 25%;
+  float: left;
+  position: relative;
+  font-weight: 400;
+}
+
+#progressbar .step0 > b {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  -webkit-transform: translate(-50%, -115%);
+          transform: translate(-50%, -115%);
+}
+#progressbar .step0 .step0_ico {
+  width: 20px;
+  height: 20px;
+  line-height: 45px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: 20px;
+  background: #c5cae9;
+  border-radius: 50%;
+  margin: auto;
+  padding: 0px;
+  color: #fff;
+}
+#progressbar .step0 .step0_ico svg {
+  color: var(--color-light);
+  font-size: 0.875rem;
+}
+#progressbar .step0::after {
+  content: "";
+  width: 100%;
+  height: 6px;
+  background: #c5cae9;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  z-index: -1;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+#progressbar .step0:last-child::after {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  position: absolute;
+  left: -50%;
+}
+#progressbar .step0:nth-child(2)::after, #progressbar .step0:nth-child(3):after {
+  left: -50%;
+}
+#progressbar .step0:first-child:after {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  position: absolute;
+  left: 50%;
+}
+#progressbar .step0:last-child:after {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+#progressbar .step0:first-child:after {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+#progressbar .step0.active.step0_ico, #progressbar .step0.active:after {
+  background: #651fff;
+}
+#progressbar .step0.active .step0_ico {
+  background: #651fff;
+}
+
+/*ProgressBar connectors*/
+.icon {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+}
+
+.icon-content {
+  padding-bottom: 20px;
+}
+
+@media screen and (max-width: 992px) {
+  .icon-content {
+    width: 50%;
+  }
+}
 .main_spinner {
   width: 100%;
   height: 80vh;
@@ -3414,37 +3509,6 @@ label {
   width: 100%;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-}
-.product_handler .ph_btn {
-  margin: 2px 10px 2px 0;
-  padding: 1rem 1.5rem;
-  font-weight: 500;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  -webkit-transition: all 0.4s linear;
-  transition: all 0.4s linear;
-}
-
-.buyBtn {
-  background-color: #fb641b;
-  color: white;
-}
-.buyBtn:hover {
-  color: white;
-  background-color: #cc4502;
-}
-
-.addToCartBtn {
-  background-color: var(--color-accent);
-  color: white;
-  border: none;
-}
-.addToCartBtn svg {
-  color: var(--color-light);
-}
-.addToCartBtn:hover {
-  background-color: var(--color-accent-alt);
 }
 
 .wishlistBtn {

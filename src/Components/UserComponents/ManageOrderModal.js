@@ -178,7 +178,7 @@ function ManageOrderModal({ closeModal, data, setMessage, refetch, userInfo, rou
 
                {
                   <div className="rv_div" style={{ alignSelf: "center" }}>
-                     <button className="status_btn" onClick={() => router.push(`/rating-review?oid=${_id}&pid=${productId}&sku=${sku}`)}
+                     <button className="bt9_status" onClick={() => router.push(`/rating-review?oid=${_id}&pid=${productId}&sku=${sku}`)}
                      >
                         Add Review
                      </button>

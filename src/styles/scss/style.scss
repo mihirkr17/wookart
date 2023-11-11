@@ -1,9 +1,13 @@
+@import '~@fortawesome/fontawesome-svg-core/styles.css';
 @import "Variables/color";
 @import "Variables/font";
 @import "Variables/util";
 @import "Partials/root";
 @import "Partials/reset";
+@import "Partials/btns";
 @import "Partials/class";
+@import "Partials/progressBar";
+
 
 // Shared Components 
 @import "SharedComponents/Spinner";

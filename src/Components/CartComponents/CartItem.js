@@ -12,9 +12,8 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
    const [loading, setLoading] = useState(false);
 
 
-   const removeItemFromCartHandler = async (cp) => {
+   const removeItemFromCartHandler = async (title, cartId) => {
       try {
-         const { productId, title, sku } = cp;
 
          const willDelete = await swal({
             title: "Are you sure?",
@@ -28,7 +27,7 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
 
          setLoading(true);
 
-         const { success, message } = await apiHandler(`/cart/delete-cart-item/${productId}/${sku}/${cartType && cartType}`, "DELETE", {});
+         const { success, message } = await apiHandler(`/cart/delete-cart-item/${cartId}`, "DELETE", {});
 
          setLoading(false);
 
@@ -49,7 +48,7 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
 
 
 
-   const itemQuantityHandler = async (value, productID, sku, cartID) => {
+   const itemQuantityHandler = async (value, productId, sku, cartId) => {
       try {
          setQtyLoading(true);
          let quantity = parseInt(value);
@@ -62,22 +61,13 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
          }
 
          const { message, success } = await apiHandler(`/cart/update-cart-product-quantity`, "PUT", {
-            actionRequestContext: {
-               pageUri: '/cart',
-               type: cartType,
-               pageNumber: 1
-            },
-            upsertRequest: {
-               cartContext: {
-                  productID, sku, quantity: quantity, cartID
-               }
-            }
+            productId, sku, quantity, cartId
          });
 
          setQtyLoading(false);
 
          if (!success) {
-            return setMessage("Something went wrong !", 'danger')
+            return setMessage(message, 'danger')
          } else {
             cartRefetch();
             return setMessage(message, 'success');
@@ -105,39 +95,42 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
          {
             Array.isArray(products) && products.map((item, i) => {
 
+
                return (
                   <div key={i} className="mb-2 cart_wrapper">
                      <div className="c_list1">
                         <div className="c_img">
-                           {qtyLoading ? "Loading" : <img src={item?.imageUrl ?? ""} alt="" />}
+                           {qtyLoading ? "Loading" : <img src={item?.image?.src ?? ""} alt="" />}
                         </div>
 
                         {
-                           !checkOut &&
-                           <div className="ms-2 c_btn">
+                           !checkOut ?
+                              <div className="ms-2 c_btn">
 
-                              <button
-                                 className='bt9_edit px-2 my-1'
-                                 disabled={item?.quantity <= 1 ? true : false}
-                                 onClick={() => itemQuantityHandler(parseInt(item?.quantity) - 1, item?.productId, item?.sku, item?._id)}>
-                                 <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
-                              </button>
+                                 <button
+                                    className='bt9_edit px-2 my-1'
+                                    disabled={item?.quantity <= 1 ? true : false}
+                                    onClick={() => itemQuantityHandler(parseInt(item?.quantity) - 1, item?.productId, item?.sku, item?._id)}>
+                                    <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
+                                 </button>
 
-                              <input
-                                 className='border px-2' type="number"
-                                 value={item?.quantity || 0}
-                                 onChange={(e) => itemQuantityHandler(e.target.value, item?.productId, item?.sku, item?._id)}
-                                 maxLength='5'
-                                 style={{ width: '50px' }}
-                              />
+                                 <input
+                                    className='border px-2' type="number"
+                                    value={item?.quantity || 0}
+                                    onChange={(e) => itemQuantityHandler(e.target.value, item?.productId, item?.sku, item?._id)}
+                                    maxLength='5'
+                                    style={{ width: '50px' }}
+                                 />
 
-                              <button
-                                 className='bt9_edit px-2 my-1'
-                                 disabled={item?.quantity >= item?.available ? true : false}
-                                 onClick={() => itemQuantityHandler(parseInt(item?.quantity) + 1, item?.productId, item?.sku, item?._id)}>
-                                 <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
-                              </button>
-                           </div>
+                                 <button
+                                    className='bt9_edit px-2 my-1'
+                                    disabled={item?.quantity >= item?.available ? true : false}
+                                    onClick={() => itemQuantityHandler(parseInt(item?.quantity) + 1, item?.productId, item?.sku, item?._id)}>
+                                    <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+                                 </button>
+                              </div> :
+                              <small className='text-muted'>Qty: {item?.quantity}</small>
+
                         }
                      </div>
 
@@ -152,8 +145,8 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
 
                            <div className="d-flex flex-column">
                               <div>
-                                 <big className='currency_sign text-success fw-bold'>{item?.sellingPrice.toLocaleString()}&nbsp;&nbsp;</big>
-                                 <small><strike className='currency_sign text-muted'>{item?.price.toLocaleString()}</strike>&nbsp;&nbsp;{-item?.initialDiscount}%</small>
+                                 <big className='currency_sign text-success fw-bold'>{item?.sellPrice?.toLocaleString()}&nbsp;&nbsp;</big>
+                                 <small><strike className='currency_sign text-muted'>{item?.stockPrice?.toLocaleString()}</strike>&nbsp;&nbsp;{-item?.initialDiscount}%</small>
                               </div>
 
 
@@ -168,13 +161,14 @@ const CartItem = ({ products, cartRefetch, checkOut, cartType, setState, setMess
                                        printAttributes(item?.attributes)
                                     }
                                  </small>
+
                               </div>
                            </div>
                         </div>
                         {
                            !checkOut && <div className="remove_btn text-end">
                               {
-                                 cartType !== "buy" && <button className='btn btn-sm' onClick={() => removeItemFromCartHandler(item)}>
+                                 cartType !== "buy" && <button className='btn btn-sm' onClick={() => removeItemFromCartHandler(item?.title, item?._id)}>
                                     <FontAwesomeIcon icon={faTrash} />
                                  </button>
                               }

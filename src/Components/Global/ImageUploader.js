@@ -139,12 +139,12 @@ const ImageUploader = ({ images, setImages }) => {
                         placeholder='Image url' value={img} onChange={(e) => imageInputHandler(e, index)} />
 
                      {
-                        images.length !== 1 && <span className='dynamic_bt9'
+                        images.length !== 1 && <span className='bt9_dynamic'
                            onClick={() => removeImageInputFieldHandler(index)}>
                            <FontAwesomeIcon icon={faMinusSquare} />
                         </span>
                      } {
-                        images.length - 1 === index && <span className='dynamic_bt9'
+                        images.length - 1 === index && <span className='bt9_dynamic'
                            onClick={() => setImages([...images, ''])}>
                            <FontAwesomeIcon icon={faPlusSquare} />
                         </span>

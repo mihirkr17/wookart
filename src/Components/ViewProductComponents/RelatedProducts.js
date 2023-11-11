@@ -19,7 +19,7 @@ export default function RelatedProducts({ relatedProducts }) {
                            <Link href={`/product/${product?.slug}?pId=${product?._id}&sku=${product?.sku}&oTracker=${product?.sku}`}>
 
                               <div className="product_card_img product_card_img_rel ">
-                                 <img src={product?.imageUrl && product?.imageUrl} alt='' />
+                                 <img src={product?.image?.src && product?.image?.src} alt='' />
                               </div>
                               <article className='product_card_description'>
                                  <div className="product_title product_title_rel">
@@ -37,7 +37,7 @@ export default function RelatedProducts({ relatedProducts }) {
                                     </div>
 
                                     <div className="price_model">
-                                       <big><span className='dollar_Symbol currency_sign'></span>{product?.pricing?.sellingPrice || product?.pricing?.price}</big>
+                                       <big><span className='dollar_Symbol currency_sign'></span>{product?.sellPrice || product?.stockPrice}</big>
             
                                        {
                                           product?.shipping?.isFree && product?.shipping?.isFree && <small className='text-center'>Free Shipping</small>

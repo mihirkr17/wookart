@@ -23,6 +23,7 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
 
    let inCart = Array.isArray(cartData?.products) && cartData?.products.find(e => e?.sku === sku);
 
+
    // add to cart handler
    const addToCartHandler = async (pId, sku, params) => {
       try {
@@ -53,6 +54,22 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
       } catch (error) {
          setMessage(error?.message, "danger");
       }
+   }
+
+   async function buyHandler(productId, sku) {
+      router.push(
+         {
+            pathname: `/checkout?session=${uuidv4()}`,
+            query: {
+               data: JSON.stringify({
+                  productId: productId,
+                  sku: sku,
+                  quantity: 1
+               }),
+               session: `${uuidv4()}`
+            }
+         }
+      );
    }
 
    const addToWishlist = async (product) => {
@@ -140,15 +157,15 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
                      <div className="product_price_model">
                         <big>
                            <span className="currency_sign"></span>
-                           {product?.pricing?.sellingPrice?.toLocaleString() || product?.pricing?.price?.toLocaleString()}
+                           {product?.variation?.sellPrice?.toLocaleString() || product?.variation?.stockPrice?.toLocaleString()}
                         </big>
 
                         <div>
                            <strike>
-                              <i className='currency_sign'>{product?.pricing?.price?.toLocaleString()}</i>
+                              <i className='currency_sign'>{product?.variation?.stockPrice?.toLocaleString()}</i>
                            </strike>
                            <span>
-                              ({product?.pricing?.discount || 0}%) off
+                              ({product?.discount || 0}%) off
                            </span>
                         </div>
                      </div>
@@ -157,8 +174,8 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
                      <small className='text-muted'>
                         <i>
                            {product?.variation?.stock === "out" ? <span className='badge_failed'>Out of Stock</span> :
-                              product?.variation?.available <= 10 ?
-                                 "Hurry, Only " + product?.variation?.available + " Left !" : ""}
+                              product?.variation?.stockQuantity <= 10 ?
+                                 "Hurry, Only " + product?.stockQuantity + " Left !" : ""}
                         </i>
                      </small>
 
@@ -166,7 +183,7 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
 
                      <br />
                      {
-                        Array.isArray(product?.swatch) &&
+                        Array.isArray(product?.swatch) && product?.swatch.length > 0 &&
                         <div className='swatch_wrapper'>
                            <label htmlFor="swatch">Variation :</label>
                            <select name="swatch" id="swatch" className='form-select form-select-sm' defaultValue={sku || ""} onChange={e => handleVariation(e.target.value)}>
@@ -175,10 +192,10 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
                                  product?.swatch?.map((swatch, index) => {
 
                                     let attribute = swatch?.attributes;
-                           
+
 
                                     return (
-                                       <option key={index} disabled={(swatch?.stock === "out" && swatch?.sku === sku ) ? true : false} value={swatch?.sku}>
+                                       <option key={index} disabled={(swatch?.stock === "out" && swatch?.sku === sku) ? true : false} value={swatch?.sku}>
                                           {variantLooping(attribute)}
                                        </option>
                                     )
@@ -208,32 +225,21 @@ export default function ProductContents({ product, sku, setMessage, userInfo }) 
 
                   <div className="py-3 mt-4 product_handler">
 
-                     <button className='ph_btn addToCartBtn'
+                     {product?.variation?.stock === "in" && <button className='bt9_accent me-2' variation="big"
                         onClick={() => (inCart ? router.push('/cart') :
                            addToCartHandler(product?._id, product?.variation?.sku, "toCart"))}>
                         <FontAwesomeIcon icon={faCartShopping} />&nbsp;
                         {inCart ? "Go To Cart" : addCartLoading ? <BtnSpinner text={"Adding..."} /> : "Add To Cart"}
-                     </button>
+                     </button>}
 
                      {
                         product?.variation?.stock === "in" &&
-                        <Link href={{
-                           pathname: `/checkout`,
-                           query: {
-                              data: JSON.stringify({
-                                 productId: product?._id,
-                                 sku: product?.variation?.sku,
-                                 quantity: 1
-                              }),
-                              session: `${uuidv4()}`
-                           }
-                        }}
-
-                           as={`/checkout?session=${uuidv4()}`}
-                           className='buyBtn ph_btn'
+                        <button
+                           className='bt9_orange' variation="big"
+                           onClick={() => buyHandler(product?._id, product?.variation?.sku)}
                         >
                            Buy Now
-                        </Link>
+                        </button>
                      }
 
                      {/* <button title={`${product?.inWishlist ? "Remove from wishlist" : "Add to wishlist"}`}

@@ -25,7 +25,7 @@ const OrderLabelModal = ({ data, closeModal, userInfo }) => {
       <ModalWrapper closeModal={closeModal}>
          <div>
             <Pdf targetRef={ref} filename={`WooKart-OID-${orderID}.pdf`}>
-               {({ toPdf }) => <button className='status_btn' onClick={toPdf}>Generate Pdf</button>}
+               {({ toPdf }) => <button className='bt9_status' onClick={toPdf}>Generate Pdf</button>}
             </Pdf>
          </div>
          <div className="wrapper mx-auto card_default card_description" style={{ width: "432px", height: "624px", margin: "1rem 0", padding: "1rem" }} ref={ref}>

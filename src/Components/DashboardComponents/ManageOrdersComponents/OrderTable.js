@@ -121,23 +121,23 @@ const OrderTable = ({ setOpenModal, setLabelModal, orders, orderRefetch, setMess
                            <div className='action_menu'>
                               <ul>
                                  <li>
-                                    <button className='status_btn_alt' onClick={() => getPaymentInfo(odr && odr?.paymentIntentID, odr)}>Get Payment Info</button>
+                                    <button className='bt9_status_alt' onClick={() => getPaymentInfo(odr && odr?.paymentIntentID, odr)}>Get Payment Info</button>
                                  </li>
 
                                  {
                                     (orderStatus === "canceled") &&
                                     <li>
-                                       <button className='status_btn_alt' onClick={() => getPaymentInfo(odr && odr?.paymentIntentID, odr)}>Refund Now</button>
+                                       <button className='bt9_status_alt' onClick={() => getPaymentInfo(odr && odr?.paymentIntentID, odr)}>Refund Now</button>
                                     </li>
                                  }
 
                                  {
                                     orderStatus === "dispatch" && <>
                                        <li>
-                                          <button className='status_btn_alt' onClick={() => setOpenBox(odr)}>Shipped Now</button>
+                                          <button className='bt9_status_alt' onClick={() => setOpenBox(odr)}>Shipped Now</button>
                                        </li>
                                        <li>
-                                          <button className='status_btn_alt' onClick={() => setLabelModal(true && odr)}>Download Label</button>
+                                          <button className='bt9_status_alt' onClick={() => setLabelModal(true && odr)}>Download Label</button>
                                        </li>
                                     </>
                                  }
@@ -145,10 +145,10 @@ const OrderTable = ({ setOpenModal, setLabelModal, orders, orderRefetch, setMess
                                     orderStatus === "placed" && <>
 
                                        <li>
-                                          <button className='status_btn_alt' onClick={() => orderDispatchHandler(odr)}>Dispatch Now</button>
+                                          <button className='bt9_status_alt' onClick={() => orderDispatchHandler(odr)}>Dispatch Now</button>
                                        </li>
                                        <li>
-                                          <button className='status_btn_alt' onClick={() => setOpenCancelReasonForm((orderID !== openCancelReasonForm) ? orderID : false)}>
+                                          <button className='bt9_status_alt' onClick={() => setOpenCancelReasonForm((orderID !== openCancelReasonForm) ? orderID : false)}>
                                              Cancel Now
                                           </button>
                                           {
@@ -170,7 +170,7 @@ const OrderTable = ({ setOpenModal, setLabelModal, orders, orderRefetch, setMess
                                  {
                                     orderStatus === "shipped" && <>
                                        <li>
-                                          <button className='status_btn_alt' onClick={() => setOpenBox(odr)}>Completed Now</button>
+                                          <button className='bt9_status_alt' onClick={() => setOpenBox(odr)}>Completed Now</button>
                                        </li>
                                     </>
                                  }
@@ -218,7 +218,7 @@ const OrderTable = ({ setOpenModal, setLabelModal, orders, orderRefetch, setMess
                                     <td className='currency_sign'>{sellingPrice + shippingCharge}</td>
                                     <td>{quantity}</td>
                                     <td>
-                                       <button className="status_btn_alt" onClick={() => setOpenModal(true && nItem)}>Details</button>
+                                       <button className="bt9_status_alt" onClick={() => setOpenModal(true && nItem)}>Details</button>
                                     </td>
                                  </tr>
 

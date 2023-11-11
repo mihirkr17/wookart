@@ -1,0 +1,166 @@
+/*Icon progressbar*/
+#progressbar {
+  margin-bottom: 30px;
+  overflow: hidden;
+  color: #455a64;
+  padding-left: 0px;
+  padding: 25px 0 10px 0;
+  margin-top: 30px;
+}
+
+#progressbar li {
+  list-style-type: none;
+  font-size: 13px;
+  width: 25%;
+  float: left;
+  position: relative;
+  font-weight: 400;
+}
+
+#progressbar .step0 {
+  > b {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -115%);
+  }
+  .step0_ico {
+    width: 20px;
+    height: 20px;
+    line-height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: #c5cae9;
+    border-radius: 50%;
+    margin: auto;
+    padding: 0px;
+    color: #fff;
+
+    svg {
+      color: var(--color-light);
+      font-size: 0.875rem;
+    }
+  }
+
+  &::after {
+    content: "";
+    width: 100%;
+    height: 6px;
+    background: #c5cae9;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    z-index: -1;
+    transform: translateY(-50%);
+  }
+
+  &:last-child::after {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    position: absolute;
+    left: -50%;
+  }
+
+  &:nth-child(2)::after,
+  &:nth-child(3):after {
+    left: -50%;
+  }
+
+  &:first-child:after {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    position: absolute;
+    left: 50%;
+  }
+
+  &:last-child:after {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  &:first-child:after {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+
+  &.active.step0_ico,
+  &.active:after {
+    background: #651fff;
+  }
+
+  &.active {
+    .step0_ico {
+      background: #651fff;
+    }
+  }
+}
+
+/*ProgressBar connectors*/
+// #progressbar li:after {
+//   content: "";
+//   width: 100%;
+//   height: 12px;
+//   background: #c5cae9;
+//   position: absolute;
+//   left: 0;
+//   top: 16px;
+//   z-index: -1;
+// }
+
+// #progressbar li:last-child:after {
+//   border-top-right-radius: 10px;
+//   border-bottom-right-radius: 10px;
+//   position: absolute;
+//   left: -50%;
+// }
+
+// #progressbar li:nth-child(2):after,
+// #progressbar li:nth-child(3):after {
+//   left: -50%;
+// }
+
+// #progressbar li:first-child:after {
+//   border-top-left-radius: 10px;
+//   border-bottom-left-radius: 10px;
+//   position: absolute;
+//   left: 50%;
+// }
+
+// #progressbar li:last-child:after {
+//   border-top-right-radius: 10px;
+//   border-bottom-right-radius: 10px;
+// }
+
+// #progressbar li:first-child:after {
+//   border-top-left-radius: 10px;
+//   border-bottom-left-radius: 10px;
+// }
+
+// /*Color number of the step and the connector before it*/
+// #progressbar li.active.step0_ico,
+// #progressbar li.active:after {
+//   background: #651fff;
+// }
+
+// #progressbar li.active.step0_ico {
+//   font-family: Font Awesome 5 Free;
+//   content: "\f00c";
+// }
+
+.icon {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+}
+
+.icon-content {
+  padding-bottom: 20px;
+}
+
+@media screen and (max-width: 992px) {
+  .icon-content {
+    width: 50%;
+  }
+}

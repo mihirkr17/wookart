@@ -5,6 +5,7 @@ import ProductImages from "@/Components/ViewProductComponents/ProductImages";
 import ProductReviews from "@/Components/ViewProductComponents/ProductReviews";
 import RelatedProducts from "@/Components/ViewProductComponents/RelatedProducts";
 import { withOutDashboard } from "@/Functions/withOutDashboard";
+import { useFetch } from "@/Hooks/useFetch";
 import { useAuthContext } from "@/lib/AuthProvider";
 import Head from "next/head";
 import { useRouter } from "next/router"
@@ -16,6 +17,8 @@ export function ViewProduct({ data }) {
    const product = data?.product && data?.product;
    const { sku, pId, variant } = router.query;
    const { authRefetch, userInfo, setMessage } = useAuthContext();
+
+   const { data: relData } = useFetch(`/product/related/products?category=${product?.categories && product?.categories[product?.categories.length - 1]}&pid=${pId}`);
 
 
    useEffect(() => {
@@ -78,7 +81,7 @@ export function ViewProduct({ data }) {
 
                <div className="col-lg-3">
                   <RelatedProducts
-                     relatedProducts={data?.relatedProducts ? data?.relatedProducts : []}
+                     relatedProducts={relData?.data?.relatedProducts ? relData?.data?.relatedProducts : []}
                   />
                </div>
             </div>
